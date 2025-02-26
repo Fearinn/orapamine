@@ -1,0 +1,17 @@
+{
+  "name": "orapamine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "orapamine.js",
+  "scripts": {
+    "build:scss": "sass --no-source-map src/orapamine.scss orapamine.css",
+    "watch:scss": "sass --no-source-map --watch src/orapamine.scss orapamine.css",
+    "build": "pnpm run build:scss",
+    "watch": "pnpm run watch:scss"
+  },
+  "author": "Matheus Gomes",
+  "license": "BGA",
+  "devDependencies": {
+    "sass": "^1.83.4"
+  }
+}

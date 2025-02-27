@@ -16,6 +16,7 @@
 :root {
   --boardHeight: 640px;
   --boardWidth: calc(1.25 * var(--boardHeight));
+  background: #2D336B;
 }
 
 .orp_gameArea {
@@ -30,42 +31,48 @@
 }
 
 .orp_boardContainer {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   padding: 32px;
 }
 
-.orp_axis-y {
+.orp_axis {
   position: absolute;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   align-items: center;
-  gap: 40px;
-  justify-content: space-evenly;
-  height: var(--boardHeight);
+  justify-content: center;
+  gap: 1px;
 }
-.orp_axis-y[data-position=left] {
+.orp_axis.orp_axis-x {
+  grid-template-columns: repeat(10, calc(var(--boardWidth) / 10));
+  left: 8%;
+}
+.orp_axis.orp_axis-x[data-position=top] {
+  top: 5%;
+}
+.orp_axis.orp_axis-x[data-position=bottom] {
+  bottom: 1%;
+}
+.orp_axis.orp_axis-y {
+  grid-template-rows: repeat(8, calc(var(--boardHeight) / 8));
+  top: 6%;
+}
+.orp_axis.orp_axis-y[data-position=left] {
   left: 2%;
 }
-.orp_axis-y[data-position=right] {
-  right: 3%;
+.orp_axis.orp_axis-y[data-position=right] {
+  right: 0;
 }
-
-.orp_axis-x {
-  position: absolute;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 40px;
-  width: var(--boardWidth);
-}
-.orp_axis-x[data-position=top] {
-  top: 2%;
-}
-.orp_axis-x[data-position=bottom] {
-  bottom: 3%;
+.orp_axis .orp_axisValue {
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  -webkit-text-stroke: 1.5px navy;
+  text-shadow: navy 1px 0 10px;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .orp_board {
@@ -77,8 +84,10 @@
 }
 
 .orp_cell {
-  background-color: gray;
+  background-color: rgb(211, 211, 211);
   border: 1px solid white;
+  opacity: 0.4;
   aspect-ratio: 1;
   width: 100%;
+  z-index: -1;
 }

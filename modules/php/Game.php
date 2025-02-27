@@ -29,7 +29,11 @@ class Game extends \Table
     {
         parent::__construct();
 
-        require "material.inc.php";      
+        require "material.inc.php";   
+        
+        $this->initGameStateLabels([
+            
+        ]);
     }
 
     /**

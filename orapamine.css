@@ -55,24 +55,23 @@
   display: grid;
   align-items: center;
   justify-content: center;
-  gap: 1px;
 }
 .orp_axis.orp_axis-x {
   grid-template-columns: repeat(10, calc(var(--boardWidth) / 10));
-  left: 8%;
+  left: 3.75%;
 }
 .orp_axis.orp_axis-x[data-position=top] {
-  top: 5%;
+  top: 3%;
 }
 .orp_axis.orp_axis-x[data-position=bottom] {
-  bottom: 1%;
+  bottom: 3%;
 }
 .orp_axis.orp_axis-y {
   grid-template-rows: repeat(8, calc(var(--boardHeight) / 8));
-  top: 6%;
+  top: 3.75%;
 }
 .orp_axis.orp_axis-y[data-position=left] {
-  left: 2%;
+  left: 0;
 }
 .orp_axis.orp_axis-y[data-position=right] {
   right: 0;
@@ -85,7 +84,6 @@
   text-align: center;
   -webkit-text-stroke: 1.5px navy;
   text-shadow: navy 1px 0 10px;
-  transform: translateX(-50%) translateY(-50%);
 }
 
 .orp_board {

@@ -13,11 +13,25 @@
  *
  */
 
+@font-face {
+  font-family: "Cookie Run";
+  font-style: normal;
+  font-weight: normal;
+  src: url("img/cookie_run/cookie_run_regular") format("opentype");
+}
+
+@font-face {
+  font-family: "Cookie Run";
+  font-style: normal;
+  font-weight: bold;
+  src: url("img/cookie_run/cookie_run_bold") format("opentype");
+}
+
 :root {
   --boardHeight: 640px;
   --boardWidth: calc(1.25 * var(--boardHeight));
 
-  background: #2D336B;
+  background: #2d336b;
 }
 
 .orp_gameArea {
@@ -74,6 +88,7 @@
   }
 
   .orp_axisValue {
+    font-family: "Cookie Run", sans-serif;
     color: white;
     font-weight: bold;
     font-size: 24px;
@@ -94,7 +109,7 @@
 }
 
 .orp_cell {
-  background-color: rgba(211,211,211);
+  background-color: rgba(211, 211, 211);
   border: 1px solid white;
   opacity: 0.4;
   aspect-ratio: 1;

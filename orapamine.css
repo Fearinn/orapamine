@@ -102,3 +102,18 @@
   width: 100%;
   z-index: -1;
 }
+.orp_cell.orp_occupied {
+  background-color: green;
+}
+.orp_cell.orp_occupied.orp_half-1 {
+  background: linear-gradient(to bottom right, rgb(211, 211, 211) 50%, green 50%);
+}
+.orp_cell.orp_occupied.orp_half-2 {
+  background: linear-gradient(to bottom left, rgb(211, 211, 211) 50%, green 50%);
+}
+.orp_cell.orp_occupied.orp_half-3 {
+  background: linear-gradient(to top right, rgb(211, 211, 211) 50%, green 50%);
+}
+.orp_cell.orp_occupied.orp_half-4 {
+  background: linear-gradient(to top left, rgb(211, 211, 211) 50%, green 50%);
+}

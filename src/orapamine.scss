@@ -112,4 +112,42 @@
   aspect-ratio: 1;
   width: 100%;
   z-index: -1;
+
+  &.orp_occupied {
+    background-color: green;
+
+    &.orp_half {
+      &-1 {
+        background: linear-gradient(
+          to bottom right,
+          rgba(211, 211, 211) 50%,
+          green 50%
+        );
+      }
+
+      &-2 {
+        background: linear-gradient(
+          to bottom left,
+          rgba(211, 211, 211) 50%,
+          green 50%
+        );
+      }
+
+      &-3 {
+        background: linear-gradient(
+          to top right,
+          rgba(211, 211, 211) 50%,
+          green 50%
+        );
+      }
+
+      &-4 {
+        background: linear-gradient(
+          to top left,
+          rgba(211, 211, 211) 50%,
+          green 50%
+        );
+      }
+    }
+  }
 }

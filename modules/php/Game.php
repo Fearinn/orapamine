@@ -1,4 +1,5 @@
 <?php
+
 /**
  *------
  * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
@@ -14,6 +15,7 @@
  *
  * In this PHP file, you are going to defines the rules of the game.
  */
+
 declare(strict_types=1);
 
 namespace Bga\Games\OrapaMine;
@@ -22,18 +24,16 @@ require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 
 class Game extends \Table
 {
-    private static array $GEMSTONES;
-    private static array $COLORS;
-     
+    private array $GEMSTONES;
+    private array $COLORS;
+
     public function __construct()
     {
         parent::__construct();
 
-        require "material.inc.php";   
-        
-        $this->initGameStateLabels([
-            
-        ]);
+        require "material.inc.php";
+
+        $this->initGameStateLabels([]);
     }
 
     /**
@@ -63,12 +63,114 @@ class Game extends \Table
         return 0;
     }
 
-    /**
-     * Game state action, example content.
-     *
-     * The action method of state `nextPlayer` is called everytime the current game state is set to `nextPlayer`.
-     */
-   
+    /** Game state actions */
+
+
+    /** Utility methods */
+
+    public function setupBoard(): void
+    {
+        $board = array_fill(1, 10, array_fill(1, 8, 0)); // Cria um tabuleiro 10x8 vazio
+
+        $gemstones = $this->GEMSTONES;
+
+        if (!$this->placeGemstones($board, $gemstones)) {
+            throw new \BgaVisibleSystemException(clienttranslate("Unable to set-up board"));
+        };
+
+        $this->globals->set("board", $board);
+    }
+
+    public function isValidPlacement(array $board, array $gemstone, int $base_x, int $base_y, int $rotation): bool
+    {
+        if ($board[$base_x][$base_y] > 0) {
+            return false;
+        }
+
+        $format = (array) $gemstone["format"][$rotation];
+
+        $piece_y = $base_y;
+        foreach ($format as $row) {
+            $piece_x = $base_x;
+
+            foreach ($row as $piece) {
+                if (!isset($board[$piece_x][$piece_y]) || $board[$piece_x][$piece_y] > 0) {
+                    return false;
+                }
+                $piece_x++;
+            }
+
+            $piece_y++;
+        }
+
+        return true;
+    }
+
+    public function arrangePieces(array &$board, array $gemstone, int $base_x, int $base_y, int $rotation): void
+    {
+        $format = (array) $gemstone["format"][$rotation];
+
+        $piece_y = $base_y;
+        foreach ($format as $row) {
+            $piece_x = $base_x;
+
+            foreach ($row as $piece) {
+                $board[$piece_x][$piece_y] = $piece;
+                $piece_x++;
+            }
+
+            $piece_y++;
+        }
+    }
+
+    public function removePieces(array &$board, array $gemstone, int $base_x, int $base_y, int $rotation): void
+    {
+        $format = (array) $gemstone["format"][$rotation];
+
+        $piece_y = $base_y;
+        foreach ($format as $row) {
+            $piece_x = $base_x;
+
+            foreach ($row as $piece) {
+                $board[$piece_x][$piece_y] = 0;
+                $piece_x++;
+            }
+
+            $piece_y++;
+        }
+    }
+
+    public function placeGemstones(array &$board, array &$gemstones, int $gemstone_id = 1): bool
+    {
+        if ($gemstone_id > 5) {
+            return true;
+        }
+
+        $random_x = random_int(1, 10);
+        $random_y = random_int(1, 8);
+        $rotations = [0, 90, 180, 270];
+        shuffle($rotations);
+
+        $gemstone = (array) $gemstones[$gemstone_id];
+
+        foreach ($rotations as $rotation) {
+            for ($x = $random_x; $x <= $random_x && $x <= 10; $x++) {
+                for ($y = $random_y; $y <= $random_y && $y <= 8; $y++) {
+                    if ($this->isValidPlacement($board, $gemstone, $x, $y, $rotation)) {
+                        $this->arrangePieces($board, $gemstone, $x, $y, $rotation);
+
+                        if ($this->placeGemstones($board, $gemstones, $gemstone_id + 1)) {
+                            return true;
+                        }
+
+                        $this->removePieces($board, $gemstone, $x, $y, $rotation);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Migrate database.
@@ -83,21 +185,21 @@ class Game extends \Table
      */
     public function upgradeTableDb($from_version)
     {
-//       if ($from_version <= 1404301345)
-//       {
-//            // ! important ! Use DBPREFIX_<table_name> for all tables
-//
-//            $sql = "ALTER TABLE DBPREFIX_xxxxxxx ....";
-//            $this->applyDbUpgradeToAllDB( $sql );
-//       }
-//
-//       if ($from_version <= 1405061421)
-//       {
-//            // ! important ! Use DBPREFIX_<table_name> for all tables
-//
-//            $sql = "CREATE TABLE DBPREFIX_xxxxxxx ....";
-//            $this->applyDbUpgradeToAllDB( $sql );
-//       }
+        //       if ($from_version <= 1404301345)
+        //       {
+        //            // ! important ! Use DBPREFIX_<table_name> for all tables
+        //
+        //            $sql = "ALTER TABLE DBPREFIX_xxxxxxx ....";
+        //            $this->applyDbUpgradeToAllDB( $sql );
+        //       }
+        //
+        //       if ($from_version <= 1405061421)
+        //       {
+        //            // ! important ! Use DBPREFIX_<table_name> for all tables
+        //
+        //            $sql = "CREATE TABLE DBPREFIX_xxxxxxx ....";
+        //            $this->applyDbUpgradeToAllDB( $sql );
+        //       }
     }
 
     /*
@@ -120,6 +222,7 @@ class Game extends \Table
         $result["players"] = $this->getCollectionFromDb(
             "SELECT `player_id` `id`, `player_score` `score` FROM `player`"
         );
+        $result["board"] = $this->globals->get("board");
 
         return $result;
     }
@@ -169,6 +272,7 @@ class Game extends \Table
         $this->reattributeColorsBasedOnPreferences($players, $gameinfos["player_colors"]);
         $this->reloadPlayersBasicInfos();
 
+        $this->setupBoard();
 
         // Activate first player once everything has been initialized and ready.
         $this->activeNextPlayer();
@@ -196,11 +300,10 @@ class Game extends \Table
 
         if ($state["type"] === "activeplayer") {
             switch ($state_name) {
-                default:
-                {
-                    $this->gamestate->nextState("zombiePass");
-                    break;
-                }
+                default: {
+                        $this->gamestate->nextState("zombiePass");
+                        break;
+                    }
             }
 
             return;

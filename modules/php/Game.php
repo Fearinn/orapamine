@@ -20,6 +20,8 @@ declare(strict_types=1);
 
 namespace Bga\Games\OrapaMine;
 
+use Bga\GameFramework\Actions\Types\IntParam;
+
 require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 
 const BOARD = "board";
@@ -66,8 +68,67 @@ class Game extends \Table
         return 0;
     }
 
-    /** Game state actions */
+    /** Game state arguments and actions*/
 
+    public function st_betweenPlayers(): void
+    {
+        $player_id = (int) $this->getActivePlayerId();
+        $this->giveExtraTime($player_id);
+        $this->activeNextPlayer($player_id);
+
+        $this->notify->all(
+            "message",
+            clienttranslate('${player_name} ends his turn'),
+            [
+                "player_id" => $player_id,
+                "player_name" => $this->getPlayerNameById($player_id)
+            ]
+        );
+
+        $this->gamestate->nextState("nextPlayer");
+    }
+
+    /** Player actions */
+
+    public function actAskLocation(#[IntParam(min: 1, max: 10)] int $guess_x, #[IntParam(min: 1, max: 8)] int $guess_y): void
+    {
+        $player_id = (int) $this->getActivePlayerId();
+
+        $coloredBoard = $this->globals->get(COLORED_BOARD);
+
+        $this->notify->all(
+            "askLocation",
+            clienttranslate('${player_name} asks what is located at position (${x}, ${y})'),
+            [
+                "player_id" => $player_id,
+                "player_name" => $this->getPlayerNameById($player_id),
+                "x" => $guess_x,
+                "y" => $guess_y,
+            ]
+        );
+
+        $color_id = $coloredBoard[$guess_x][$guess_y];
+
+        if ($color_id > 0) {
+            $message = clienttranslate('There is a ${color_label} gem!');
+            $color_label = (string) $this->COLORS[$color_id]["label"];
+        } else {
+            $message = clienttranslate('Nothing is there!');
+            $color_label = null;
+        }
+
+        $this->notify->all(
+            "answerLocation",
+            $message,
+            [
+                "colorCode" => (string) $this->COLORS[$color_id]["code"],
+                "color_label" => $color_label,
+                "i18n" => ["color"],
+            ]
+        );
+
+        $this->gamestate->nextState("nextPlayer");
+    }
 
     /** Utility methods */
 
@@ -371,8 +432,13 @@ class Game extends \Table
         throw new \feException("Zombie mode not supported at this game state: \"{$state_name}\".");
     }
 
-    public function debug_setupBoard()
+    public function debug_setupBoard(): void
     {
         $this->setupBoard();
+    }
+
+    public function debug_askLocation(int $x = 1, int $y = 8): void
+    {
+        $this->actAskLocation($x, $y);
     }
 }

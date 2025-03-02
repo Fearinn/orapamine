@@ -29,36 +29,16 @@ define([
     setup: function (gamedatas) {
       console.log("Starting game setup");
 
+      this.orp = {
+        info: {
+          colors: gamedatas.COLORS,
+        },
+      };
+
+      this.setupBoard(gamedatas);
+
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
-
-      console.log(gamedatas.board, "BOARD");
-
-      document.querySelectorAll("[data-cell]").forEach((cellElement) => {
-        const x = cellElement.dataset.cell.split("-")[0];
-        const y = cellElement.dataset.cell.split("-")[1];
-        cellElement.style.gridArea = `${y}/${x}`;
-      });
-
-      Object.keys(gamedatas.board).forEach((x) => {
-        const row = gamedatas.board[x];
-        Object.keys(row).forEach((y) => {
-          const cell = row[y];
-
-          if (cell > 0) {
-            const cellElement = document.querySelector(
-              `[data-cell="${x}-${y}"]`
-            );
-            cellElement.classList.add("orp_occupied");
-
-            if (cell < 5) {
-              cellElement.classList.add("orp_half");
-              cellElement.classList.add(`orp_half-${cell}`);
-            }
-          }
-        });
-      });
-
       console.log("Ending game setup");
     },
 
@@ -94,6 +74,39 @@ define([
 
     ///////////////////////////////////////////////////
     //// Utility methods
+
+    setupBoard: function (gamedatas) {
+      document.querySelectorAll("[data-cell]").forEach((cellElement) => {
+        const x = cellElement.dataset.cell.split("-")[0];
+        const y = cellElement.dataset.cell.split("-")[1];
+        cellElement.style.gridArea = `${y}/${x}`;
+      });
+
+      Object.keys(gamedatas.board).forEach((x) => {
+        const row = gamedatas.board[x];
+        Object.keys(row).forEach((y) => {
+          const cell = row[y];
+
+          if (cell > 0) {
+            const cellElement = document.querySelector(
+              `[data-cell="${x}-${y}"]`
+            );
+            cellElement.classList.add("orp_occupied");
+
+            const color_id = gamedatas.coloredBoard[x][y];
+            const color = this.orp.info.colors[color_id];
+
+            cellElement.style.setProperty("--pieceColor", color.code);
+            cellElement.style.setProperty("--pieceColorDarker", color.darkerCode);
+
+            if (cell < 5) {
+              cellElement.classList.add("orp_half");
+              cellElement.classList.add(`orp_half-${cell}`);
+            }
+          }
+        });
+      });
+    },
 
     ///////////////////////////////////////////////////
     //// Player's actions

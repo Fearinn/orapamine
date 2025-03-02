@@ -22,6 +22,9 @@ namespace Bga\Games\OrapaMine;
 
 require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 
+const BOARD = "board";
+const COLORED_BOARD = "coloredBoard";
+
 class Game extends \Table
 {
     private array $GEMSTONES;
@@ -70,15 +73,18 @@ class Game extends \Table
 
     public function setupBoard(): void
     {
-        $board = array_fill(1, 10, array_fill(1, 8, 0)); // Cria um tabuleiro 10x8 vazio
+        $board = array_fill(1, 10, array_fill(1, 8, 0));
+        $coloredBoard = array_fill(1, 10, array_fill(1, 8, 0));
 
         $gemstones = $this->GEMSTONES;
+        shuffle($gemstones);
 
-        if (!$this->placeGemstones($board, $gemstones)) {
-            throw new \BgaVisibleSystemException(clienttranslate("Unable to set-up board"));
+        if (!$this->placeGemstones($board, $coloredBoard, $gemstones)) {
+            $this->setupBoard();
         };
 
-        $this->globals->set("board", $board);
+        $this->globals->set(BOARD, $board);
+        $this->globals->set(COLORED_BOARD, $coloredBoard);
     }
 
     public function isValidPlacement(array $board, array $gemstone, int $base_x, int $base_y, int $rotation): bool
@@ -88,6 +94,7 @@ class Game extends \Table
         }
 
         $format = (array) $gemstone["format"][$rotation];
+        $gemstoneHidden = false;
 
         $piece_y = $base_y;
         foreach ($format as $row) {
@@ -97,16 +104,46 @@ class Game extends \Table
                 if (!isset($board[$piece_x][$piece_y]) || $board[$piece_x][$piece_y] > 0) {
                     return false;
                 }
+
+                $board[$piece_x][$piece_y] = $piece;
+
+                for ($x = $piece_x; $x <= 10; $x++) {
+                    if ($board[$x][$piece_y] === 0) {
+                        $gemstoneHidden = false;
+                    }
+                }
+
+                for ($x = $piece_x; $x >= 1; $x--) {
+                    if ($board[$x][$piece_y] === 0) {
+                        $gemstoneHidden = false;
+                    }
+                }
+
+                for ($y = $piece_y; $y <= 8; $y++) {
+                    if ($board[$piece_x][$y] === 0) {
+                        $gemstoneHidden = false;
+                    }
+                }
+
+                for ($y = $piece_y; $y >= 1; $y--) {
+                    if ($board[$piece_x][$y] === 0) {
+                        $gemstoneHidden = false;
+                    }
+                }
+
                 $piece_x++;
             }
-
             $piece_y++;
+        }
+
+        if ($gemstoneHidden) {
+            return false;
         }
 
         return true;
     }
 
-    public function arrangePieces(array &$board, array $gemstone, int $base_x, int $base_y, int $rotation): void
+    public function arrangePieces(array &$board, array &$coloredBoard, array $gemstone, int $base_x, int $base_y, int $rotation): void
     {
         $format = (array) $gemstone["format"][$rotation];
 
@@ -116,6 +153,7 @@ class Game extends \Table
 
             foreach ($row as $piece) {
                 $board[$piece_x][$piece_y] = $piece;
+                $coloredBoard[$piece_x][$piece_y] = (int) $gemstone["color"];
                 $piece_x++;
             }
 
@@ -123,7 +161,7 @@ class Game extends \Table
         }
     }
 
-    public function removePieces(array &$board, array $gemstone, int $base_x, int $base_y, int $rotation): void
+    public function removePieces(array &$board, array &$coloredBoard, array $gemstone, int $base_x, int $base_y, int $rotation): void
     {
         $format = (array) $gemstone["format"][$rotation];
 
@@ -133,6 +171,7 @@ class Game extends \Table
 
             foreach ($row as $piece) {
                 $board[$piece_x][$piece_y] = 0;
+                $coloredBoard[$piece_x][$piece_y] = 0;
                 $piece_x++;
             }
 
@@ -140,9 +179,9 @@ class Game extends \Table
         }
     }
 
-    public function placeGemstones(array &$board, array &$gemstones, int $gemstone_id = 1): bool
+    public function placeGemstones(array &$board, array &$coloredBoard, array &$gemstones, int $index = 0): bool
     {
-        if ($gemstone_id > 5) {
+        if ($index > 4) {
             return true;
         }
 
@@ -151,19 +190,19 @@ class Game extends \Table
         $rotations = [0, 90, 180, 270];
         shuffle($rotations);
 
-        $gemstone = (array) $gemstones[$gemstone_id];
+        $gemstone = (array) $gemstones[$index];
 
         foreach ($rotations as $rotation) {
             for ($x = $random_x; $x <= $random_x && $x <= 10; $x++) {
                 for ($y = $random_y; $y <= $random_y && $y <= 8; $y++) {
                     if ($this->isValidPlacement($board, $gemstone, $x, $y, $rotation)) {
-                        $this->arrangePieces($board, $gemstone, $x, $y, $rotation);
+                        $this->arrangePieces($board, $coloredBoard, $gemstone, $x, $y, $rotation);
 
-                        if ($this->placeGemstones($board, $gemstones, $gemstone_id + 1)) {
+                        if ($this->placeGemstones($board, $coloredBoard, $gemstones, $index + 1)) {
                             return true;
                         }
 
-                        $this->removePieces($board, $gemstone, $x, $y, $rotation);
+                        $this->removePieces($board, $coloredBoard, $gemstone, $x, $y, $rotation);
                     }
                 }
             }
@@ -222,7 +261,9 @@ class Game extends \Table
         $result["players"] = $this->getCollectionFromDb(
             "SELECT `player_id` `id`, `player_score` `score` FROM `player`"
         );
-        $result["board"] = $this->globals->get("board");
+        $result["board"] = $this->globals->get(BOARD);
+        $result["COLORS"] = $this->COLORS;
+        $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 
         return $result;
     }

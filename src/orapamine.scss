@@ -30,8 +30,9 @@
 :root {
   --boardHeight: 640px;
   --boardWidth: calc(1.25 * var(--boardHeight));
+  --boardColor: rgba(200, 200, 200, 0.8);
 
-  background: #2d336b;
+  // background: #2d336b;
 }
 
 .orp_gameArea {
@@ -106,47 +107,58 @@
 }
 
 .orp_cell {
-  background-color: rgba(211, 211, 211);
-  border: 1px solid white;
-  opacity: 0.4;
+  background-color: var(--boardColor);
+  border: 1.5px solid whitesmoke;
   aspect-ratio: 1;
   width: 100%;
   z-index: -1;
 
   &.orp_occupied {
-    background-color: green;
+    background-color: var(--pieceColor);
 
-    &.orp_half {
+    &:not(.orp_half) {
+      border-color: var(--pieceColorDarker);
+    }
+
+    &.orp_half {      
       &-1 {
         background: linear-gradient(
           to bottom right,
-          rgba(211, 211, 211) 50%,
-          green 50%
+          var(--boardColor) 50%,
+          var(--pieceColor) 50%
         );
+        border-bottom-color: var(--pieceColorDarker);
+        border-right-color: var(--pieceColorDarker);
       }
 
       &-2 {
         background: linear-gradient(
           to bottom left,
-          rgba(211, 211, 211) 50%,
-          green 50%
+          var(--boardColor) 50%,
+          var(--pieceColor) 50%
         );
+        border-bottom-color: var(--pieceColorDarker);
+        border-left-color: var(--pieceColorDarker);
       }
 
       &-3 {
         background: linear-gradient(
           to top right,
-          rgba(211, 211, 211) 50%,
-          green 50%
+          var(--boardColor) 50%,
+          var(--pieceColor) 50%
         );
+        border-top-color: var(--pieceColorDarker);
+        border-right-color: var(--pieceColorDarker);
       }
 
       &-4 {
         background: linear-gradient(
           to top left,
-          rgba(211, 211, 211) 50%,
-          green 50%
+          var(--boardColor) 50%,
+          var(--pieceColor) 50%
         );
+        border-top-color: var(--pieceColorDarker);
+        border-left-color: var(--pieceColorDarker);
       }
     }
   }

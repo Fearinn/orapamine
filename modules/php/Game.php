@@ -80,7 +80,7 @@ class Game extends \Table
         shuffle($gemstones);
 
         if (!$this->placeGemstones($board, $coloredBoard, $gemstones)) {
-            $this->setupBoard();
+            throw new \BgaUserException(clienttranslate("Failed to set-up board. Please try again"));
         };
 
         $this->globals->set(BOARD, $board);
@@ -94,7 +94,7 @@ class Game extends \Table
         }
 
         $format = (array) $gemstone["format"][$rotation];
-        $gemstoneHidden = false;
+        $gemstoneHidden = true;
 
         $piece_y = $base_y;
         foreach ($format as $row) {
@@ -185,16 +185,28 @@ class Game extends \Table
             return true;
         }
 
-        $random_x = random_int(1, 10);
-        $random_y = random_int(1, 8);
+        $possible_x = [];
+        $possible_y = [];
+        foreach ($board as $x => $row) {
+            foreach ($row as $y => $piece) {
+                if ($piece === 0) {
+                    $possible_x[] = $x;
+                    $possible_y[] = $y;
+                }
+            }
+        }
+
+        shuffle($possible_x);
+        shuffle($possible_y);
+
         $rotations = [0, 90, 180, 270];
         shuffle($rotations);
 
         $gemstone = (array) $gemstones[$index];
 
         foreach ($rotations as $rotation) {
-            for ($x = $random_x; $x <= $random_x && $x <= 10; $x++) {
-                for ($y = $random_y; $y <= $random_y && $y <= 8; $y++) {
+            foreach ($possible_x as $x) {
+                foreach ($possible_y as $y) {
                     if ($this->isValidPlacement($board, $gemstone, $x, $y, $rotation)) {
                         $this->arrangePieces($board, $coloredBoard, $gemstone, $x, $y, $rotation);
 
@@ -357,5 +369,10 @@ class Game extends \Table
         }
 
         throw new \feException("Zombie mode not supported at this game state: \"{$state_name}\".");
+    }
+
+    public function debug_setupBoard()
+    {
+        $this->setupBoard();
     }
 }

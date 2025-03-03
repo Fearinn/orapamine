@@ -111,7 +111,19 @@
   border: 1.5px solid whitesmoke;
   aspect-ratio: 1;
   width: 100%;
-  z-index: -1;
+
+  &-selectable {
+    cursor: pointer;
+  }
+
+  &-selected {
+    background-color: rgba(0, 255, 0, 0.5) !important;
+  }
+
+  &-unselectable {
+    cursor: not-allowed;
+    opacity: 0.75;
+  }
 
   &.orp_occupied {
     background-color: var(--pieceColor);

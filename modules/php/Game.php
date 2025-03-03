@@ -26,6 +26,7 @@ require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 
 const BOARD = "board";
 const COLORED_BOARD = "coloredBoard";
+const SELECTABLE_LOCATIONS = "selectableLocations";
 
 class Game extends \Table
 {
@@ -69,6 +70,12 @@ class Game extends \Table
     }
 
     /** Game state arguments and actions*/
+    public function arg_playerTurn(): array
+    {
+        return [
+            "selectableLocations" => array_values($this->globals->get(SELECTABLE_LOCATIONS)),
+        ];
+    }
 
     public function st_betweenPlayers(): void
     {
@@ -95,6 +102,7 @@ class Game extends \Table
         $player_id = (int) $this->getActivePlayerId();
 
         $coloredBoard = $this->globals->get(COLORED_BOARD);
+        $this->updateSelectableLocations("{$guess_x}-{$guess_y}");
 
         $this->notify->all(
             "askLocation",
@@ -110,10 +118,13 @@ class Game extends \Table
         $color_id = $coloredBoard[$guess_x][$guess_y];
 
         if ($color_id > 0) {
-            $message = clienttranslate('There is a ${color_label} gem!');
-            $color_label = (string) $this->COLORS[$color_id]["label"];
+            $message = clienttranslate('There is a ${color_label} gem at position (${x}, ${y})');
+            $color = (array) $this->COLORS[$color_id];
+            $color_code = (string) $color["code"];
+            $color_label = (string) $color["label"];
         } else {
-            $message = clienttranslate('Nothing is there!');
+            $message = clienttranslate('There is nothing at position (${x}, ${y})');
+            $color_code = null;
             $color_label = null;
         }
 
@@ -121,9 +132,12 @@ class Game extends \Table
             "answerLocation",
             $message,
             [
-                "colorCode" => (string) $this->COLORS[$color_id]["code"],
+                "colorCode" => $color_code,
+                "preserve" => ["colorCode"],
+                "x" => $guess_x,
+                "y" => $guess_y,
                 "color_label" => $color_label,
-                "i18n" => ["color"],
+                "i18n" => ["color_label"],
             ]
         );
 
@@ -284,6 +298,27 @@ class Game extends \Table
         return false;
     }
 
+    public function updateSelectableLocations(string $removedLocation, ?bool $setup = false): void
+    {
+        $selectableLocations = [];
+        if ($setup) {
+            $board = $this->globals->get(BOARD);
+            foreach ($board as $x => $row) {
+                foreach ($row as $y => $cell) {
+                    $selectableLocations["{$x}-{$y}"] = "{$x}-{$y}";
+                }
+            }
+
+            $this->globals->set(SELECTABLE_LOCATIONS, $selectableLocations);
+            return;
+        }
+
+        $selectableLocations = $this->globals->get(SELECTABLE_LOCATIONS);
+        unset($selectableLocations[$removedLocation]);
+
+        $this->globals->set(SELECTABLE_LOCATIONS, $selectableLocations);
+    }
+
     /**
      * Migrate database.
      *
@@ -334,9 +369,7 @@ class Game extends \Table
         $result["players"] = $this->getCollectionFromDb(
             "SELECT `player_id` `id`, `player_score` `score` FROM `player`"
         );
-        $result["board"] = $this->globals->get(BOARD);
         $result["COLORS"] = $this->COLORS;
-        $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 
         return $result;
     }
@@ -387,6 +420,7 @@ class Game extends \Table
         $this->reloadPlayersBasicInfos();
 
         $this->setupBoard();
+        $this->updateSelectableLocations("", true);
 
         // Activate first player once everything has been initialized and ready.
         $this->activeNextPlayer();

@@ -35,6 +35,8 @@ define([
         },
       };
 
+      this.setupBoard();
+
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
       console.log("Ending game setup");
@@ -93,15 +95,17 @@ define([
     ///////////////////////////////////////////////////
     //// Utility methods
 
-    setupBoard: function (gamedatas) {
+    setupBoard: function () {
       document.querySelectorAll("[data-cell]").forEach((cellElement) => {
         const x = cellElement.dataset.cell.split("-")[0];
         const y = cellElement.dataset.cell.split("-")[1];
         cellElement.style.gridArea = `${y}/${x}`;
       });
+    },
 
-      Object.keys(gamedatas.board).forEach((x) => {
-        const row = gamedatas.board[x];
+    revealBoard: function ({ board, coloredBoard }) {
+      Object.keys(board).forEach((x) => {
+        const row = board[x];
         Object.keys(row).forEach((y) => {
           const cell = row[y];
 
@@ -111,7 +115,7 @@ define([
             );
             cellElement.classList.add("orp_occupied");
 
-            const color_id = gamedatas.coloredBoard[x][y];
+            const color_id = coloredBoard[x][y];
             const color = this.orp.info.colors[color_id];
 
             cellElement.style.setProperty("--pieceColor", color.code);
@@ -200,6 +204,7 @@ define([
           if (args.color_label && args.colorCode) {
             const backgroundColor =
               args.color_label === "white" ? "black" : "white";
+
             args.color_label = `<span style="font-weight: bold; color: ${
               args.colorCode
             }; background-color: ${backgroundColor}">${_(

@@ -61,10 +61,10 @@
   left: 3.75%;
 }
 .orp_axis.orp_axis-x[data-position=top] {
-  top: 3%;
+  top: 0;
 }
 .orp_axis.orp_axis-x[data-position=bottom] {
-  bottom: 3%;
+  bottom: 0;
 }
 .orp_axis.orp_axis-y {
   grid-template-rows: repeat(8, calc(var(--boardHeight) / 8));

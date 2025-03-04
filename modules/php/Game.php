@@ -123,7 +123,7 @@ class Game extends \Table
 
         $this->notify->all(
             "askLocation",
-            clienttranslate('${player_name} asks what is located at position ${x}${y}'),
+            clienttranslate('${player_name} asks: position ${x}${y}'),
             [
                 "player_id" => $player_id,
                 "player_name" => $this->getPlayerNameById($player_id),
@@ -135,12 +135,12 @@ class Game extends \Table
         $color_id = $coloredBoard[$guess_x][$guess_y];
 
         if ($color_id > 0) {
-            $message = clienttranslate('There is a ${color_label} gem at position ${x}${y}');
+            $message = clienttranslate('position ${x}${y}: ${color_label} gem!');
             $color = (array) $this->COLORS[$color_id];
             $color_code = (string) $color["code"];
             $color_label = (string) $color["label"];
         } else {
-            $message = clienttranslate('There is nothing at position ${x}${y}');
+            $message = clienttranslate('Position ${x}${y}: nothing is there!');
             $color_code = null;
             $color_label = null;
         }

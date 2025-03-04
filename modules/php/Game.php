@@ -99,8 +99,21 @@ class Game extends \Table
 
     /** Player actions */
 
-    public function actAskLocation(#[IntParam(min: 1, max: 10)] int $guess_x, #[IntParam(min: 1, max: 8)] int $guess_y): void
+    public function checkVersion(?int $CLIENT_VERSION): void
     {
+        if ($CLIENT_VERSION === null) {
+            return;
+        }
+
+        $SERVER_VERSION = (int) $this->gamestate->table_globals[300];
+        if ($CLIENT_VERSION !== $SERVER_VERSION) {
+            throw new \BgaUserException(clienttranslate("A new version of this game is now available. Please reload the page (F5)."));
+        }
+    }
+
+    public function actAskLocation(?int $CLIENT_VERSION, #[IntParam(min: 1, max: 10)] int $guess_x, #[IntParam(min: 1, max: 8)] int $guess_y): void
+    {
+        $this->checkVersion($CLIENT_VERSION);
         $player_id = (int) $this->getActivePlayerId();
 
         $coloredBoard = $this->globals->get(COLORED_BOARD);
@@ -368,11 +381,10 @@ class Game extends \Table
         // WARNING: We must only return information visible by the current player.
         $current_player_id = (int) $this->getCurrentPlayerId();
 
-        // Get information about players.
-        // NOTE: you can retrieve some extra field you added for "player" table in `dbmodel.sql` if you need it.
         $result["players"] = $this->getCollectionFromDb(
             "SELECT `player_id` `id`, `player_score` `score` FROM `player`"
         );
+        $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $result["COLORS"] = $this->COLORS;
 
         return $result;
@@ -477,6 +489,6 @@ class Game extends \Table
 
     public function debug_askLocation(int $x = 1, int $y = 8): void
     {
-        $this->actAskLocation($x, $y);
+        $this->actAskLocation(null, $x, $y);
     }
 }

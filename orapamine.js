@@ -179,6 +179,7 @@ define([
     //// Player's actions
 
     performAction: function (action, args, options) {
+      args.CLIENT_VERSION = this.gamedatas.GAME_VERSION;
       this.bgaPerformAction(action, args, options);
     },
 

@@ -205,11 +205,19 @@ define([
             const backgroundColor =
               args.color_label === "white" ? "black" : "white";
 
-            args.color_label = `<span style="font-weight: bold; color: ${
+            args.color_label = `<span class="orp_logHighlight" style="color: ${
               args.colorCode
             }; background-color: ${backgroundColor}">${_(
               args.color_label
             )}</span>`;
+          }
+
+          if (args.x) {
+            args.x = `<span class="orp_logHighlight">${args.x}</span>`;
+          }
+
+          if (args.y) {
+            args.y = `<span class="orp_logHighlight">${args.y}</span>`;
           }
         }
       } catch (e) {

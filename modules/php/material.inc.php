@@ -278,43 +278,43 @@ $this->ORIGINS = [
         "location" => [1, 8],
     ],
     "I" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [1, 8],
     ],
     "J" => [
-        "direction" => 2,
-        "location" => [2, 8],
+        "direction" => 4,
+        "location" => [4, 8],
     ],
     "K" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [3, 8],
     ],
     "L" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [4, 8],
     ],
     "M" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [5, 8],
     ],
     "N" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [6, 8],
     ],
     "O" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [7, 8],
     ],
     "P" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [8, 8],
     ],
     "Q" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [9, 8],
     ],
     "R" => [
-        "direction" => 2,
+        "direction" => 4,
         "location" => [10, 8],
     ],
     1 => [
@@ -358,35 +358,35 @@ $this->ORIGINS = [
         "location" => [10, 1],
     ],
     11 => [
-        "direction" => 4,
+        "direction" => 2,
         "location" => [1, 10],
     ],
     12 => [
-        "direction" => 4,
+        "direction" => 2,
         "location" => [2, 10],
     ],
     13 => [
-        "direction" => 4,
+        "direction" => 2,
         "location" => [3, 10],
     ],
     14 => [
-        "direction" => 4,
-        "location" => [4, 10],
+        "direction" => 2,
+        "location" => [2, 10],
     ],
     15 => [
-        "direction" => 4,
+        "direction" => 2,
         "location" => [5, 10],
     ],
     16 => [
-        "direction" => 4,
+        "direction" => 2,
         "location" => [6, 10],
     ],
     17 => [
-        "direction" => 4,
+        "direction" => 2,
         "location" => [7, 10],
     ],
     18 => [
-        "direction" => 4,
+        "direction" => 2,
         "location" => [8, 10],
     ],
 ];

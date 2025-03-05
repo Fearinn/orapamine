@@ -159,7 +159,7 @@ class Game extends \Table
         $player_id = (int) $this->getActivePlayerId();
 
         [$origin_x, $origin_y] = $this->ORIGINS[$origin]["location"];
-        $direction = $this->ORIGINS[$origin]["direction"];
+        $direction_id = $this->ORIGINS[$origin]["direction"];
 
         $this->notify->all(
             "sendWave",
@@ -172,7 +172,7 @@ class Game extends \Table
         );
 
         $visitedColors = [];
-        $this->sendWave($origin_x, $origin_y, $direction, $visitedColors, $origin);
+        $this->sendWave($origin_x, $origin_y, $direction_id, $visitedColors, $origin);
 
         $this->gamestate->nextState("nextPlayer");
     }
@@ -352,7 +352,7 @@ class Game extends \Table
         $this->globals->set(SELECTABLE_LOCATIONS, $selectableLocations);
     }
 
-    public function sendWave(int $origin_x, int $origin_y, int $direction, array &$visitedColors, ?string $origin = null): void
+    public function sendWave(int $origin_x, int $origin_y, int $direction_id, array &$visitedColors, ?string $origin = null): void
     {
         $board = $this->globals->get(BOARD);
         $coloredBoard = $this->globals->get(COLORED_BOARD);
@@ -361,12 +361,12 @@ class Game extends \Table
             $piece = $board[$origin_x][$origin_y];
 
             if ($piece > 0) {
-                $newDirection = $this->DIRECTIONS[$direction]["conversions"][$piece];
+                $newDirection = $this->DIRECTIONS[$direction_id]["conversions"][$piece];
 
-                if (($direction === 1 && $newDirection === 2) ||
-                    ($direction === 2 && $newDirection === 1) ||
-                    ($direction === 3 && $newDirection === 4) ||
-                    ($direction === 4 && $newDirection === 3)
+                if (($direction_id === 1 && $newDirection === 2) ||
+                    ($direction_id === 2 && $newDirection === 1) ||
+                    ($direction_id === 3 && $newDirection === 4) ||
+                    ($direction_id === 4 && $newDirection === 3)
                 ) {
                     $color_id = $coloredBoard[$origin_x][$origin_y];
                     $visitedColors = [$color_id];
@@ -376,12 +376,12 @@ class Game extends \Table
             }
         }
 
-        if ($direction === 1) {
+        if ($direction_id === 1) {
             for ($x = $origin_x; $x <= 10; $x++) {
                 $piece = $board[$x][$origin_y];
 
                 if ($piece > 0) {
-                    $this->changeWaveDirection($x, $origin_y, $direction, $visitedColors);
+                    $this->changeWaveDirection($x, $origin_y, $direction_id, $visitedColors);
                     return;
                 }
 
@@ -392,12 +392,12 @@ class Game extends \Table
             }
         }
 
-        if ($direction === 2) {
+        if ($direction_id === 2) {
             for ($x = $origin_x; $x >= 1; $x--) {
                 $piece = $board[$x][$origin_y];
 
                 if ($piece > 0) {
-                    $this->changeWaveDirection($x, $origin_y, $direction, $visitedColors);
+                    $this->changeWaveDirection($x, $origin_y, $direction_id, $visitedColors);
                     return;
                 }
 
@@ -408,12 +408,12 @@ class Game extends \Table
             }
         }
 
-        if ($direction === 3) {
+        if ($direction_id === 3) {
             for ($y = $origin_y; $y >= 1; $y++) {
                 $piece = $board[$origin_x][$y];
 
                 if ($piece > 0) {
-                    $this->changeWaveDirection($origin_x, $y, $direction, $visitedColors);
+                    $this->changeWaveDirection($origin_x, $y, $direction_id, $visitedColors);
                     return;
                 }
 
@@ -424,12 +424,14 @@ class Game extends \Table
             }
         }
 
-        if ($direction === 4) {
+        if ($direction_id === 4) {
             for ($y = $origin_y; $y >= 1; $y--) {
                 $piece = $board[$origin_x][$y];
 
                 if ($piece > 0) {
-                    $this->changeWaveDirection($origin_x, $y, $direction, $visitedColors);
+                    // throw new \BgaUserException(json_encode($y));
+
+                    $this->changeWaveDirection($origin_x, $y, $direction_id, $visitedColors);
                     return;
                 }
 
@@ -443,7 +445,7 @@ class Game extends \Table
         throw new \BgaVisibleSystemException("Couldn't send wave");
     }
 
-    public function changeWaveDirection(int $x, int $y, int $direction, array &$visitedColors): void
+    public function changeWaveDirection(int $x, int $y, int $direction_id, array &$visitedColors): void
     {
         $board = (array) $this->globals->get(BOARD);
         $coloredBoard = (array) $this->globals->get(COLORED_BOARD);
@@ -451,16 +453,14 @@ class Game extends \Table
         $color_id = $coloredBoard[$x][$y];
         $visitedColors[] = $color_id;
 
-        $direction_info = (array) $this->DIRECTIONS[$direction];
-        $shift = (array) $direction_info["shift"];
+        $piece = (int) $board[$x][$y];
+        $nextDirection_id = (int) $this->DIRECTIONS[$direction_id]["conversions"][$piece];
+        $shift = (array) $this->DIRECTIONS[$nextDirection_id]["shift"];
 
         $next_x = $x + (int) $shift["x"];
         $next_y = $y + (int) $shift["y"];
 
-        $piece = (int) $board[$x][$y];
-        $next_direction = (int) $direction_info["conversions"][$piece];
-
-        $this->sendWave($next_x, $next_y, $next_direction, $visitedColors);
+        $this->sendWave($next_x, $next_y, $nextDirection_id, $visitedColors);
     }
 
     public function returnWave(int $x, int $y, array $visitedColors): void
@@ -477,7 +477,9 @@ class Game extends \Table
             }
         }
 
-        if (count($visitedColors) === 1) {
+        if (!$visitedColors) {
+            $result["color"] = 0;
+        } else if (count($visitedColors) === 1) {
             $color_id = reset($visitedColors);
             $result["color"] = $color_id;
         } else {
@@ -490,7 +492,7 @@ class Game extends \Table
                 }
 
                 $isEqual = true;
-                for ($i = 0; $i <= count($components); $i++) {
+                for ($i = 0; $i <= count($visitedColors) - 1; $i++) {
                     if ($components[$i] !== $visitedColors[$i]) {
                         $isEqual = false;
                         break;
@@ -502,6 +504,10 @@ class Game extends \Table
                     break;
                 }
             }
+        }
+
+        if (count($result) !== 2) {
+            throw new \BgaVisibleSystemException("Failed to determine exit or color");
         }
 
         $exit_id = (string) $result["exit"];

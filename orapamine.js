@@ -224,6 +224,14 @@ define([
           if (args.y) {
             args.y = `<span class="orp_logHighlight">${args.y}</span>`;
           }
+
+          if (args.origin) {
+            args.origin = `<span class="orp_logHighlight">${args.origin}</span>`;
+          }
+
+          if (args.exit) {
+            args.exit = `<span class="orp_logHighlight">${args.exit}</span>`;
+          }
         }
       } catch (e) {
         console.error(log, args, "Exception thrown", e.stack);

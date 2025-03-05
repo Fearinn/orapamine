@@ -123,6 +123,12 @@ $this->GEMSTONES = [
 ];
 
 $this->COLORS = [
+    0 => [
+        "name" => "transparent",
+        "label" => clienttranslate("transparent"),
+        "components" => [],
+        "code" => "#000000",
+    ],
     1 => [
         "name" => "mediumblue",
         "label" => clienttranslate("blue"),
@@ -359,35 +365,35 @@ $this->ORIGINS = [
     ],
     11 => [
         "direction" => 2,
-        "location" => [1, 10],
+        "location" => [10, 1],
     ],
     12 => [
         "direction" => 2,
-        "location" => [2, 10],
+        "location" => [10, 2],
     ],
     13 => [
         "direction" => 2,
-        "location" => [3, 10],
+        "location" => [10, 3],
     ],
     14 => [
         "direction" => 2,
-        "location" => [2, 10],
+        "location" => [10, 4],
     ],
     15 => [
         "direction" => 2,
-        "location" => [5, 10],
+        "location" => [10, 5],
     ],
     16 => [
         "direction" => 2,
-        "location" => [6, 10],
+        "location" => [10, 6],
     ],
     17 => [
         "direction" => 2,
-        "location" => [7, 10],
+        "location" => [10, 7],
     ],
     18 => [
         "direction" => 2,
-        "location" => [8, 10],
+        "location" => [10, 8],
     ],
 ];
 
@@ -445,7 +451,7 @@ $this->DIRECTIONS = [
         ],
         "shift" => [
             "x" => 0,
-            "y" => 1,
+            "y" => -1,
         ],
     ],
 ];

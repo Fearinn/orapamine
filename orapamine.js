@@ -36,6 +36,10 @@ define([
       };
 
       this.setupBoard();
+      this.revealBoard({
+        board: gamedatas.board,
+        coloredBoard: gamedatas.coloredBoard,
+      });
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();

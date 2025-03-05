@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Bga\Games\OrapaMine;
 
 use Bga\GameFramework\Actions\Types\IntParam;
+use Bga\GameFramework\Actions\Types\StringParam;
 
 require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 
@@ -33,7 +34,7 @@ class Game extends \Table
     private array $GEMSTONES;
     private array $COLORS;
     private array $AXIS_LETTERS;
-    private array $AXIS_NUMBERS;
+    private array $ORIGINS;
 
     public function __construct()
     {
@@ -159,6 +160,43 @@ class Game extends \Table
         );
 
         $this->gamestate->nextState("nextPlayer");
+    }
+
+    public function actSendWave(?int $CLIENT_VERSION, #[StringParam(alphanum: true)] string $origin): void
+    {
+        $this->checkVersion($CLIENT_VERSION);
+        $player_id = (int) $this->getActivePlayerId();
+
+        [$origin_x, $origin_y] = $this->ORIGINS[$origin]["location"];
+        $direction = $this->ORIGINS[$origin]["direction"];
+
+        $this->notify->all(
+            "sendWave",
+            clienttranslate('${player_name} sends a wave from ${origin}'),
+            [
+                "player_id" => $player_id,
+                "player_name" => $this->getPlayerNameById($player_id),
+                "origin" => $origin,
+            ]
+        );
+
+        $response = $this->sendWave($origin_x, $origin_y, $direction, [], $origin);
+
+        $exit = (string) $response["exit"];
+        $color_id = (int) $response["color"];
+        $color = $this->COLORS[$color_id];
+
+        $this->notify->all(
+            "exitWave",
+            clienttranslate('A ${color_label} wave exits from ${exit}'),
+            [
+                "exit" => $exit,
+                "colorCode" => $color["code"],
+                "preserve" => ["colorCode"],
+                "color_label" => $color["label"],
+                "i18n" => ["color_label"],
+            ]
+        );
     }
 
     /** Utility methods */
@@ -336,6 +374,117 @@ class Game extends \Table
         $this->globals->set(SELECTABLE_LOCATIONS, $selectableLocations);
     }
 
+    public function sendWave(int $origin_x, int $origin_y, int $direction, array $colors, ?string $origin = null): array
+    {
+        $board = $this->globals->get(BOARD);
+        $coloredBoard = $this->globals->get(COLORED_BOARD);
+
+        if ($origin) {
+            $piece = $board[$origin_x][$origin_y];
+
+            if ($piece > 0) {
+                $newDirection = $this->DIRECTIONS[$direction]["conversions"][$piece];
+
+                $exit = $origin;
+                $color_id = $coloredBoard[$origin_x][$origin_y];
+
+                if (($direction === 1 && $newDirection === 2) ||
+                    ($direction === 2 && $newDirection === 1) ||
+                    ($direction === 3 && $newDirection === 4) ||
+                    ($direction === 4 && $newDirection === 3)
+                ) {
+                    return ["color" => $color_id, "exit" => $exit];
+                }
+            }
+        }
+
+        if ($direction === 1) {
+            for ($x = $origin_x; $x <= 10; $x++) {
+                $piece = $board[$x][$origin_y];
+
+                if ($piece > 0) {
+                    return $this->changeWaveDirection($x, $origin_y, $direction, $colors);
+                }
+
+                if ($x === 10) {
+                    $exit = 1;
+                    $color_id = 1;
+                    return ["color" => $color_id, "exit" => $exit];
+                }
+            }
+        }
+
+        if ($direction === 2) {
+            for ($x = $origin_x - 1; $x >= 1; $x--) {
+                $piece = $board[$x][$origin_y];
+
+                if ($piece > 0) {
+                    return $this->changeWaveDirection($x, $origin_y, $direction, $colors);
+                }
+
+                if ($x === 1) {
+                    $exit = 1;
+                    $color_id = 1;
+                    return ["color" => $color_id, "exit" => $exit];
+                }
+            }
+        }
+
+        if ($direction === 3) {
+            for ($y = $origin_y; $y >= 1; $y++) {
+                $piece = $board[$origin_x][$y];
+
+                if ($piece > 0) {
+                    return $this->changeWaveDirection($origin_x, $y, $direction, $colors);
+                }
+
+                if ($y === 8) {
+                    $exit = 1;
+                    $color_id = 1;
+                    return ["color" => $color_id, "exit" => $exit];
+                }
+            }
+        }
+
+        if ($direction === 4) {
+            for ($y = $origin_y; $y >= 1; $y--) {
+                $piece = $board[$origin_x][$y];
+
+                if ($piece > 0) {
+                    return $this->changeWaveDirection($origin_x, $y, $direction, $colors);
+                }
+
+                if ($y === 1) {
+                    $exit = $y;
+                    $color_id = 1;
+                    return ["color" => $color_id, "exit" => $exit];
+                }
+            }
+        }
+
+        throw new \BgaVisibleSystemException("Couldn't send wave");
+    }
+
+    public function changeWaveDirection(int $x, int $y, int $direction, array $colors): array
+    {
+        $board = (array) $this->globals->get(BOARD);
+        $coloredBoard = (array) $this->globals->get(COLORED_BOARD);
+
+        $color_id = $coloredBoard[$x][$y];
+        $colors[] = $color_id;
+
+        $direction_info = (array) $this->DIRECTIONS[$direction];
+        $shift = (array) $direction_info["shift"];
+
+        $next_x = $x + (int) $shift["x"];
+        $next_y = $y + (int) $shift["y"];
+
+        $piece = $board[$x][$y];
+        $next_direction = (int) $direction_info["conversions"][$piece];
+
+        return $this->sendWave($next_x, $next_y, $next_direction, $colors);
+    }
+
     /**
      * Migrate database.
      *
@@ -386,6 +535,8 @@ class Game extends \Table
         );
         $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $result["COLORS"] = $this->COLORS;
+        $result["board"] = $this->globals->get(BOARD);
+        $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 
         return $result;
     }
@@ -490,5 +641,10 @@ class Game extends \Table
     public function debug_askLocation(int $x = 1, int $y = 8): void
     {
         $this->actAskLocation(null, $x, $y);
+    }
+
+    public function debug_sendWave(string $origin): void
+    {
+        $this->actSendWave(null, $origin);
     }
 }

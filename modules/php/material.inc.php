@@ -244,27 +244,208 @@ $this->AXIS_LETTERS = [
     ]
 ];
 
-$this->AXIS_NUMBERS = [
-    "x" => [
-        1 => 1,
-        2 => 2,
-        3 => 3,
-        4 => 4,
-        5 => 5,
-        6 => 6,
-        7 => 7,
-        8 => 8,
-        9 => 9,
-        10 => 10,
+$this->ORIGINS = [
+    "A" => [
+        "direction" => 1,
+        "location" => [1, 1],
     ],
-    "y" => [
-        1 => 11,
-        2 => 12,
-        3 => 13,
-        4 => 14,
-        5 => 15,
-        6 => 16,
-        7 => 17,
-        8 => 18,
-    ]
+    "B" => [
+        "direction" => 1,
+        "location" => [1, 2],
+    ],
+    "C" => [
+        "direction" => 1,
+        "location" => [1, 3],
+    ],
+    "D" => [
+        "direction" => 1,
+        "location" => [1, 4],
+    ],
+    "E" => [
+        "direction" => 1,
+        "location" => [1, 5],
+    ],
+    "F" => [
+        "direction" => 1,
+        "location" => [1, 6],
+    ],
+    "G" => [
+        "direction" => 1,
+        "location" => [1, 7],
+    ],
+    "H" => [
+        "direction" => 1,
+        "location" => [1, 8],
+    ],
+    "I" => [
+        "direction" => 2,
+        "location" => [1, 8],
+    ],
+    "J" => [
+        "direction" => 2,
+        "location" => [2, 8],
+    ],
+    "K" => [
+        "direction" => 2,
+        "location" => [3, 8],
+    ],
+    "L" => [
+        "direction" => 2,
+        "location" => [4, 8],
+    ],
+    "M" => [
+        "direction" => 2,
+        "location" => [5, 8],
+    ],
+    "N" => [
+        "direction" => 2,
+        "location" => [6, 8],
+    ],
+    "O" => [
+        "direction" => 2,
+        "location" => [7, 8],
+    ],
+    "P" => [
+        "direction" => 2,
+        "location" => [8, 8],
+    ],
+    "Q" => [
+        "direction" => 2,
+        "location" => [9, 8],
+    ],
+    "R" => [
+        "direction" => 2,
+        "location" => [10, 8],
+    ],
+    1 => [
+        "direction" => 3,
+        "location" => [1, 1],
+    ],
+    2 => [
+        "direction" => 3,
+        "location" => [2, 1],
+    ],
+    3 => [
+        "direction" => 3,
+        "location" => [3, 1],
+    ],
+    4 => [
+        "direction" => 3,
+        "location" => [4, 1],
+    ],
+    5 => [
+        "direction" => 3,
+        "location" => [5, 1],
+    ],
+    6 => [
+        "direction" => 3,
+        "location" => [6, 1],
+    ],
+    7 => [
+        "direction" => 3,
+        "location" => [7, 1],
+    ],
+    8 => [
+        "direction" => 3,
+        "location" => [8, 1],
+    ],
+    9 => [
+        "direction" => 3,
+        "location" => [9, 1],
+    ],
+    10 => [
+        "direction" => 3,
+        "location" => [10, 1],
+    ],
+    11 => [
+        "direction" => 4,
+        "location" => [1, 10],
+    ],
+    12 => [
+        "direction" => 4,
+        "location" => [2, 10],
+    ],
+    13 => [
+        "direction" => 4,
+        "location" => [3, 10],
+    ],
+    14 => [
+        "direction" => 4,
+        "location" => [4, 10],
+    ],
+    15 => [
+        "direction" => 4,
+        "location" => [5, 10],
+    ],
+    16 => [
+        "direction" => 4,
+        "location" => [6, 10],
+    ],
+    17 => [
+        "direction" => 4,
+        "location" => [7, 10],
+    ],
+    18 => [
+        "direction" => 4,
+        "location" => [8, 10],
+    ],
+];
+
+$this->DIRECTIONS = [
+    1 => [
+        "name" => "right",
+        "conversions" => [
+            1 => 4,
+            2 => 2,
+            3 => 3,
+            4 => 2,
+            5 => 2,
+        ],
+        "shift" => [
+            "x" => 1,
+            "y" => 0,
+        ],
+    ],
+    2 => [
+        "name" => "left",
+        "conversions" => [
+            1 => 1,
+            2 => 4,
+            3 => 4,
+            4 => 3,
+            5 => 1,
+        ],
+        "shift" => [
+            "x" => -1,
+            "y" => 0,
+        ],
+    ],
+    3 => [
+        "name" => "down",
+        "conversions" => [
+            1 => 2,
+            2 => 1,
+            3 => 4,
+            4 => 4,
+            5 => 4,
+        ],
+        "shift" => [
+            "x" => 0,
+            "y" => 1,
+        ],
+    ],
+    4 => [
+        "name" => "up",
+        "conversions" => [
+            1 => 3,
+            2 => 3,
+            3 => 2,
+            4 => 1,
+            5 => 3,
+        ],
+        "shift" => [
+            "x" => 0,
+            "y" => 1,
+        ],
+    ],
 ];

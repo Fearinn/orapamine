@@ -253,146 +253,182 @@ $this->AXIS_LETTERS = [
 $this->ORIGINS = [
     "A" => [
         "direction" => 1,
+        "exitDirection" => 2,
         "location" => [1, 1],
     ],
     "B" => [
         "direction" => 1,
+        "exitDirection" => 2,
         "location" => [1, 2],
     ],
     "C" => [
         "direction" => 1,
+        "exitDirection" => 2,
         "location" => [1, 3],
     ],
     "D" => [
         "direction" => 1,
+        "exitDirection" => 2,
         "location" => [1, 4],
     ],
     "E" => [
         "direction" => 1,
+        "exitDirection" => 2,
         "location" => [1, 5],
     ],
     "F" => [
         "direction" => 1,
+        "exitDirection" => 2,
         "location" => [1, 6],
     ],
     "G" => [
         "direction" => 1,
+        "exitDirection" => 2,
         "location" => [1, 7],
     ],
     "H" => [
         "direction" => 1,
+        "exitDirection" => 2,
         "location" => [1, 8],
     ],
     "I" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [1, 8],
     ],
     "J" => [
         "direction" => 4,
-        "location" => [4, 8],
+        "exitDirection" => 3,
+        "location" => [2, 8],
     ],
     "K" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [3, 8],
     ],
     "L" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [4, 8],
     ],
     "M" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [5, 8],
     ],
     "N" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [6, 8],
     ],
     "O" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [7, 8],
     ],
     "P" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [8, 8],
     ],
     "Q" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [9, 8],
     ],
     "R" => [
         "direction" => 4,
+        "exitDirection" => 3,
         "location" => [10, 8],
     ],
     1 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [1, 1],
     ],
     2 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [2, 1],
     ],
     3 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [3, 1],
     ],
     4 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [4, 1],
     ],
     5 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [5, 1],
     ],
     6 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [6, 1],
     ],
     7 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [7, 1],
     ],
     8 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [8, 1],
     ],
     9 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [9, 1],
     ],
     10 => [
         "direction" => 3,
+        "exitDirection" => 4,
         "location" => [10, 1],
     ],
     11 => [
         "direction" => 2,
+        "exitDirection" => 1,
         "location" => [10, 1],
     ],
     12 => [
         "direction" => 2,
+        "exitDirection" => 1,
         "location" => [10, 2],
     ],
     13 => [
         "direction" => 2,
+        "exitDirection" => 1,
         "location" => [10, 3],
     ],
     14 => [
         "direction" => 2,
+        "exitDirection" => 1,
         "location" => [10, 4],
     ],
     15 => [
         "direction" => 2,
+        "exitDirection" => 1,
         "location" => [10, 5],
     ],
     16 => [
         "direction" => 2,
+        "exitDirection" => 1,
         "location" => [10, 6],
     ],
     17 => [
         "direction" => 2,
+        "exitDirection" => 1,
         "location" => [10, 7],
     ],
     18 => [
         "direction" => 2,
+        "exitDirection" => 1,
         "location" => [10, 8],
     ],
 ];
@@ -417,7 +453,7 @@ $this->DIRECTIONS = [
         "conversions" => [
             1 => 1,
             2 => 4,
-            3 => 4,
+            3 => 1,
             4 => 3,
             5 => 1,
         ],

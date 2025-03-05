@@ -127,7 +127,7 @@ class Game extends \Table
         $color_id = $coloredBoard[$guess_x][$guess_y];
 
         if ($color_id > 0) {
-            $message = clienttranslate('position ${x}${y}: ${color_label} gem!');
+            $message = clienttranslate('Position ${x}${y}: ${color_label} gem');
             $color = (array) $this->COLORS[$color_id];
             $color_code = (string) $color["code"];
             $color_label = (string) $color["label"];
@@ -357,6 +357,14 @@ class Game extends \Table
         $board = $this->globals->get(BOARD);
         $coloredBoard = $this->globals->get(COLORED_BOARD);
 
+        $this->dump("direction", $direction_id);
+        $this->dump("location", $origin_x.$origin_y);
+
+        if ($origin_x < 1 || $origin_y > 10 || $origin_y < 1 || $origin_y > 8) {
+            $this->returnWave($origin_x, $origin_y, $direction_id, $visitedColors);
+            return;
+        }
+
         if ($origin) {
             $piece = $board[$origin_x][$origin_y];
 
@@ -370,7 +378,7 @@ class Game extends \Table
                 ) {
                     $color_id = $coloredBoard[$origin_x][$origin_y];
                     $visitedColors = [$color_id];
-                    $this->returnWave($origin_x, $origin_y, $visitedColors);
+                    $this->returnWave($origin_x, $origin_y, $direction_id, $visitedColors);
                     return;
                 }
             }
@@ -386,7 +394,7 @@ class Game extends \Table
                 }
 
                 if ($x === 10) {
-                    $this->returnWave($x, $origin_y, $visitedColors);
+                    $this->returnWave($x, $origin_y, $direction_id, $visitedColors);
                     return;
                 }
             }
@@ -402,7 +410,7 @@ class Game extends \Table
                 }
 
                 if ($x === 1) {
-                    $this->returnWave($x, $origin_y, $visitedColors);
+                    $this->returnWave($x, $origin_y, $direction_id, $visitedColors);
                     return;
                 }
             }
@@ -418,7 +426,7 @@ class Game extends \Table
                 }
 
                 if ($y === 8) {
-                    $this->returnWave($origin_x, $y, $visitedColors);
+                    $this->returnWave($origin_x, $y,  $direction_id, $visitedColors);
                     return;
                 }
             }
@@ -429,14 +437,12 @@ class Game extends \Table
                 $piece = $board[$origin_x][$y];
 
                 if ($piece > 0) {
-                    // throw new \BgaUserException(json_encode($y));
-
                     $this->changeWaveDirection($origin_x, $y, $direction_id, $visitedColors);
                     return;
                 }
 
                 if ($y === 1) {
-                    $this->returnWave($origin_x, $y, $visitedColors);
+                    $this->returnWave($origin_x, $y, $direction_id, $visitedColors);
                     return;
                 }
             }
@@ -463,15 +469,32 @@ class Game extends \Table
         $this->sendWave($next_x, $next_y, $nextDirection_id, $visitedColors);
     }
 
-    public function returnWave(int $x, int $y, array $visitedColors): void
+    public function returnWave(int $x, int $y, int $direction_id, array $visitedColors): void
     {
         $result = [];
         $visitedColors = array_unique($visitedColors);
 
+        if ($x < 1) {
+            $x = 1;
+        }
+
+        if ($x > 10) {
+            $x = 10;
+        }
+
+        if ($y < 1) {
+            $y = 1;
+        }
+
+        if ($y > 10) {
+            $y = 10;
+        }
+
         foreach ($this->ORIGINS as $exit_id => $exit) {
             [$exit_x, $exit_y] = (array) $exit["location"];
+            $exitDirection_id = $exit["exitDirection"];
 
-            if ($exit_x === $x && $exit_y === $y) {
+            if ($exit_x === $x && $exit_y === $y && $exitDirection_id === $direction_id) {
                 $result["exit"] = $exit_id;
                 break;
             }

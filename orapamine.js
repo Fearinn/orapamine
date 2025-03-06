@@ -160,11 +160,13 @@ define([
     },
 
     setSelectableLocations: function (selectableLocations, unset = false) {
+      const selectedClass = "orp_cell-selected";
+
       document.querySelectorAll("[data-cell]").forEach((cellElement) => {
         if (unset) {
           cellElement.classList.remove("orp_cell-selectable");
           cellElement.classList.remove("orp_cell-unselectable");
-          cellElement.classList.remove("orp_cell-selected");
+          cellElement.classList.remove(selectedClass);
           cellElement.onclick = undefined;
           return;
         }
@@ -175,14 +177,19 @@ define([
           cellElement.onclick = () => {
             document.getElementById("orp_confirmBtn")?.remove();
 
+            if (cellElement.classList.contains(selectedClass)) {
+              cellElement.classList.remove(selectedClass);
+              return;
+            }
+
             document
-              .querySelectorAll(".orp_cell-selected")
+              .querySelectorAll(`.${selectedClass}`)
               .forEach((siblingElement) => {
                 if (siblingElement.dataset.location !== location) {
-                  siblingElement.classList.remove("orp_cell-selected");
+                  siblingElement.classList.remove(selectedClass);
                 }
               });
-            cellElement.classList.toggle("orp_cell-selected");
+            cellElement.classList.add(selectedClass);
 
             this.statusBar.addActionButton(
               _("Confirm selection"),
@@ -202,11 +209,13 @@ define([
     },
 
     setSelectableOrigins: function (selectableOrigins, unset = false) {
+      const selectedClass = "orp_origin-selected";
+
       document.querySelectorAll("[data-origin]").forEach((originElement) => {
         if (unset) {
           originElement.classList.remove("orp_origin-selectable");
           originElement.classList.remove("orp_origin-unselectable");
-          originElement.classList.remove("orp_origin-selected");
+          originElement.classList.remove(selectedClass);
           originElement.onclick = undefined;
           return;
         }
@@ -222,14 +231,19 @@ define([
           originElement.onclick = () => {
             document.getElementById("orp_confirmBtn")?.remove();
 
+            if (originElement.classList.contains(selectedClass)) {
+              originElement.classList.remove(selectedClass);
+              return;
+            }
+
             document
               .querySelectorAll(".orp_origin-selected")
               .forEach((siblingElement) => {
                 if (siblingElement.dataset.origin !== origin) {
-                  siblingElement.classList.remove("orp_origin-selected");
+                  siblingElement.classList.remove(selectedClass);
                 }
               });
-            originElement.classList.toggle("orp_origin-selected");
+            originElement.classList.toggle(selectedClass);
 
             this.statusBar.addActionButton(
               _("Confirm selection"),

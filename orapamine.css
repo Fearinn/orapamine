@@ -80,7 +80,8 @@
 .orp_axis.orp_axis-y[data-position=right] {
   right: 0;
 }
-.orp_axis .orp_axisValue {
+
+.orp_origin {
   font-family: "Cookie Run", sans-serif;
   color: white;
   font-weight: bold;
@@ -88,6 +89,17 @@
   text-align: center;
   -webkit-text-stroke: 1.5px navy;
   text-shadow: navy 1px 0 10px;
+  padding: 0 1px;
+}
+.orp_origin-selectable {
+  cursor: pointer;
+}
+.orp_origin-unselectable {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.orp_origin-selected {
+  border: 2px solid green;
 }
 
 .orp_board {

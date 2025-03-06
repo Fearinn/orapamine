@@ -28,6 +28,8 @@ require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 const BOARD = "board";
 const COLORED_BOARD = "coloredBoard";
 const SELECTABLE_LOCATIONS = "selectableLocations";
+const SELECTABLE_ORIGINS = "selectableOrigins";
+const ORIGIN = "origin";
 
 class Game extends \Table
 {
@@ -75,8 +77,12 @@ class Game extends \Table
     /** Game state arguments and actions*/
     public function arg_playerTurn(): array
     {
+        $selectableLocations = (array) $this->globals->get(SELECTABLE_LOCATIONS);
+        $selectableOrigins = (array) $this->globals->get(SELECTABLE_ORIGINS);
+
         return [
-            "selectableLocations" => array_values($this->globals->get(SELECTABLE_LOCATIONS)),
+            "selectableLocations" => array_values($selectableLocations),
+            "selectableOrigins" => array_keys($selectableOrigins),
         ];
     }
 
@@ -153,10 +159,52 @@ class Game extends \Table
         $this->gamestate->nextState("nextPlayer");
     }
 
-    public function actSendWave(?int $CLIENT_VERSION, #[StringParam(alphanum: true)] string $origin): void
+    public function actSendWave(?int $CLIENT_VERSION, #[StringParam(
+        enum: [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+        ]
+    )] string $origin): void
     {
         $this->checkVersion($CLIENT_VERSION);
+
         $player_id = (int) $this->getActivePlayerId();
+
+        $this->globals->set(ORIGIN, $origin);
 
         [$origin_x, $origin_y] = $this->ORIGINS[$origin]["location"];
         $direction_id = $this->ORIGINS[$origin]["direction"];
@@ -357,9 +405,6 @@ class Game extends \Table
         $board = $this->globals->get(BOARD);
         $coloredBoard = $this->globals->get(COLORED_BOARD);
 
-        $this->dump("direction", $direction_id);
-        $this->dump("location", $origin_x.$origin_y);
-
         if ($origin_x < 1 || $origin_y > 10 || $origin_y < 1 || $origin_y > 8) {
             $this->returnWave($origin_x, $origin_y, $direction_id, $visitedColors);
             return;
@@ -369,16 +414,16 @@ class Game extends \Table
             $piece = $board[$origin_x][$origin_y];
 
             if ($piece > 0) {
-                $newDirection = $this->DIRECTIONS[$direction_id]["conversions"][$piece];
+                $newDirection_id = $this->DIRECTIONS[$direction_id]["conversions"][$piece];
 
-                if (($direction_id === 1 && $newDirection === 2) ||
-                    ($direction_id === 2 && $newDirection === 1) ||
-                    ($direction_id === 3 && $newDirection === 4) ||
-                    ($direction_id === 4 && $newDirection === 3)
+                if (($direction_id === 1 && $newDirection_id === 2) ||
+                    ($direction_id === 2 && $newDirection_id === 1) ||
+                    ($direction_id === 3 && $newDirection_id === 4) ||
+                    ($direction_id === 4 && $newDirection_id === 3)
                 ) {
                     $color_id = $coloredBoard[$origin_x][$origin_y];
                     $visitedColors = [$color_id];
-                    $this->returnWave($origin_x, $origin_y, $direction_id, $visitedColors);
+                    $this->returnWave($origin_x, $origin_y, $newDirection_id, $visitedColors);
                     return;
                 }
             }
@@ -533,7 +578,11 @@ class Game extends \Table
             throw new \BgaVisibleSystemException("Failed to determine exit or color");
         }
 
-        $exit_id = (string) $result["exit"];
+        $origin = (string) $this->globals->get(ORIGIN);
+        $exit_id = (string) $result["exit"];      
+
+        $this->updateSelectableOrigins($origin, $exit_id);
+
         $color_id = (int) $result["color"];
         $color = $this->COLORS[$color_id];
 
@@ -548,6 +597,27 @@ class Game extends \Table
                 "i18n" => ["color_label"],
             ]
         );
+    }
+
+    public function updateSelectableOrigins(string $removedOrigin, string $removedExit, ?bool $setup = false): void
+    {
+        $selectableOrigins = [];
+        if ($setup) {
+            $selectableOrigins = $this->ORIGINS;
+            $this->globals->set(SELECTABLE_ORIGINS, $selectableOrigins);
+            return;
+        }
+
+        $selectableOrigins = $this->globals->get(SELECTABLE_ORIGINS);
+
+        if (!array_key_exists($removedOrigin, $selectableOrigins)) {
+            throw new \BgaVisibleSystemException("The wave had already been sent from this origin");
+        }
+
+        unset($selectableOrigins[$removedOrigin]);
+        unset($selectableOrigins[$removedExit]);
+
+        $this->globals->set(SELECTABLE_ORIGINS, $selectableOrigins);
     }
 
     /**
@@ -653,6 +723,7 @@ class Game extends \Table
 
         $this->setupBoard();
         $this->updateSelectableLocations("", true);
+        $this->updateSelectableOrigins("", "", true);
 
         // Activate first player once everything has been initialized and ready.
         $this->activeNextPlayer();
@@ -701,6 +772,8 @@ class Game extends \Table
     public function debug_setupBoard(): void
     {
         $this->setupBoard();
+        $this->updateSelectableLocations("", true);
+        $this->updateSelectableOrigins("", "", true);
     }
 
     public function debug_askLocation(int $x = 1, int $y = 8): void

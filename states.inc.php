@@ -36,7 +36,7 @@ $machinestates = [
         "args" => "arg_playerTurn",
         "possibleactions" => [
             "actAskLocation",
-            "actAskWave",
+            "actSendWave",
             "actSubmitAnswer", 
         ],
         "transitions" => ["nextPlayer" => 3],

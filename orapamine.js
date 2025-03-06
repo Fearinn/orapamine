@@ -55,6 +55,7 @@ define([
       if (this.isCurrentPlayerActive()) {
         if (stateName === "playerTurn") {
           const selectableLocations = args.args.selectableLocations;
+          const selectableOrigins = args.args.selectableOrigins;
 
           this.statusBar.addActionButton(
             _("Ask about specific position"),
@@ -64,6 +65,12 @@ define([
               });
             }
           );
+
+          this.statusBar.addActionButton(_("Send ultrasound wave"), () => {
+            this.setClientState("client_sendWave", {
+              client_args: { selectableOrigins: selectableOrigins },
+            });
+          });
         }
 
         if (stateName === "client_askLocation") {
@@ -78,13 +85,32 @@ define([
           );
           this.setSelectableLocations(selectableLocations);
         }
+
+        if (stateName === "client_sendWave") {
+          const selectableOrigins = args.client_args.selectableOrigins;
+
+          this.statusBar.addActionButton(
+            _("Cancel"),
+            () => {
+              this.restoreServerGameState();
+            },
+            { color: "alert" }
+          );
+          this.setSelectableOrigins(selectableOrigins);
+        }
       }
     },
 
     onLeavingState: function (stateName) {
       console.log("Leaving state: " + stateName);
 
-      this.setSelectableLocations(null, true);
+      if (stateName === "client_askLocation") {
+        this.setSelectableLocations(null, true);
+      }
+
+      if (stateName === "client_sendWave") {
+        this.setSelectableOrigins(null, true);
+      }
     },
 
     onUpdateActionButtons: function (stateName, args) {
@@ -156,7 +182,7 @@ define([
             document
               .querySelectorAll(".orp_cell-selected")
               .forEach((siblingElement) => {
-                if (siblingElement.id !== cellElement.id) {
+                if (siblingElement.dataset.location !== location) {
                   siblingElement.classList.remove("orp_cell-selected");
                 }
               });
@@ -179,6 +205,53 @@ define([
       });
     },
 
+    setSelectableOrigins: function (selectableOrigins, unset = false) {
+      document.querySelectorAll("[data-origin]").forEach((originElement) => {
+        if (unset) {
+          originElement.classList.remove("orp_origin-selectable");
+          originElement.classList.remove("orp_origin-unselectable");
+          originElement.classList.remove("orp_origin-selected");
+          originElement.onclick = undefined;
+          return;
+        }
+
+        selectableOrigins = selectableOrigins.map((origin) => {
+          return String(origin);
+        });
+
+        const origin = originElement.dataset.origin;
+
+        if (selectableOrigins.includes(origin)) {
+          originElement.classList.add("orp_origin-selectable");
+          originElement.onclick = () => {
+            document.getElementById("orp_confirmBtn")?.remove();
+
+            document
+              .querySelectorAll(".orp_origin-selected")
+              .forEach((siblingElement) => {
+                if (siblingElement.dataset.origin !== origin) {
+                  siblingElement.classList.remove("orp_origin-selected");
+                }
+              });
+            originElement.classList.toggle("orp_origin-selected");
+
+            this.statusBar.addActionButton(
+              _("Confirm selection"),
+              () => {
+                this.actSendWave(origin);
+              },
+              {
+                id: "orp_confirmBtn",
+              }
+            );
+          };
+          return;
+        }
+
+        originElement.classList.add("orp_origin-unselectable");
+      });
+    },
+
     ///////////////////////////////////////////////////
     //// Player's actions
 
@@ -192,6 +265,10 @@ define([
       const guess_y = location.split("-")[1];
 
       this.performAction("actAskLocation", { guess_x, guess_y });
+    },
+
+    actSendWave: function (origin) {
+      this.performAction("actSendWave", { origin });
     },
 
     ///////////////////////////////////////////////////

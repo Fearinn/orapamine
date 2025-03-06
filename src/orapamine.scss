@@ -113,7 +113,10 @@
   }
 
   &-selected {
-    border: 2px solid green;
+    -webkit-text-stroke-color: black;
+    text-shadow: black 1px 0 10px;
+    transform: scale(1.2);
+    transition-duration: 0.5s;
   }
 }
 
@@ -136,7 +139,10 @@
   }
 
   &-selected {
-    background-color: rgba(0, 255, 0, 0.5) !important;
+    border: 2px solid black;
+    box-shadow: 0 0 8px 0 black;
+    transform: scale(1.1);
+    transition-duration: 0.5s;
   }
 
   &-unselectable {

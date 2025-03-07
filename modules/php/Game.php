@@ -82,7 +82,7 @@ class Game extends \Table
 
         return [
             "selectableLocations" => array_values($selectableLocations),
-            "selectableOrigins" => array_keys($selectableOrigins),
+            "selectableOrigins" => array_values($selectableOrigins),
         ];
     }
 
@@ -579,7 +579,7 @@ class Game extends \Table
         }
 
         $origin = (string) $this->globals->get(ORIGIN);
-        $exit_id = (string) $result["exit"];      
+        $exit_id = (string) $result["exit"];
 
         $this->updateSelectableOrigins($origin, $exit_id);
 
@@ -601,21 +601,23 @@ class Game extends \Table
 
     public function updateSelectableOrigins(string $removedOrigin, string $removedExit, ?bool $setup = false): void
     {
-        $selectableOrigins = [];
         if ($setup) {
-            $selectableOrigins = $this->ORIGINS;
+            $selectableOrigins = array_keys($this->ORIGINS);
             $this->globals->set(SELECTABLE_ORIGINS, $selectableOrigins);
             return;
         }
 
         $selectableOrigins = $this->globals->get(SELECTABLE_ORIGINS);
 
-        if (!array_key_exists($removedOrigin, $selectableOrigins)) {
+        $k_removedOrigin = array_search($removedOrigin, $selectableOrigins);
+        $k_removedExit = array_search($removedExit, $selectableOrigins);
+
+        if ($k_removedOrigin === false || $k_removedExit === false) {
             throw new \BgaVisibleSystemException("The wave had already been sent from this origin");
         }
 
-        unset($selectableOrigins[$removedOrigin]);
-        unset($selectableOrigins[$removedExit]);
+        unset($selectableOrigins[$k_removedOrigin]);
+        unset($selectableOrigins[$k_removedExit]);
 
         $this->globals->set(SELECTABLE_ORIGINS, $selectableOrigins);
     }

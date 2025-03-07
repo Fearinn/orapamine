@@ -146,21 +146,21 @@
     box-shadow: 0 0 8px 0 black;
     transform: scale(1.1);
     transition-duration: 0.5s;
+    z-index: 1;
   }
 
   &-unselectable {
     cursor: not-allowed;
-    opacity: 0.75;
   }
 
-  &.orp_occupied {
+  &-occupied {
     background-color: var(--pieceColor);
 
-    &:not(.orp_half) {
+    &:not(.orp_cell-half) {
       border-color: var(--pieceColorDarker);
     }
 
-    &.orp_half {
+    &-half {
       &-1 {
         background: linear-gradient(
           to bottom right,
@@ -202,4 +202,11 @@
       }
     }
   }
+}
+
+.orp_innerCell {
+  aspect-ratio: 1;
+  border-radius: 100%;
+  opacity: 0.75;
+  width: 100%;
 }

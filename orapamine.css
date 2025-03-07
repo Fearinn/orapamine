@@ -130,34 +130,41 @@
   box-shadow: 0 0 8px 0 black;
   transform: scale(1.1);
   transition-duration: 0.5s;
+  z-index: 1;
 }
 .orp_cell-unselectable {
   cursor: not-allowed;
-  opacity: 0.75;
 }
-.orp_cell.orp_occupied {
+.orp_cell-occupied {
   background-color: var(--pieceColor);
 }
-.orp_cell.orp_occupied:not(.orp_half) {
+.orp_cell-occupied:not(.orp_cell-half) {
   border-color: var(--pieceColorDarker);
 }
-.orp_cell.orp_occupied.orp_half-1 {
+.orp_cell-occupied-half-1 {
   background: linear-gradient(to bottom right, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-bottom-color: var(--pieceColorDarker);
   border-right-color: var(--pieceColorDarker);
 }
-.orp_cell.orp_occupied.orp_half-2 {
+.orp_cell-occupied-half-2 {
   background: linear-gradient(to bottom left, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-bottom-color: var(--pieceColorDarker);
   border-left-color: var(--pieceColorDarker);
 }
-.orp_cell.orp_occupied.orp_half-3 {
+.orp_cell-occupied-half-3 {
   background: linear-gradient(to top right, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-top-color: var(--pieceColorDarker);
   border-right-color: var(--pieceColorDarker);
 }
-.orp_cell.orp_occupied.orp_half-4 {
+.orp_cell-occupied-half-4 {
   background: linear-gradient(to top left, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-top-color: var(--pieceColorDarker);
   border-left-color: var(--pieceColorDarker);
+}
+
+.orp_innerCell {
+  aspect-ratio: 1;
+  border-radius: 100%;
+  opacity: 0.75;
+  width: 100%;
 }

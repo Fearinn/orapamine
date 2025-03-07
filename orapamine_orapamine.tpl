@@ -12,57 +12,61 @@
 <div id="orp_gameArea" class="orp_gameArea">
   <div id="orp_boardContainer" class="orp_boardContainer">
     <div id="orp_letterAxis-y" class="orp_axis orp_axis-y" data-position="left">
-      <div class="orp_origin" data-origin="A">A</div>
-      <div class="orp_origin" data-origin="B">B</div>
-      <div class="orp_origin" data-origin="C">C</div>
-      <div class="orp_origin" data-origin="D">D</div>
-      <div class="orp_origin" data-origin="E">E</div>
-      <div class="orp_origin" data-origin="F">F</div>
-      <div class="orp_origin" data-origin="G">G</div>
-      <div class="orp_origin" data-origin="H">H</div>
+      <div id="orp_origin-A" class="orp_origin" data-origin="A">A</div>
+      <div id="orp_origin-B" class="orp_origin" data-origin="B">B</div>
+      <div id="orp_origin-C" class="orp_origin" data-origin="C">C</div>
+      <div id="orp_origin-D" class="orp_origin" data-origin="D">D</div>
+      <div id="orp_origin-E" class="orp_origin" data-origin="E">E</div>
+      <div id="orp_origin-F" class="orp_origin" data-origin="F">F</div>
+      <div id="orp_origin-G" class="orp_origin" data-origin="G">G</div>
+      <div id="orp_origin-H" class="orp_origin" data-origin="H">H</div>
     </div>
+
     <div
       id="orp_letterAxis-x"
       class="orp_axis orp_axis-x"
       data-position="bottom"
     >
-      <div class="orp_origin" data-origin="I">I</div>
-      <div class="orp_origin" data-origin="J">J</div>
-      <div class="orp_origin" data-origin="K">K</div>
-      <div class="orp_origin" data-origin="L">L</div>
-      <div class="orp_origin" data-origin="M">M</div>
-      <div class="orp_origin" data-origin="N">N</div>
-      <div class="orp_origin" data-origin="O">O</div>
-      <div class="orp_origin" data-origin="P">P</div>
-      <div class="orp_origin" data-origin="Q">Q</div>
-      <div class="orp_origin" data-origin="R">R</div>
+      <div id="orp_origin-I" class="orp_origin" data-origin="I">I</div>
+      <div id="orp_origin-J" class="orp_origin" data-origin="J">J</div>
+      <div id="orp_origin-K" class="orp_origin" data-origin="K">K</div>
+      <div id="orp_origin-L" class="orp_origin" data-origin="L">L</div>
+      <div id="orp_origin-M" class="orp_origin" data-origin="M">M</div>
+      <div id="orp_origin-N" class="orp_origin" data-origin="N">N</div>
+      <div id="orp_origin-O" class="orp_origin" data-origin="O">O</div>
+      <div id="orp_origin-P" class="orp_origin" data-origin="P">P</div>
+      <div id="orp_origin-Q" class="orp_origin" data-origin="Q">Q</div>
+      <div id="orp_origin-R" class="orp_origin" data-origin="R">R</div>
     </div>
+
     <div id="orp_numberAxis-x" class="orp_axis orp_axis-x" data-position="top">
-      <div class="orp_origin" data-origin="1">1</div>
-      <div class="orp_origin" data-origin="2">2</div>
-      <div class="orp_origin" data-origin="3">3</div>
-      <div class="orp_origin" data-origin="4">4</div>
-      <div class="orp_origin" data-origin="5">5</div>
-      <div class="orp_origin" data-origin="6">6</div>
-      <div class="orp_origin" data-origin="7">7</div>
-      <div class="orp_origin" data-origin="8">8</div>
-      <div class="orp_origin" data-origin="9">9</div>
-      <div class="orp_origin" data-origin="10">10</div>
+      <div id="orp_origin-1" class="orp_origin" data-origin="1">1</div>
+      <div id="orp_origin-2" class="orp_origin" data-origin="2">2</div>
+      <div id="orp_origin-3" class="orp_origin" data-origin="3">3</div>
+      <div id="orp_origin-4" class="orp_origin" data-origin="4">4</div>
+      <div id="orp_origin-5" class="orp_origin" data-origin="5">5</div>
+      <div id="orp_origin-6" class="orp_origin" data-origin="6">6</div>
+      <div id="orp_origin-7" class="orp_origin" data-origin="7">7</div>
+      <div id="orp_origin-8" class="orp_origin" data-origin="8">8</div>
+      <div id="orp_origin-9" class="orp_origin" data-origin="9">9</div>
+      <div id="orp_origin-10" class="orp_origin" data-origin="10">10</div>
     </div>
+
     <div
       id="orp_numberAxis-y"
       class="orp_axis orp_axis-y"
       data-position="right"
     >
-      <div class="orp_origin" data-origin="11">11</div>
-      <div class="orp_origin" data-origin="12">12</div>
-      <div class="orp_origin" data-origin="13">13</div>
-      <div class="orp_origin" data-origin="14">14</div>
-      <div class="orp_origin" data-origin="15">15</div>
-      <div class="orp_origin" data-origin="16">16</div>
-      <div class="orp_origin" data-origin="17">17</div>
-      <div class="orp_origin" data-origin="18">18</div>
+      <div id="orp_origin-11" class="orp_origin" data-origin="11">11</div>
+      <div id="orp_origin-12" class="orp_origin" data-origin="12">12</div>
+      <div id="orp_origin-13" class="orp_origin" data-origin="13">13</div>
+      <div id="orp_origin-14" class="orp_origin" data-origin="14">14</div>
+      <div id="orp_origin-15" class="orp_origin" data-origin="15">15</div>
+      <div id="orp_origin-16" class="orp_origin" data-origin="16">16</div>
+      <div id="orp_origin-17" class="orp_origin" data-origin="17">17</div>
+      <div id="orp_origin-18" class="orp_origin" data-origin="18">18</div>
     </div>
+
     <div id="orp_board" class="orp_board">
       <div id="orp_cell-1-1" data-cell="1-1" class="orp_cell"></div>
       <div id="orp_cell-1-2" data-cell="1-2" class="orp_cell"></div>

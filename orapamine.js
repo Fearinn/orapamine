@@ -143,7 +143,7 @@ define([
             const cellElement = document.querySelector(
               `[data-cell="${x}-${y}"]`
             );
-            cellElement.classList.add("orp_occupied");
+            cellElement.classList.add("orp_cell-occupied");
 
             const color_id = coloredBoard[x][y];
             const color = this.orp.info.colors[color_id];
@@ -155,8 +155,8 @@ define([
             );
 
             if (cell < 5) {
-              cellElement.classList.add("orp_half");
-              cellElement.classList.add(`orp_half-${cell}`);
+              cellElement.classList.add("orp_cell-half");
+              cellElement.classList.add(`orp_cell-half-${cell}`);
             }
           }
         });
@@ -293,30 +293,39 @@ define([
       this.bgaSetupPromiseNotifications();
     },
 
-    notif_returnWave: function (args) {
-      const color = args.color;
-      const origin = args.origin;
-      const exit = args.exit;
+    notif_answerLocation: function (args) {
+      let color = args.color;
+      const { x, y } = args;
 
-      console.log(document.querySelector(`[data-origin="${origin}"]`).style);
-
-      document.querySelector(
-        `[data-origin="${origin}"]`
-      ).style.textShadow = `${color.code} 0 0 10px`;
-
-      document.querySelector(
-        `[data-origin="${origin}"]`
-      ).style.backgroundColor = color.code;
-
-      if (exit && origin !== exit) {
-        document.querySelector(
-          `[data-origin="${exit}"]`
-        ).style.backgroundColor = color.code;
+      if (!color) {
+        color = this.orp.info.colors[0];
       }
 
-      document.querySelector(
-        `[data-origin="${exit}"]`
-      ).style.textShadow = `${color.code} 0 0 10px`;
+      const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
+
+      const innerCellElement = document.createElement("div");
+      innerCellElement.id = `orp_innerCell-${x}-${y}`;
+      innerCellElement.style.backgroundColor = color.code;
+      innerCellElement.classList.add("orp_innerCell");
+
+      cellElement.appendChild(innerCellElement);
+      this.addTooltip(innerCellElement.id, _(color.label), "");
+    },
+
+    notif_returnWave: function (args) {
+      const { color, origin, exit } = args;
+
+      const originElement = document.querySelector(`[data-origin="${origin}"]`);
+      originElement.style.backgroundColor = color.code;
+      originElement.style.textShadow = "none";
+      this.addTooltip(originElement.id, _(color.label), "");
+
+      if (exit && origin !== exit) {
+        const exitElement = document.querySelector(`[data-origin="${exit}"]`);
+        exitElement.style.backgroundColor = color.code;
+        exitElement.style.textShadow = "none";
+        this.addTooltip(exitElement.id, _(color.label), "");
+      }
     },
 
     format_string_recursive(log, args) {
@@ -325,17 +334,14 @@ define([
           args.processed = true;
 
           if (args.color_label && args.color) {
-            const backgroundColor =
-              args.color.contrast === "light" ? "black" : "white";
+            const color = args.color.contrast === "light" ? "black" : "white";
 
-            args.color_label = `<span class="orp_logHighlight" style="color: ${
+            args.color_label = `<span class="orp_logHighlight" style="color: ${color}; background-color: ${
               args.color.code
-            }; background-color: ${backgroundColor}; padding: 0 1px;">${_(
-              args.color_label
-            )}</span>`;
+            }; padding: 0 4px;">${_(args.color_label)}</span>`;
           }
 
-          highlighted = ["x", "y", "log_origin", "log_exit"];
+          highlighted = ["log_x", "log_y", "log_origin", "log_exit"];
           highlighted.forEach((key) => {
             args[key] = `<span class="orp_logHighlight">${args[key]}</span>`;
           });

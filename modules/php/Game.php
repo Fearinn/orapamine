@@ -121,23 +121,23 @@ class Game extends \Table
 
         $this->notify->all(
             "askLocation",
-            clienttranslate('${player_name}: what is at position ${x}${y}?'),
+            clienttranslate('${player_name}: what is at position ${log_x}${log_y}?'),
             [
                 "player_id" => $player_id,
                 "player_name" => $this->getPlayerNameById($player_id),
-                "x" => $guess_x,
-                "y" => $letter_y,
+                "log_x" => $guess_x,
+                "log_y" => $letter_y,
             ]
         );
 
         $color_id = $coloredBoard[$guess_x][$guess_y];
 
         if ($color_id > 0) {
-            $message = clienttranslate('Position ${x}${y}: ${color_label} gem');
+            $message = clienttranslate('Position ${log_x}${log_y}: ${color_label} gem');
             $color = (array) $this->COLORS[$color_id];
             $color_label = (string) $color["label"];
         } else {
-            $message = clienttranslate('Position ${x}${y}: nothing is there!');
+            $message = clienttranslate('Position ${log_x}${log_y}: nothing is there!');
             $color = null;
             $color_label = null;
         }
@@ -147,9 +147,11 @@ class Game extends \Table
             $message,
             [
                 "color" => $color,
-                "preserve" => ["colorCode"],
                 "x" => $guess_x,
-                "y" => $letter_y,
+                "y" => $guess_y,
+                "preserve" => ["colorCode"],
+                "log_x" => $guess_x,
+                "log_y" => $letter_y,
                 "color_label" => $color_label,
                 "i18n" => ["color_label"],
             ]
@@ -210,11 +212,11 @@ class Game extends \Table
 
         $this->notify->all(
             "sendWave",
-            clienttranslate('${player_name} sends a wave from ${origin}'),
+            clienttranslate('${player_name} sends a wave from ${log_origin}'),
             [
                 "player_id" => $player_id,
                 "player_name" => $this->getPlayerNameById($player_id),
-                "origin" => $origin,
+                "log_origin" => $origin,
             ]
         );
 

@@ -121,7 +121,7 @@ class Game extends \Table
 
         $this->notify->all(
             "askLocation",
-            clienttranslate('${player_name} asks: position ${x}${y}'),
+            clienttranslate('${player_name}: what is at position ${x}${y}?'),
             [
                 "player_id" => $player_id,
                 "player_name" => $this->getPlayerNameById($player_id),
@@ -404,7 +404,7 @@ class Game extends \Table
         $board = $this->globals->get(BOARD);
         $coloredBoard = $this->globals->get(COLORED_BOARD);
 
-        if ($origin_x < 1 || $origin_y > 10 || $origin_y < 1 || $origin_y > 8) {
+        if ($origin_x < 1 || $origin_x > 10 || $origin_y < 1 || $origin_y > 8) {
             $this->returnWave($origin_x, $origin_y, $direction_id, $visitedColors);
             return;
         }
@@ -515,7 +515,7 @@ class Game extends \Table
 
     public function returnWave(int $x, int $y, int $direction_id, array $visitedColors): void
     {
-        $result = [];
+        $response = [];
         $visitedColors = array_unique($visitedColors);
 
         if ($x < 1) {
@@ -539,16 +539,16 @@ class Game extends \Table
             $exitDirection_id = $exit["exitDirection"];
 
             if ($exit_x === $x && $exit_y === $y && $exitDirection_id === $direction_id) {
-                $result["exit"] = $exit_id;
+                $response["exit"] = $exit_id;
                 break;
             }
         }
 
         if (!$visitedColors) {
-            $result["color"] = 0;
+            $response["color"] = 0;
         } else if (count($visitedColors) === 1) {
             $color_id = reset($visitedColors);
-            $result["color"] = $color_id;
+            $response["color"] = $color_id;
         } else {
             sort($visitedColors);
             foreach ($this->COLORS as $color_id => $color) {
@@ -567,22 +567,22 @@ class Game extends \Table
                 }
 
                 if ($isEqual) {
-                    $result["color"] = $color_id;
+                    $response["color"] = $color_id;
                     break;
                 }
             }
         }
 
-        if (count($result) !== 2) {
+        if (count($response) !== 2) {
             throw new \BgaVisibleSystemException("Failed to determine exit or color");
         }
 
         $origin = (string) $this->globals->get(ORIGIN);
-        $exit_id = (string) $result["exit"];
+        $exit_id = (string) $response["exit"];
 
         $this->updateSelectableOrigins($origin, $exit_id);
 
-        $color_id = (int) $result["color"];
+        $color_id = (int) $response["color"];
         $color = (array) $this->COLORS[$color_id];
 
         $this->notify->all(
@@ -671,6 +671,8 @@ class Game extends \Table
         );
         $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $result["COLORS"] = $this->COLORS;
+        // $result["board"] = $this->globals->get(BOARD);
+        // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 
         return $result;
     }

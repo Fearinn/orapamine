@@ -44,6 +44,7 @@
 
 .orp_logHighlight {
   font-weight: bold;
+  text-transform: capitalize;
 }
 
 .orp_boardContainer {

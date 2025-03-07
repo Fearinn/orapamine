@@ -135,11 +135,10 @@ class Game extends \Table
         if ($color_id > 0) {
             $message = clienttranslate('Position ${x}${y}: ${color_label} gem');
             $color = (array) $this->COLORS[$color_id];
-            $color_code = (string) $color["code"];
             $color_label = (string) $color["label"];
         } else {
             $message = clienttranslate('Position ${x}${y}: nothing is there!');
-            $color_code = null;
+            $color = null;
             $color_label = null;
         }
 
@@ -147,7 +146,7 @@ class Game extends \Table
             "answerLocation",
             $message,
             [
-                "colorCode" => $color_code,
+                "color" => $color,
                 "preserve" => ["colorCode"],
                 "x" => $guess_x,
                 "y" => $letter_y,
@@ -584,16 +583,16 @@ class Game extends \Table
         $this->updateSelectableOrigins($origin, $exit_id);
 
         $color_id = (int) $result["color"];
-        $color = $this->COLORS[$color_id];
+        $color = (array) $this->COLORS[$color_id];
 
         $this->notify->all(
             "exitWave",
-            clienttranslate('A ${color_label} wave exits from ${exit}'),
+            clienttranslate('The wave exits from ${exit} as ${color_label}'),
             [
                 "exit" => $exit_id,
-                "colorCode" => $color["code"],
-                "preserve" => ["colorCode"],
-                "color_label" => $color["label"],
+                "color" => $color,
+                "preserve" => ["color"],
+                "color_label" => (string) $color["label"],
                 "i18n" => ["color_label"],
             ]
         );

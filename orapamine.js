@@ -293,32 +293,21 @@ define([
         if (log && args && !args.processed) {
           args.processed = true;
 
-          if (args.color_label && args.colorCode) {
+          if (args.color_label && args.color) {
             const backgroundColor =
-              args.color_label === "white" ? "black" : "white";
+              args.color.contrast === "light" ? "black" : "white";
 
             args.color_label = `<span class="orp_logHighlight" style="color: ${
-              args.colorCode
-            }; background-color: ${backgroundColor}">${_(
+              args.color.code
+            }; background-color: ${backgroundColor}; padding: 0 1px;">${_(
               args.color_label
             )}</span>`;
           }
 
-          if (args.x) {
-            args.x = `<span class="orp_logHighlight">${args.x}</span>`;
-          }
-
-          if (args.y) {
-            args.y = `<span class="orp_logHighlight">${args.y}</span>`;
-          }
-
-          if (args.origin) {
-            args.origin = `<span class="orp_logHighlight">${args.origin}</span>`;
-          }
-
-          if (args.exit) {
-            args.exit = `<span class="orp_logHighlight">${args.exit}</span>`;
-          }
+          highlighted = ["x", "y", "origin", "exit"];
+          highlighted.forEach((key) => {
+            args[key] = `<span class="orp_logHighlight">${args[key]}</span>`;
+          });
         }
       } catch (e) {
         console.error(log, args, "Exception thrown", e.stack);

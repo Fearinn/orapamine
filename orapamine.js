@@ -20,6 +20,7 @@ define([
   "dojo/_base/declare",
   "ebg/core/gamegui",
   "ebg/counter",
+  `${g_gamethemeurl}modules/js/bga-zoom.js`,
 ], function (dojo, declare) {
   return declare("bgagame.orapamine", ebg.core.gamegui, {
     constructor: function () {
@@ -33,7 +34,18 @@ define([
         info: {
           colors: gamedatas.COLORS,
         },
+        managers: {},
       };
+
+      this.orp.managers.zoom = new ZoomManager({
+        element: document.getElementById("orp_gameArea"),
+        localStorageZoomKey: "orp-zoom",
+        zoomControls: {
+          color: "white",
+        },
+        zoomLevels: [0.5, 0.75, 1, 1.25, 1.5],
+        smooth: true,
+      });
 
       this.setupBoard();
       // this.revealBoard({

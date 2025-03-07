@@ -586,12 +586,15 @@ class Game extends \Table
         $color = (array) $this->COLORS[$color_id];
 
         $this->notify->all(
-            "exitWave",
-            clienttranslate('The wave exits from ${exit} as ${color_label}'),
+            "returnWave",
+            clienttranslate('The wave exits from ${log_exit} as ${color_label}'),
             [
+                "origin" => $origin,
                 "exit" => $exit_id,
                 "color" => $color,
                 "preserve" => ["color"],
+                "log_origin" => $origin,
+                "log_exit" => $exit_id,
                 "color_label" => (string) $color["label"],
                 "i18n" => ["color_label"],
             ]

@@ -290,6 +290,33 @@ define([
 
     setupNotifications: function () {
       console.log("notifications subscriptions setup");
+      this.bgaSetupPromiseNotifications();
+    },
+
+    notif_returnWave: function (args) {
+      const color = args.color;
+      const origin = args.origin;
+      const exit = args.exit;
+
+      console.log(document.querySelector(`[data-origin="${origin}"]`).style);
+
+      document.querySelector(
+        `[data-origin="${origin}"]`
+      ).style.textShadow = `${color.code} 0 0 10px`;
+
+      document.querySelector(
+        `[data-origin="${origin}"]`
+      ).style.backgroundColor = color.code;
+
+      if (exit && origin !== exit) {
+        document.querySelector(
+          `[data-origin="${exit}"]`
+        ).style.backgroundColor = color.code;
+      }
+
+      document.querySelector(
+        `[data-origin="${exit}"]`
+      ).style.textShadow = `${color.code} 0 0 10px`;
     },
 
     format_string_recursive(log, args) {
@@ -308,7 +335,7 @@ define([
             )}</span>`;
           }
 
-          highlighted = ["x", "y", "origin", "exit"];
+          highlighted = ["x", "y", "log_origin", "log_exit"];
           highlighted.forEach((key) => {
             args[key] = `<span class="orp_logHighlight">${args[key]}</span>`;
           });

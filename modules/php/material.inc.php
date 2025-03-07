@@ -127,8 +127,8 @@ $this->COLORS = [
         "name" => "transparent",
         "label" => clienttranslate("transparent"),
         "components" => [],
-        "code" => "#000000",
-        "contrast" => "dark",
+        "code" => "#F5F5DC",
+        "contrast" => "light",
     ],
     1 => [
         "name" => "mediumblue",

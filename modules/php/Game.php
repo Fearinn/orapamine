@@ -30,6 +30,8 @@ const COLORED_BOARD = "coloredBoard";
 const SELECTABLE_LOCATIONS = "selectableLocations";
 const SELECTABLE_ORIGINS = "selectableOrigins";
 const ORIGIN = "origin";
+const REVEALED_LOCATIONS = "revealedLocations";
+const REVEALED_ORIGINS = "revealedOrigins";
 
 class Game extends \Table
 {
@@ -141,6 +143,10 @@ class Game extends \Table
             $color = null;
             $color_label = null;
         }
+
+        $revelaedLocations = $this->globals->get(REVEALED_LOCATIONS);
+        $revelaedLocations[] = ["x" => $guess_x, "y" => $guess_y, "color" => $color];
+        $this->globals->set(REVEALED_LOCATIONS, $revelaedLocations);
 
         $this->notify->all(
             "answerLocation",
@@ -587,6 +593,11 @@ class Game extends \Table
         $color_id = (int) $response["color"];
         $color = (array) $this->COLORS[$color_id];
 
+        $revealedOrigins = $this->globals->get(REVEALED_ORIGINS);
+        $revealedOrigins[] = ["origin" => $origin, "color" => $color];
+        $revealedOrigins[] = ["origin" => $exit_id, "color" => $color];
+        $revealedOrigins = $this->globals->set(REVEALED_ORIGINS, $revealedOrigins);
+
         $this->notify->all(
             "returnWave",
             clienttranslate('The wave exits from ${log_exit} as ${color_label}'),
@@ -676,6 +687,8 @@ class Game extends \Table
         );
         $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $result["COLORS"] = $this->COLORS;
+        $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
+        $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         // $result["board"] = $this->globals->get(BOARD);
         // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 

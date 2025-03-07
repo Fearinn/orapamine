@@ -41,6 +41,9 @@ define([
       //   coloredBoard: gamedatas.coloredBoard,
       // })
 
+      this.styleLocationFeedback(gamedatas.revealedLocations);
+      this.styleWaveFeedback(gamedatas.revealedOrigins);
+
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
       console.log("Ending game setup");
@@ -266,6 +269,45 @@ define([
       });
     },
 
+    styleLocationFeedback: function (revealedLocations) {
+      revealedLocations.forEach((location) => {
+        let color = location.color;
+        const { x, y } = location;
+
+        if (!color) {
+          color = this.orp.info.colors[0];
+        }
+
+        const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
+
+        const innerCellElement = document.createElement("div");
+        innerCellElement.id = `orp_innerCell-${x}-${y}`;
+        innerCellElement.style.backgroundColor = color.code;
+        innerCellElement.classList.add("orp_innerCell");
+
+        cellElement.appendChild(innerCellElement);
+        this.addTooltip(innerCellElement.id, _(color.label), "");
+      });
+    },
+
+    styleWaveFeedback: function (revealedOrigins) {
+      revealedOrigins.forEach((feedback) => {
+        const { origin, color } = feedback;
+
+        if (!origin) {
+          return;
+        }
+
+        const originElement = document.querySelector(
+          `[data-origin="${origin}"]`
+        );
+
+        originElement.style.backgroundColor = color.code;
+        originElement.style.textShadow = "none";
+        this.addTooltip(originElement.id, _(color.label), "");
+      });
+    },
+
     ///////////////////////////////////////////////////
     //// Player's actions
 
@@ -294,38 +336,17 @@ define([
     },
 
     notif_answerLocation: function (args) {
-      let color = args.color;
-      const { x, y } = args;
-
-      if (!color) {
-        color = this.orp.info.colors[0];
-      }
-
-      const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
-
-      const innerCellElement = document.createElement("div");
-      innerCellElement.id = `orp_innerCell-${x}-${y}`;
-      innerCellElement.style.backgroundColor = color.code;
-      innerCellElement.classList.add("orp_innerCell");
-
-      cellElement.appendChild(innerCellElement);
-      this.addTooltip(innerCellElement.id, _(color.label), "");
+      const { x, y, color } = args;
+      this.styleLocationFeedback([{ x, y, color }]);
     },
 
     notif_returnWave: function (args) {
       const { color, origin, exit } = args;
 
-      const originElement = document.querySelector(`[data-origin="${origin}"]`);
-      originElement.style.backgroundColor = color.code;
-      originElement.style.textShadow = "none";
-      this.addTooltip(originElement.id, _(color.label), "");
-
-      if (exit && origin !== exit) {
-        const exitElement = document.querySelector(`[data-origin="${exit}"]`);
-        exitElement.style.backgroundColor = color.code;
-        exitElement.style.textShadow = "none";
-        this.addTooltip(exitElement.id, _(color.label), "");
-      }
+      this.styleWaveFeedback([
+        { origin, color },
+        { origin: exit, color },
+      ]);
     },
 
     format_string_recursive(log, args) {

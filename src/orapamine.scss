@@ -32,6 +32,7 @@
   --boardHeight: 640px;
   --boardWidth: calc(1.25 * var(--boardHeight));
   --boardColor: rgba(200, 200, 200, 0.8);
+  --cellWidth: calc(var(--boardWidth) / 10);
 
   // background: #2d336b;
 }
@@ -41,6 +42,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 16px;
   width: 100%;
 
   * {
@@ -68,7 +71,7 @@
   justify-content: center;
 
   &.orp_axis-x {
-    grid-template-columns: repeat(10, calc(var(--boardWidth) / 10));
+    grid-template-columns: repeat(10, var(--cellWidth));
     left: 3.75%;
 
     &[data-position="top"] {
@@ -126,7 +129,7 @@
 
 .orp_board {
   display: grid;
-  grid-template-columns: repeat(10, calc(var(--boardWidth) / 10));
+  grid-template-columns: repeat(10, var(--cellWidth));
   grid-template-rows: repeat(8, calc(var(--boardHeight) / 8));
   align-items: center;
   justify-content: center;
@@ -154,60 +157,81 @@
     cursor: not-allowed;
   }
 
-  &-occupied {
-    background-color: var(--pieceColor);
-
-    &:not(.orp_cell-half) {
-      border-color: var(--pieceColorDarker);
-    }
-
-    &-half {
-      &-1 {
-        background: linear-gradient(
-          to bottom right,
-          var(--boardColor) 50%,
-          var(--pieceColor) 50%
-        );
-        border-bottom-color: var(--pieceColorDarker);
-        border-right-color: var(--pieceColorDarker);
-      }
-
-      &-2 {
-        background: linear-gradient(
-          to bottom left,
-          var(--boardColor) 50%,
-          var(--pieceColor) 50%
-        );
-        border-bottom-color: var(--pieceColorDarker);
-        border-left-color: var(--pieceColorDarker);
-      }
-
-      &-3 {
-        background: linear-gradient(
-          to top right,
-          var(--boardColor) 50%,
-          var(--pieceColor) 50%
-        );
-        border-top-color: var(--pieceColorDarker);
-        border-right-color: var(--pieceColorDarker);
-      }
-
-      &-4 {
-        background: linear-gradient(
-          to top left,
-          var(--boardColor) 50%,
-          var(--pieceColor) 50%
-        );
-        border-top-color: var(--pieceColorDarker);
-        border-left-color: var(--pieceColorDarker);
-      }
-    }
+  .orp_innerCell {
+    aspect-ratio: 1;
+    border-radius: 100%;
+    opacity: 0.75;
+    width: 100%;
   }
 }
 
-.orp_innerCell {
+.orp_solutionPieces {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: var(--boardWidth);
+}
+
+.orp_gemstone {
+  display: grid;
+}
+
+.orp_piece {
+  background-color: var(--pieceColor);
   aspect-ratio: 1;
-  border-radius: 100%;
-  opacity: 0.75;
-  width: 100%;
+  border: 1.5px solid whitesmoke;
+  width: var(--cellWidth);
+
+  &-empty {
+    background-color: var(--boardColor);
+  }
+
+  &:not(.orp_piece-half, .orp_piece-empty) {
+    border-color: var(--pieceColorDarker);
+  }
+
+  &-half {
+    &-1 {
+      background: linear-gradient(
+        to bottom right,
+        var(--boardColor) 50%,
+        var(--pieceColor) 50%
+      );
+      border-bottom-color: var(--pieceColorDarker);
+      border-right-color: var(--pieceColorDarker);
+    }
+
+    &-2 {
+      background: linear-gradient(
+        to bottom left,
+        var(--boardColor) 50%,
+        var(--pieceColor) 50%
+      );
+      border-bottom-color: var(--pieceColorDarker);
+      border-left-color: var(--pieceColorDarker);
+    }
+
+    &-3 {
+      background: linear-gradient(
+        to top right,
+        var(--boardColor) 50%,
+        var(--pieceColor) 50%
+      );
+      border-top-color: var(--pieceColorDarker);
+      border-right-color: var(--pieceColorDarker);
+    }
+
+    &-4 {
+      background: linear-gradient(
+        to top left,
+        var(--boardColor) 50%,
+        var(--pieceColor) 50%
+      );
+      border-top-color: var(--pieceColorDarker);
+      border-left-color: var(--pieceColorDarker);
+    }
+  }
 }

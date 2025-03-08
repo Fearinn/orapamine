@@ -3,7 +3,8 @@
 $this->GEMSTONES = [
     1 => [
         "color" => 1,
-        "size" => 4,
+        "columns" => 2,
+        "rows" => 2,
         "polygon" => "square",
         "format" => [
             0 => [
@@ -26,7 +27,8 @@ $this->GEMSTONES = [
     ],
     2 => [
         "color" => 2,
-        "size" => 3,
+        "columns" => 3,
+        "rows" => 1,
         "polygon" => "trapezium",
         "format" => [
             0 => [[1, 5, 4]],
@@ -45,7 +47,8 @@ $this->GEMSTONES = [
     ],
     3 => [
         "color" => 3,
-        "size" => 4,
+        "columns" => 2,
+        "rows" => 2,
         "polygon" => "triangle",
         "format" => [
             0 => [
@@ -68,7 +71,8 @@ $this->GEMSTONES = [
     ],
     4 => [
         "color" => 4,
-        "size" => 8,
+        "columns" => 4,
+        "rows" => 2,
         "polygon" => "triangle",
         "format" => [
             0 => [
@@ -95,7 +99,8 @@ $this->GEMSTONES = [
     ],
     5 => [
         "color" => 4,
-        "size" => 8,
+        "columns" => 4,
+        "rows" => 2,
         "polygon" => "triangle",
         "format" => [
             0 => [

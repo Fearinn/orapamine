@@ -687,6 +687,7 @@ class Game extends \Table
         );
         $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $result["COLORS"] = $this->COLORS;
+        $result["GEMSTONES"] = array_values($this->GEMSTONES);
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         // $result["board"] = $this->globals->get(BOARD);

@@ -33,6 +33,7 @@ define([
       this.orp = {
         info: {
           colors: gamedatas.COLORS,
+          gemstones: gamedatas.GEMSTONES,
         },
         managers: {},
       };
@@ -48,6 +49,7 @@ define([
       });
 
       this.setupBoard();
+      this.setupSolutionPieces();
       // this.revealBoard({
       //   board: gamedatas.board,
       //   coloredBoard: gamedatas.coloredBoard,
@@ -160,7 +162,7 @@ define([
             const cellElement = document.querySelector(
               `[data-cell="${x}-${y}"]`
             );
-            cellElement.classList.add("orp_cell-occupied");
+            cellElement.classList.add("orp_piece");
 
             const color_id = coloredBoard[x][y];
             const color = this.orp.info.colors[color_id];
@@ -172,10 +174,62 @@ define([
             );
 
             if (cell < 5) {
-              cellElement.classList.add("orp_cell-half");
-              cellElement.classList.add(`orp_cell-half-${cell}`);
+              cellElement.classList.add("orp_piece-half");
+              cellElement.classList.add(`orp_piece-half-${cell}`);
             }
           }
+        });
+      });
+    },
+
+    setupSolutionPieces: function () {
+      const solutionPiecesElement =
+        document.getElementById("orp_solutionPieces");
+
+      this.orp.info.gemstones.forEach((gemstone, index) => {
+        solutionPiecesElement.insertAdjacentHTML(
+          "beforeend",
+          `<div id="orp_gemstone-${index}"></div>`
+        );
+
+        gemstone.format[0].forEach((row) => {
+          const gemstoneElement = document.getElementById(
+            `orp_gemstone-${index}`
+          );
+          gemstoneElement.classList.add("orp_gemstone");
+          gemstoneElement.style.gridTemplateColumns = `repeat(${gemstone.columns}, var(--cellWidth))`;
+          gemstoneElement.style.gridTemplateRows = `repeat(${gemstone.rows}, var(--cellWidth))`;
+          gemstoneElement.dataset.rotation = 0;
+
+          gemstoneElement.onclick = () => {
+            gemstoneElement.dataset.rotation = Number(gemstoneElement.dataset.rotation) + 90;
+            const rotation = gemstoneElement.dataset.rotation;
+            gemstoneElement.style.transform = `rotate(${rotation}deg)`;
+          };
+
+          row.forEach((piece) => {
+            const pieceElement = document.createElement("div");
+            gemstoneElement.appendChild(pieceElement);
+            pieceElement.classList.add("orp_piece");
+
+            if (piece === 0) {
+              pieceElement.classList.add("orp_piece-empty");
+            }
+
+            const color_id = gemstone.color;
+            const color = this.orp.info.colors[color_id];
+
+            pieceElement.style.setProperty("--pieceColor", color.code);
+            pieceElement.style.setProperty(
+              "--pieceColorDarker",
+              color.darkerCode
+            );
+
+            if (piece < 5) {
+              pieceElement.classList.add("orp_piece-half");
+              pieceElement.classList.add(`orp_piece-half-${piece}`);
+            }
+          });
         });
       });
     },

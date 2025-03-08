@@ -150,6 +150,7 @@
       <div id="orp_cell-10-8" data-cell="10-8" class="orp_cell"></div>
     </div>
   </div>
+  <div id="orp_solutionPieces" class="orp_solutionPieces"></div>
 </div>
 
 <script type="text/javascript"></script>

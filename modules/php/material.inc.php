@@ -129,6 +129,7 @@ $this->GEMSTONES = [
 
 $this->COLORS = [
     0 => [
+        "id" => 0,
         "name" => "transparent",
         "label" => clienttranslate("transparent"),
         "components" => [],
@@ -136,6 +137,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     1 => [
+        "id" => 1,
         "name" => "mediumblue",
         "label" => clienttranslate("blue"),
         "components" => [],
@@ -144,6 +146,7 @@ $this->COLORS = [
         "contrast" => "dark",
     ],
     2 => [
+        "id" => 2,
         "name" => "red",
         "label" => clienttranslate("red"),
         "components" => [],
@@ -152,6 +155,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     3 => [
+        "id" => 3,
         "name" => "gold",
         "label" => clienttranslate("yellow"),
         "components" => [],
@@ -160,6 +164,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     4 => [
+        "id" => 4,
         "name" => "white",
         "label" => clienttranslate("white"),
         "components" => [],
@@ -168,6 +173,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     5 => [
+        "id" => 5,
         "name" => "purple",
         "label" => clienttranslate("purple"),
         "components" => [1, 2],
@@ -175,6 +181,7 @@ $this->COLORS = [
         "contrast" => "dark",
     ],
     6 => [
+        "id" => 6,
         "name" => "green",
         "label" => clienttranslate("green"),
         "components" => [1, 3],
@@ -182,6 +189,7 @@ $this->COLORS = [
         "contrast" => "dark",
     ],
     7 => [
+        "id" => 7,
         "name" => "orange",
         "label" => clienttranslate("orange"),
         "components" => [2, 3],
@@ -189,6 +197,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     8 => [
+        "id" => 8,
         "name" => "skyblue",
         "label" => clienttranslate("sky blue"),
         "components" => [1, 4],
@@ -196,6 +205,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     9 => [
+        "id" => 9,
         "name" => "pink",
         "label" => clienttranslate("pink"),
         "components" => [2, 4],
@@ -203,6 +213,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     10 => [
+        "id" => 10,
         "name" => "lemon",
         "label" => clienttranslate("lemon"),
         "components" => [3, 4],
@@ -210,6 +221,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     11 => [
+        "id" => 11,
         "name" => "lightpurple",
         "label" => clienttranslate("light purple"),
         "components" => [1, 2, 4],
@@ -217,6 +229,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     12 => [
+        "id" => 12,
         "name" => "lightgreen",
         "label" => clienttranslate("light green"),
         "components" => [1, 3, 4],
@@ -224,6 +237,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     13 => [
+        "id" => 13,
         "name" => "lightorange",
         "label" => clienttranslate("light orange"),
         "components" => [2, 3, 4],
@@ -231,6 +245,7 @@ $this->COLORS = [
         "contrast" => "light",
     ],
     14 => [
+        "id" => 14,
         "name" => "black",
         "label" => clienttranslate("black"),
         "components" => [1, 2, 3],
@@ -238,6 +253,7 @@ $this->COLORS = [
         "contrast" => "dark",
     ],
     15 => [
+        "id" => 15,
         "name" => "gray",
         "label" => clienttranslate("gray"),
         "components" => [1, 2, 3, 4],

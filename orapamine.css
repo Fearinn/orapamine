@@ -182,6 +182,7 @@
 }
 
 .orp_cell {
+  position: relative;
   background-color: var(--boardColor);
   border: 1.5px solid whitesmoke;
   aspect-ratio: 1;
@@ -219,7 +220,6 @@
 
 .orp_gemstone {
   display: grid;
-  cursor: pointer;
   touch-action: none;
   will-change: transform;
 }
@@ -228,11 +228,12 @@
   background-color: var(--pieceColor);
   aspect-ratio: 1;
   border: 1.5px solid whitesmoke;
+  cursor: pointer;
   touch-action: none;
   width: var(--cellWidth);
 }
 .orp_piece-empty {
-  background-color: var(--boardColor);
+  visibility: hidden;
 }
 .orp_piece:not(.orp_piece-half, .orp_piece-empty) {
   border-color: var(--pieceColorDarker);
@@ -256,4 +257,8 @@
   background: linear-gradient(to top left, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-top-color: var(--pieceColorDarker);
   border-left-color: var(--pieceColorDarker);
+}
+
+.orp_dragContainer {
+  transform: scale(1) !important;
 }

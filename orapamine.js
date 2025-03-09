@@ -59,7 +59,7 @@ define([
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
-      this.orp.managers.draggable = new Draggable();
+      new Draggable(gamedatas.GEMSTONES);
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
@@ -302,6 +302,7 @@ define([
         const innerCellElement = document.createElement("div");
         innerCellElement.id = `orp_innerCell-${x}-${y}`;
         innerCellElement.style.backgroundColor = color.code;
+        innerCellElement.dataset.color = color.id;
         innerCellElement.classList.add("orp_innerCell");
 
         cellElement.appendChild(innerCellElement);
@@ -332,38 +333,44 @@ define([
         document.getElementById("orp_solutionPieces");
 
       this.orp.info.gemstones.forEach((gemstone, index) => {
+        const gemstone_id = index + 1;
+
         solutionPiecesElement.insertAdjacentHTML(
           "beforeend",
-          `<div id="orp_gemstone-${index}"></div>`
+          `<div id="orp_gemstone-${gemstone_id}" data-gemstone="${gemstone_id}"></div>`
         );
 
         gemstone.format[0].forEach((row) => {
           const gemstoneElement = document.getElementById(
-            `orp_gemstone-${index}`
+            `orp_gemstone-${gemstone_id}`
           );
           gemstoneElement.classList.add("orp_gemstone");
           gemstoneElement.style.gridTemplateColumns = `repeat(${gemstone.columns}, var(--cellWidth))`;
           gemstoneElement.style.gridTemplateRows = `repeat(${gemstone.rows}, var(--cellWidth))`;
-          gemstoneElement.dataset.rotation = 0;
-
-          // gemstoneElement.onclick = () => {
-          //   gemstoneElement.dataset.rotation =
-          //     Number(gemstoneElement.dataset.rotation) + 90;
-          //   const rotation = gemstoneElement.dataset.rotation;
-          //   gemstoneElement.style.transform = `rotate(${rotation}deg)`;
-          // };
 
           row.forEach((piece) => {
             const pieceElement = document.createElement("div");
             gemstoneElement.appendChild(pieceElement);
+            pieceElement.dataset.rotation = 0;
             pieceElement.classList.add("orp_piece");
 
             if (piece === 0) {
               pieceElement.classList.add("orp_piece-empty");
             }
 
+            // if (piece > 0 && piece < 5) {
+            //   pieceElement.onclick = () => {
+            //     pieceElement.dataset.rotation =
+            //       Number(pieceElement.dataset.rotation) + 90;
+            //     const rotation = pieceElement.dataset.rotation;
+            //     pieceElement.style.transform = `rotate(${rotation}deg)`;
+            //   };
+            // }
+
             const color_id = gemstone.color;
             const color = this.orp.info.colors[color_id];
+
+            pieceElement.dataset.color = color_id;
 
             pieceElement.style.setProperty("--pieceColor", color.code);
             pieceElement.style.setProperty(

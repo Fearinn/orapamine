@@ -32,10 +32,22 @@ const userPressed = (event) => {
 };
 
 const userMoved = (event) => {
-  if (!raf) {
-    deltaX = event.clientX - startX;
-    deltaY = event.clientY - startY;
+  deltaX = event.clientX - startX;
+  deltaY = event.clientY - startY;
 
+  const gameAreaElement = document.getElementById("orp_gameArea");
+  const style = window.getComputedStyle(gameAreaElement);
+  let scale = 1;
+  if (style.transform && style.transform !== "none") {
+    // The transform is usually in the form: matrix(a, b, c, d, tx, ty)
+    const values = style.transform.match(/matrix\(([^)]+)\)/)[1].split(", ");
+    scale = parseFloat(values[0]);
+  }
+
+  deltaX /= scale;
+  deltaY /= scale;
+
+  if (!raf) {
     raf = requestAnimationFrame(userMovedRaf);
   }
 };

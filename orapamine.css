@@ -97,10 +97,10 @@
 .orp_gameArea {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 16px;
+  padding: 0 8px;
   width: 100%;
 }
 .orp_gameArea * {
@@ -219,12 +219,16 @@
 
 .orp_gemstone {
   display: grid;
+  cursor: pointer;
+  touch-action: none;
+  will-change: transform;
 }
 
 .orp_piece {
   background-color: var(--pieceColor);
   aspect-ratio: 1;
   border: 1.5px solid whitesmoke;
+  touch-action: none;
   width: var(--cellWidth);
 }
 .orp_piece-empty {

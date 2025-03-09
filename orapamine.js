@@ -20,6 +20,7 @@ define([
   "dojo/_base/declare",
   "ebg/core/gamegui",
   "ebg/counter",
+  `${g_gamethemeurl}modules/js/draggable.js`,
   `${g_gamethemeurl}modules/js/bga-zoom.js`,
 ], function (dojo, declare) {
   return declare("bgagame.orapamine", ebg.core.gamegui, {
@@ -57,6 +58,8 @@ define([
 
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
+
+      this.orp.managers.draggable = new Draggable();
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
@@ -178,58 +181,6 @@ define([
               cellElement.classList.add(`orp_piece-half-${cell}`);
             }
           }
-        });
-      });
-    },
-
-    setupSolutionPieces: function () {
-      const solutionPiecesElement =
-        document.getElementById("orp_solutionPieces");
-
-      this.orp.info.gemstones.forEach((gemstone, index) => {
-        solutionPiecesElement.insertAdjacentHTML(
-          "beforeend",
-          `<div id="orp_gemstone-${index}"></div>`
-        );
-
-        gemstone.format[0].forEach((row) => {
-          const gemstoneElement = document.getElementById(
-            `orp_gemstone-${index}`
-          );
-          gemstoneElement.classList.add("orp_gemstone");
-          gemstoneElement.style.gridTemplateColumns = `repeat(${gemstone.columns}, var(--cellWidth))`;
-          gemstoneElement.style.gridTemplateRows = `repeat(${gemstone.rows}, var(--cellWidth))`;
-          gemstoneElement.dataset.rotation = 0;
-
-          gemstoneElement.onclick = () => {
-            gemstoneElement.dataset.rotation = Number(gemstoneElement.dataset.rotation) + 90;
-            const rotation = gemstoneElement.dataset.rotation;
-            gemstoneElement.style.transform = `rotate(${rotation}deg)`;
-          };
-
-          row.forEach((piece) => {
-            const pieceElement = document.createElement("div");
-            gemstoneElement.appendChild(pieceElement);
-            pieceElement.classList.add("orp_piece");
-
-            if (piece === 0) {
-              pieceElement.classList.add("orp_piece-empty");
-            }
-
-            const color_id = gemstone.color;
-            const color = this.orp.info.colors[color_id];
-
-            pieceElement.style.setProperty("--pieceColor", color.code);
-            pieceElement.style.setProperty(
-              "--pieceColorDarker",
-              color.darkerCode
-            );
-
-            if (piece < 5) {
-              pieceElement.classList.add("orp_piece-half");
-              pieceElement.classList.add(`orp_piece-half-${piece}`);
-            }
-          });
         });
       });
     },
@@ -373,6 +324,59 @@ define([
         originElement.style.backgroundColor = color.code;
         originElement.style.textShadow = "none";
         this.addTooltip(originElement.id, _(color.label), "");
+      });
+    },
+
+    setupSolutionPieces: function () {
+      const solutionPiecesElement =
+        document.getElementById("orp_solutionPieces");
+
+      this.orp.info.gemstones.forEach((gemstone, index) => {
+        solutionPiecesElement.insertAdjacentHTML(
+          "beforeend",
+          `<div id="orp_gemstone-${index}"></div>`
+        );
+
+        gemstone.format[0].forEach((row) => {
+          const gemstoneElement = document.getElementById(
+            `orp_gemstone-${index}`
+          );
+          gemstoneElement.classList.add("orp_gemstone");
+          gemstoneElement.style.gridTemplateColumns = `repeat(${gemstone.columns}, var(--cellWidth))`;
+          gemstoneElement.style.gridTemplateRows = `repeat(${gemstone.rows}, var(--cellWidth))`;
+          gemstoneElement.dataset.rotation = 0;
+
+          // gemstoneElement.onclick = () => {
+          //   gemstoneElement.dataset.rotation =
+          //     Number(gemstoneElement.dataset.rotation) + 90;
+          //   const rotation = gemstoneElement.dataset.rotation;
+          //   gemstoneElement.style.transform = `rotate(${rotation}deg)`;
+          // };
+
+          row.forEach((piece) => {
+            const pieceElement = document.createElement("div");
+            gemstoneElement.appendChild(pieceElement);
+            pieceElement.classList.add("orp_piece");
+
+            if (piece === 0) {
+              pieceElement.classList.add("orp_piece-empty");
+            }
+
+            const color_id = gemstone.color;
+            const color = this.orp.info.colors[color_id];
+
+            pieceElement.style.setProperty("--pieceColor", color.code);
+            pieceElement.style.setProperty(
+              "--pieceColorDarker",
+              color.darkerCode
+            );
+
+            if (piece < 5) {
+              pieceElement.classList.add("orp_piece-half");
+              pieceElement.classList.add(`orp_piece-half-${piece}`);
+            }
+          });
+        });
       });
     },
 

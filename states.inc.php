@@ -37,7 +37,8 @@ $machinestates = [
         "possibleactions" => [
             "actAskLocation",
             "actSendWave",
-            "actSubmitAnswer", 
+            "actSaveSolution",
+            "actSubmitSolution", 
         ],
         "transitions" => ["nextPlayer" => 3],
     ],

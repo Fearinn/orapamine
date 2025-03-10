@@ -20,7 +20,9 @@ declare(strict_types=1);
 
 namespace Bga\Games\OrapaMine;
 
+use Bga\GameFramework\Actions\CheckAction;
 use Bga\GameFramework\Actions\Types\IntParam;
+use Bga\GameFramework\Actions\Types\JsonParam;
 use Bga\GameFramework\Actions\Types\StringParam;
 
 require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
@@ -32,6 +34,7 @@ const SELECTABLE_ORIGINS = "selectableOrigins";
 const ORIGIN = "origin";
 const REVEALED_LOCATIONS = "revealedLocations";
 const REVEALED_ORIGINS = "revealedOrigins";
+const PLACED_PIECES = "placedPieces";
 
 class Game extends \Table
 {
@@ -229,6 +232,19 @@ class Game extends \Table
         $visitedColors = [];
         $this->sendWave($origin_x, $origin_y, $direction_id, $visitedColors, $origin);
 
+        $this->gamestate->nextState("nextPlayer");
+    }
+
+    #[CheckAction(false)]
+    public function actSaveSolution(?int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $placedPieces): void
+    {
+        $this->checkVersion($CLIENT_VERSION);
+
+        $this->globals->set(PLACED_PIECES, $placedPieces);
+
+        $player_id = (int) $this->getCurrentPlayerId();
+
+        $this->notify->player($player_id, "message", clienttranslate("Solution sheet successfully saved"));
         $this->gamestate->nextState("nextPlayer");
     }
 
@@ -690,6 +706,7 @@ class Game extends \Table
         $result["GEMSTONES"] = array_values($this->GEMSTONES);
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
+        $result["placedPieces"] = $this->globals->get(PLACED_PIECES, []);
         // $result["board"] = $this->globals->get(BOARD);
         // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 

@@ -36,6 +36,9 @@ define([
           colors: gamedatas.COLORS,
           gemstones: gamedatas.GEMSTONES,
         },
+        globals: {
+          placedPieces: gamedatas.placedPieces,
+        },
         managers: {},
       };
 
@@ -59,7 +62,7 @@ define([
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
-      new Draggable(gamedatas.GEMSTONES);
+      new Draggable(this, gamedatas.GEMSTONES);
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
@@ -71,6 +74,20 @@ define([
 
     onEnteringState: function (stateName, args) {
       console.log("Entering state: " + stateName, args);
+
+      if (!this.isSpectator) {
+        this.statusBar.addActionButton(
+          _("Save"),
+          () => {
+            this.actSaveSolution();
+          },
+          {
+            id: "orp_saveSolutionBtn",
+            color: "secondary",
+            classes: ["orp_saveSolutionBtn"],
+          }
+        );
+      }
 
       if (this.isCurrentPlayerActive()) {
         if (stateName === "playerTurn") {
@@ -395,6 +412,11 @@ define([
 
     actSendWave: function (origin) {
       this.performAction("actSendWave", { origin });
+    },
+
+    actSaveSolution: function () {
+      const placedPieces = JSON.stringify(this.orp.globals.placedPieces);
+      this.performAction("actSaveSolution", { placedPieces });
     },
 
     ///////////////////////////////////////////////////

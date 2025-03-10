@@ -6,6 +6,7 @@ let raf = null;
 let element = null;
 let scale = 1;
 let gemstones = null;
+let game = null;
 
 function userPressed(event) {
   element = event.target;
@@ -146,7 +147,8 @@ function enableRotation(pieceElement) {
 }
 
 class Draggable {
-  constructor(g_gemstones) {
+  constructor(g, g_gemstones) {
+    game = g;
     gemstones = g_gemstones;
 
     const gameAreaElement = document.getElementById("orp_gameArea");

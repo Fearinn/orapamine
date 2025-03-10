@@ -351,26 +351,17 @@ define([
           row.forEach((piece) => {
             const pieceElement = document.createElement("div");
             gemstoneElement.appendChild(pieceElement);
-            pieceElement.dataset.rotation = 0;
             pieceElement.classList.add("orp_piece");
 
             if (piece === 0) {
               pieceElement.classList.add("orp_piece-empty");
             }
 
-            // if (piece > 0 && piece < 5) {
-            //   pieceElement.onclick = () => {
-            //     pieceElement.dataset.rotation =
-            //       Number(pieceElement.dataset.rotation) + 90;
-            //     const rotation = pieceElement.dataset.rotation;
-            //     pieceElement.style.transform = `rotate(${rotation}deg)`;
-            //   };
-            // }
-
             const color_id = gemstone.color;
             const color = this.orp.info.colors[color_id];
 
             pieceElement.dataset.color = color_id;
+            pieceElement.dataset.piece = piece;
 
             pieceElement.style.setProperty("--pieceColor", color.code);
             pieceElement.style.setProperty(

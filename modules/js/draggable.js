@@ -77,14 +77,14 @@ function userReleased(event) {
   deltaY = null;
 }
 
-function dropItemOntoXY(selectedItem, x, y) {
+function dropItemOntoXY(pieceElement, x, y) {
   const gameAreaElement = document.getElementById("orp_gameArea");
   gameAreaElement.classList.add("orp_dragContainer");
 
   const pointsTo = document.elementFromPoint(x, y);
 
   gameAreaElement.classList.remove("orp_dragContainer");
-  selectedItem.classList.remove("orp_drag");
+  pieceElement.classList.remove("orp_drag");
 
   if (!pointsTo) {
     return;
@@ -92,32 +92,56 @@ function dropItemOntoXY(selectedItem, x, y) {
 
   const boardElement = document.getElementById("orp_boardContainer");
 
-  if (!boardElement.contains(pointsTo) && boardElement.contains(selectedItem)) {
-    selectedItem.remove();
+  if (!boardElement.contains(pointsTo) && boardElement.contains(pieceElement)) {
+    pieceElement.remove();
     return;
   }
 
   if (pointsTo.classList.contains("orp_innerCell")) {
-    if (selectedItem.dataset.color !== pointsTo.dataset.color) {
+    const cellElement = pointsTo.parentNode;
+
+    if (pieceElement.dataset.color !== pointsTo.dataset.color) {
       return;
     }
 
-    if (selectedItem.parentNode.dataset.cell) {
-      pointsTo.parentNode.appendChild(selectedItem);
+    if (pieceElement.parentNode.dataset.cell) {
+      cellElement.appendChild(pieceElement);
     } else {
-      pointsTo.parentNode.appendChild(selectedItem.cloneNode(true));
+      pieceElement = pieceElement.cloneNode(true);
+      cellElement.appendChild(pieceElement);
     }
 
+    enableRotation(pieceElement);
     pointsTo.style.display = "none";
   }
 
   if (pointsTo.dataset.cell) {
-    if (selectedItem.parentNode.dataset.cell) {
-      pointsTo.appendChild(selectedItem);
-      return;
+    if (pieceElement.parentNode.dataset.cell) {
+      pointsTo.appendChild(pieceElement);
+    } else {
+      pieceElement = pieceElement.cloneNode(true);
+      pointsTo.appendChild(pieceElement);
     }
 
-    pointsTo.appendChild(selectedItem.cloneNode(true));
+    enableRotation(pieceElement);
+  }
+}
+
+function enableRotation(pieceElement) {
+  let piece = Number(pieceElement.dataset.piece);
+
+  if (piece > 0 && piece < 5) {
+    pieceElement.onclick = () => {
+      pieceElement.classList.remove(`orp_piece-half-${piece}`);
+
+      piece++;
+      if (piece > 4) {
+        piece = 1;
+      }
+
+      pieceElement.dataset.piece = piece;
+      pieceElement.classList.add(`orp_piece-half-${piece}`);
+    };
   }
 }
 

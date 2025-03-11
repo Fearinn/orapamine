@@ -39,7 +39,8 @@
 
 .orp_gameArea {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 860px);
   align-items: center;
   justify-content: center;
   gap: 16px;

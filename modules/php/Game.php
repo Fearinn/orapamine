@@ -138,11 +138,11 @@ class Game extends \Table
         $color_id = $coloredBoard[$guess_x][$guess_y];
 
         if ($color_id > 0) {
-            $message = clienttranslate('Position ${log_x}${log_y}: ${color_label} gem');
+            $message = clienttranslate('${log_x}${log_y}: ${color_label} gem');
             $color = (array) $this->COLORS[$color_id];
             $color_label = (string) $color["label"];
         } else {
-            $message = clienttranslate('Position ${log_x}${log_y}: nothing is there!');
+            $message = clienttranslate('${log_x}${log_y}: nothing is there!');
             $color = null;
             $color_label = null;
         }
@@ -354,8 +354,11 @@ class Game extends \Table
             $piece_x = $base_x;
 
             foreach ($row as $piece) {
-                $board[$piece_x][$piece_y] = $piece;
-                $coloredBoard[$piece_x][$piece_y] = (int) $gemstone["color"];
+                if ($piece > 0) {
+                    $board[$piece_x][$piece_y] = $piece;
+                    $coloredBoard[$piece_x][$piece_y] = (int) $gemstone["color"];
+                }
+                
                 $piece_x++;
             }
 

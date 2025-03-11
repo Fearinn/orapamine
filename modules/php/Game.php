@@ -236,11 +236,9 @@ class Game extends \Table
     }
 
     #[CheckAction(false)]
-    public function actSaveSolution(?int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $solutionSheet): void
+    public function actClearSolution(?int $CLIENT_VERSION): void
     {
         $this->checkVersion($CLIENT_VERSION);
-
-        $this->globals->set(SOLUTION_SHEET, $solutionSheet);
 
         $players = $this->loadPlayersBasicInfos();
         $player_id = (int) $this->getCurrentPlayerId();
@@ -249,7 +247,27 @@ class Game extends \Table
             throw new \BgaVisibleSystemException("Only players may perform this action");
         }
 
+        $this->globals->set(SOLUTION_SHEET, []);
+        $this->notify->player($player_id, "message", clienttranslate("Solution sheet successfully cleared"));
+
+        $this->gamestate->nextState("nextPlayer");
+    }
+
+    #[CheckAction(false)]
+    public function actSaveSolution(?int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $solutionSheet): void
+    {
+        $this->checkVersion($CLIENT_VERSION);
+
+        $players = $this->loadPlayersBasicInfos();
+        $player_id = (int) $this->getCurrentPlayerId();
+
+        if (!array_key_exists($player_id, $players)) {
+            throw new \BgaVisibleSystemException("Only players may perform this action");
+        }
+
+        $this->globals->set(SOLUTION_SHEET, $solutionSheet);
         $this->notify->player($player_id, "message", clienttranslate("Solution sheet successfully saved"));
+
         $this->gamestate->nextState("nextPlayer");
     }
 

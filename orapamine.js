@@ -466,6 +466,17 @@ define([
       this.performAction("actSendWave", { origin });
     },
 
+    actClearSolution: function () {
+      document
+        .getElementById("orp_board")
+        .querySelectorAll("[data-piece]")
+        .forEach((pieceElement) => {
+          pieceElement.remove();
+        });
+
+      this.performAction("actClearSolution", {}, { checkAction: false });
+    },
+
     actSaveSolution: function () {
       const solutionSheet = [];
       document

@@ -327,23 +327,18 @@ define([
           color = this.orp.info.colors[0];
         }
 
+        const innerCellHTML = `<div id="orp_innerCell-${x}-${y}" class="orp_innerCell" 
+        data-color="${color.id}" style="background-color: ${color.code}; border-color: ${color.code}"></div>`;
+
         const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
-
-        const innerCellElement = document.createElement("div");
-        innerCellElement.id = `orp_innerCell-${x}-${y}`;
-        innerCellElement.classList.add("orp_innerCell");
-        innerCellElement.style.backgroundColor = color.code;
-        innerCellElement.style.borderColor = color.code;
-        innerCellElement.dataset.color = color.id;
-
         cellElement.childNodes.forEach((pieceElement) => {
           if (pieceElement.dataset.color != color.id) {
             pieceElement.remove();
           }
         });
 
-        cellElement.appendChild(innerCellElement);
-        this.addTooltip(innerCellElement.id, _(color.label), "");
+        cellElement.insertAdjacentHTML("beforeend", innerCellHTML);
+        this.addTooltip(`orp_innerCell-${x}-${y}`, _(color.label), "");
       });
     },
 

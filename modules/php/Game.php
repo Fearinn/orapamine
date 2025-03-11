@@ -34,7 +34,7 @@ const SELECTABLE_ORIGINS = "selectableOrigins";
 const ORIGIN = "origin";
 const REVEALED_LOCATIONS = "revealedLocations";
 const REVEALED_ORIGINS = "revealedOrigins";
-const PLACED_PIECES = "placedPieces";
+const SOLUTION_SHEET = "solutionSheet";
 
 class Game extends \Table
 {
@@ -236,11 +236,11 @@ class Game extends \Table
     }
 
     #[CheckAction(false)]
-    public function actSaveSolution(?int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $placedPieces): void
+    public function actSaveSolution(?int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $solutionSheet): void
     {
         $this->checkVersion($CLIENT_VERSION);
 
-        $this->globals->set(PLACED_PIECES, $placedPieces);
+        $this->globals->set(SOLUTION_SHEET, $solutionSheet);
 
         $players = $this->loadPlayersBasicInfos();
         $player_id = (int) $this->getCurrentPlayerId();
@@ -711,7 +711,7 @@ class Game extends \Table
         $result["GEMSTONES"] = array_values($this->GEMSTONES);
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
-        $result["placedPieces"] = $this->globals->get(PLACED_PIECES, []);
+        $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEET, []);
         // $result["board"] = $this->globals->get(BOARD);
         // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 
@@ -830,6 +830,6 @@ class Game extends \Table
 
     public function debug_resetSolution(): void
     {
-        $this->globals->set(PLACED_PIECES, []);
+        $this->globals->set(SOLUTION_SHEET, []);
     }
 }

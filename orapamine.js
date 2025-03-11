@@ -37,7 +37,7 @@ define([
           gemstones: gamedatas.GEMSTONES,
         },
         globals: {
-          placedPieces: gamedatas.placedPieces,
+          solutionSheet: gamedatas.solutionSheet,
         },
         managers: {},
       };
@@ -62,7 +62,7 @@ define([
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
-      gamedatas.placedPieces.forEach((placedPiece) => {
+      gamedatas.solutionSheet.forEach((placedPiece) => {
         this.createPieceElement(placedPiece);
       });
 
@@ -433,7 +433,7 @@ define([
     },
 
     actSaveSolution: function () {
-      const placedPieces = [];
+      const solutionSheet = [];
       document
         .getElementById("orp_board")
         .querySelectorAll("[data-cell]")
@@ -444,14 +444,14 @@ define([
             const piece = pieceElement.dataset.piece;
             const color_id = pieceElement.dataset.color;
 
-            placedPieces.push({ piece, color_id, x, y });
+            solutionSheet.push({ piece, color_id, x, y });
           }
         });
 
       this.performAction(
         "actSaveSolution",
         {
-          placedPieces: JSON.stringify(placedPieces),
+          solutionSheet: JSON.stringify(solutionSheet),
         },
         {
           checkAction: false,

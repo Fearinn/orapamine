@@ -349,7 +349,7 @@ define([
 
         if (piece < 5) {
           pieceElement.classList.add("orp_piece-half");
-          
+
           pieceElement.onclick = () => {
             piece++;
             if (piece > 4) {
@@ -448,9 +448,15 @@ define([
           }
         });
 
-      this.performAction("actSaveSolution", {
-        placedPieces: JSON.stringify(placedPieces),
-      });
+      this.performAction(
+        "actSaveSolution",
+        {
+          placedPieces: JSON.stringify(placedPieces),
+        },
+        {
+          checkAction: false,
+        }
+      );
     },
 
     ///////////////////////////////////////////////////

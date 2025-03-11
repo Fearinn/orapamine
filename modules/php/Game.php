@@ -242,7 +242,12 @@ class Game extends \Table
 
         $this->globals->set(PLACED_PIECES, $placedPieces);
 
+        $players = $this->loadPlayersBasicInfos();
         $player_id = (int) $this->getCurrentPlayerId();
+
+        if (!array_key_exists($player_id, $players)) {
+            throw new \BgaVisibleSystemException("Only players may perform this action");
+        }
 
         $this->notify->player($player_id, "message", clienttranslate("Solution sheet successfully saved"));
         $this->gamestate->nextState("nextPlayer");

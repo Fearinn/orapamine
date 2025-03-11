@@ -113,6 +113,32 @@
   text-transform: capitalize;
 }
 
+.orp_panelButtons {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+.orp_panelButton {
+  font-size: 24px;
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 1;
+  width: 40px !important;
+}
+.orp_panelButton .orp_icon {
+  font-style: normal;
+  display: block;
+}
+.orp_panelButton .orp_icon-trash::after {
+  content: "🗑";
+}
+.orp_panelButton .orp_icon-disk::after {
+  content: "💾";
+}
+
 .orp_boardContainer {
   position: relative;
   display: flex;

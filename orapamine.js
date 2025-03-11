@@ -68,6 +68,47 @@ define([
 
       new Draggable(gamedatas.GEMSTONES);
 
+      if (!this.isSpectator) {
+        const playerPanel = this.getPlayerPanelElement(this.player_id);
+        playerPanel.insertAdjacentHTML(
+          "beforeend",
+          `<div id="orp_panelButtons" class="orp_panelButtons"></div>`
+        );
+
+        this.statusBar.addActionButton(
+          `<i class="orp_icon-trash orp_icon"></i>`,
+          () => {
+            this.confirmationDialog(
+              _("Are you sure you want to clear the solution sheet?"),
+              () => {
+                this.actClearSolution();
+              }
+            );
+          },
+          {
+            id: "orp_clearSolutionButton",
+            color: "alert",
+            classes: ["orp_panelButton"],
+            destination: document.getElementById("orp_panelButtons"),
+            title: _("Clear solution"),
+          }
+        );
+
+        this.statusBar.addActionButton(
+          `<i class="orp_icon-disk orp_icon"></i>`,
+          () => {
+            this.actSaveSolution();
+          },
+          {
+            id: "orp_saveSolutionButton",
+            color: "secondary",
+            classes: ["orp_panelButton", "orp_saveSolutionButton"],
+            destination: document.getElementById("orp_panelButtons"),
+            title: _("Save solution"),
+          }
+        );
+      }
+
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
       console.log("Ending game setup");
@@ -78,20 +119,6 @@ define([
 
     onEnteringState: function (stateName, args) {
       console.log("Entering state: " + stateName, args);
-
-      if (!this.isSpectator) {
-        this.statusBar.addActionButton(
-          _("Save"),
-          () => {
-            this.actSaveSolution();
-          },
-          {
-            id: "orp_saveSolutionBtn",
-            color: "secondary",
-            classes: ["orp_saveSolutionBtn"],
-          }
-        );
-      }
 
       if (this.isCurrentPlayerActive()) {
         if (stateName === "playerTurn") {

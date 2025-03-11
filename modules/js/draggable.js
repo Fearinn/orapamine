@@ -106,22 +106,21 @@ function dropItemOntoXY(pieceElement, x, y) {
     }
 
     if (pieceElement.parentNode.dataset.cell) {
-      cellElement.appendChild(pieceElement);
+      cellElement.insertAdjacentElement("afterbegin", pieceElement);
     } else {
       pieceElement = pieceElement.cloneNode(true);
-      cellElement.appendChild(pieceElement);
+      cellElement.insertAdjacentElement("afterbegin", pieceElement);
     }
 
     enableRotation(pieceElement);
-    pointsTo.style.display = "none";
   }
 
   if (pointsTo.dataset.cell) {
     if (pieceElement.parentNode.dataset.cell) {
-      pointsTo.appendChild(pieceElement);
+      pointsTo.insertAdjacentElement("afterbegin", pieceElement);
     } else {
       pieceElement = pieceElement.cloneNode(true);
-      pointsTo.appendChild(pieceElement);
+      pointsTo.insertAdjacentElement("afterbegin", pieceElement);
     }
 
     enableRotation(pieceElement);

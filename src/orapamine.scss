@@ -158,13 +158,18 @@
   &-unselectable {
     cursor: not-allowed;
   }
+}
 
-  .orp_innerCell {
-    aspect-ratio: 1;
-    border-radius: 100%;
-    opacity: 0.75;
-    width: 100%;
-  }
+.orp_innerCell {
+  aspect-ratio: 1;
+  border: 1px solid;
+  border-radius: 100%;
+  opacity: 0.75;
+  width: 100%;
+}
+
+.orp_piece ~ .orp_innerCell {
+  display: none;
 }
 
 .orp_solutionPieces {

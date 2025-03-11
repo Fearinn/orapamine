@@ -40,7 +40,7 @@ $machinestates = [
             "actSaveSolution",
             "actSubmitSolution", 
         ],
-        "transitions" => ["nextPlayer" => 3],
+        "transitions" => ["nextPlayer" => 3, "zombiePass" => 3],
     ],
 
     3 => [

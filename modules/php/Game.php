@@ -822,4 +822,9 @@ class Game extends \Table
     {
         $this->actSendWave(null, $origin);
     }
+
+    public function debug_resetSolution(): void
+    {
+        $this->globals->set(PLACED_PIECES, []);
+    }
 }

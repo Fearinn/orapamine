@@ -62,7 +62,11 @@ define([
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
-      new Draggable(this, gamedatas.GEMSTONES);
+      gamedatas.placedPieces.forEach((placedPiece) => {
+        this.createPieceElement(placedPiece);
+      });
+
+      new Draggable(gamedatas.GEMSTONES);
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
@@ -176,28 +180,10 @@ define([
       Object.keys(board).forEach((x) => {
         const row = board[x];
         Object.keys(row).forEach((y) => {
-          const cell = row[y];
+          const piece = Number(row[y]);
 
-          if (cell > 0) {
-            const cellElement = document.querySelector(
-              `[data-cell="${x}-${y}"]`
-            );
-            cellElement.classList.add("orp_piece");
-
-            const color_id = coloredBoard[x][y];
-            const color = this.orp.info.colors[color_id];
-
-            cellElement.style.setProperty("--pieceColor", color.code);
-            cellElement.style.setProperty(
-              "--pieceColorDarker",
-              color.darkerCode
-            );
-
-            if (cell < 5) {
-              cellElement.classList.add("orp_piece-half");
-              cellElement.classList.add(`orp_piece-half-${cell}`);
-            }
-          }
+          const color_id = coloredBoard[x][y];
+          this.createPieceElement({ piece, color_id, x, y });
         });
       });
     },
@@ -345,6 +331,29 @@ define([
       });
     },
 
+    createPieceElement: function ({ piece, color_id, x, y }) {
+      if (piece > 0) {
+        const pieceElement = document.createElement("div");
+        pieceElement.dataset.piece = piece;
+        pieceElement.dataset.color = color_id;
+        pieceElement.classList.add("orp_piece");
+        pieceElement.classList.add(`orp_piece-${piece}`);
+
+        const color = this.orp.info.colors[color_id];
+
+        pieceElement.style.setProperty("--pieceColor", color.code);
+        pieceElement.style.setProperty("--pieceColorDarker", color.darkerCode);
+
+        const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
+        cellElement.appendChild(pieceElement);
+
+        if (piece < 5) {
+          pieceElement.classList.add("orp_piece-half");
+          pieceElement.classList.add(`orp_piece-half-${piece}`);
+        }
+      }
+    },
+
     setupSolutionPieces: function () {
       const solutionPiecesElement =
         document.getElementById("orp_solutionPieces");
@@ -415,8 +424,24 @@ define([
     },
 
     actSaveSolution: function () {
-      const placedPieces = JSON.stringify(this.orp.globals.placedPieces);
-      this.performAction("actSaveSolution", { placedPieces });
+      const placedPieces = [];
+      document
+        .getElementById("orp_board")
+        .querySelectorAll("[data-cell]")
+        .forEach((cellElement) => {
+          const pieceElement = cellElement.querySelector("[data-piece]");
+          if (pieceElement) {
+            const [x, y] = cellElement.dataset.cell.split("-");
+            const piece = pieceElement.dataset.piece;
+            const color_id = pieceElement.dataset.color;
+
+            placedPieces.push({ piece, color_id, x, y });
+          }
+        });
+
+      this.performAction("actSaveSolution", {
+        placedPieces: JSON.stringify(placedPieces),
+      });
     },
 
     ///////////////////////////////////////////////////

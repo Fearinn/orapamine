@@ -147,8 +147,7 @@ function enableRotation(pieceElement) {
 }
 
 class Draggable {
-  constructor(g, g_gemstones) {
-    game = g;
+  constructor(g_gemstones) {
     gemstones = g_gemstones;
 
     const gameAreaElement = document.getElementById("orp_gameArea");

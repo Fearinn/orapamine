@@ -133,15 +133,12 @@ function enableRotation(pieceElement) {
 
   if (piece > 0 && piece < 5) {
     pieceElement.onclick = () => {
-      pieceElement.classList.remove(`orp_piece-half-${piece}`);
-
       piece++;
       if (piece > 4) {
         piece = 1;
       }
 
       pieceElement.dataset.piece = piece;
-      pieceElement.classList.add(`orp_piece-half-${piece}`);
     };
   }
 }

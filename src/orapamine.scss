@@ -199,7 +199,7 @@
   }
 
   &-half {
-    &-1 {
+    &[data-piece="1"] {
       background: linear-gradient(
         to bottom right,
         var(--boardColor) 50%,
@@ -209,7 +209,7 @@
       border-right-color: var(--pieceColorDarker);
     }
 
-    &-2 {
+    &[data-piece="2"] {
       background: linear-gradient(
         to bottom left,
         var(--boardColor) 50%,
@@ -219,7 +219,7 @@
       border-left-color: var(--pieceColorDarker);
     }
 
-    &-3 {
+    &[data-piece="3"] {
       background: linear-gradient(
         to top right,
         var(--boardColor) 50%,
@@ -229,7 +229,7 @@
       border-right-color: var(--pieceColorDarker);
     }
 
-    &-4 {
+    &[data-piece="4"] {
       background: linear-gradient(
         to top left,
         var(--boardColor) 50%,

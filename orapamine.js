@@ -349,7 +349,17 @@ define([
 
         if (piece < 5) {
           pieceElement.classList.add("orp_piece-half");
-          pieceElement.classList.add(`orp_piece-half-${piece}`);
+          
+          pieceElement.onclick = () => {
+            piece++;
+            if (piece > 4) {
+              piece = 1;
+            }
+
+            pieceElement.dataset.piece = piece;
+          };
+
+          let piece = Number(pieceElement.dataset.piece);
         }
       }
     },
@@ -397,7 +407,6 @@ define([
 
             if (piece < 5) {
               pieceElement.classList.add("orp_piece-half");
-              pieceElement.classList.add(`orp_piece-half-${piece}`);
             }
           });
         });

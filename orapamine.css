@@ -238,22 +238,22 @@
 .orp_piece:not(.orp_piece-half, .orp_piece-empty) {
   border-color: var(--pieceColorDarker);
 }
-.orp_piece-half-1 {
+.orp_piece-half[data-piece="1"] {
   background: linear-gradient(to bottom right, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-bottom-color: var(--pieceColorDarker);
   border-right-color: var(--pieceColorDarker);
 }
-.orp_piece-half-2 {
+.orp_piece-half[data-piece="2"] {
   background: linear-gradient(to bottom left, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-bottom-color: var(--pieceColorDarker);
   border-left-color: var(--pieceColorDarker);
 }
-.orp_piece-half-3 {
+.orp_piece-half[data-piece="3"] {
   background: linear-gradient(to top right, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-top-color: var(--pieceColorDarker);
   border-right-color: var(--pieceColorDarker);
 }
-.orp_piece-half-4 {
+.orp_piece-half[data-piece="4"] {
   background: linear-gradient(to top left, var(--boardColor) 50%, var(--pieceColor) 50%);
   border-top-color: var(--pieceColorDarker);
   border-left-color: var(--pieceColorDarker);

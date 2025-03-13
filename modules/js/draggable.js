@@ -98,52 +98,33 @@ function dropItemOntoXY(pieceElement, x, y) {
     return;
   }
 
-  if (pointsTo.classList.contains("orp_innerCell")) {
-    const cellElement = pointsTo.parentNode;
+  const cellElement = pointsTo.closest(`[data-cell]`);
 
-    if (pieceElement.dataset.color !== pointsTo.dataset.color) {
-      return;
-    }
-
-    if (pieceElement.parentNode.dataset.cell) {
-      cellElement.insertAdjacentElement("afterbegin", pieceElement);
-    } else {
-      pieceElement = pieceElement.cloneNode(true);
-      cellElement.insertAdjacentElement("afterbegin", pieceElement);
-    }
-
-    enableRotation(pieceElement);
+  if (!cellElement || cellElement.querySelector("[data-piece]")) {
+    return;
   }
 
-  if (pointsTo.dataset.cell) {
-    if (pieceElement.parentNode.dataset.cell) {
-      pointsTo.insertAdjacentElement("afterbegin", pieceElement);
-    } else {
-      pieceElement = pieceElement.cloneNode(true);
-      pointsTo.insertAdjacentElement("afterbegin", pieceElement);
-    }
-
-    enableRotation(pieceElement);
+  const innerCellElement = cellElement.querySelector(".orp_innerCell");
+  if (
+    innerCellElement &&
+    innerCellElement.dataset.color != pieceElement.dataset.color
+  ) {
+    return;
   }
-}
 
-function enableRotation(pieceElement) {
-  let piece = Number(pieceElement.dataset.piece);
-
-  if (piece > 0 && piece < 5) {
-    pieceElement.onclick = () => {
-      piece++;
-      if (piece > 4) {
-        piece = 1;
-      }
-
-      pieceElement.dataset.piece = piece;
-    };
+  if (boardElement.contains(pieceElement)) {
+    cellElement.insertAdjacentElement("afterbegin", pieceElement);
+    game.enableRotation(pieceElement);
+    return;
   }
+  const cloneElement = pieceElement.cloneNode(true);
+  cellElement.insertAdjacentElement("afterbegin", cloneElement);
+  game.enableRotation(cloneElement);
 }
 
 class Draggable {
-  constructor(g_gemstones) {
+  constructor(g, g_gemstones) {
+    game = g;
     gemstones = g_gemstones;
 
     const gameAreaElement = document.getElementById("orp_gameArea");

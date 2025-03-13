@@ -39,7 +39,9 @@ define([
         globals: {
           solutionSheet: gamedatas.solutionSheet,
         },
-        managers: {},
+        managers: {
+          uid: 0,
+        },
       };
 
       this.orp.managers.zoom = new ZoomManager({
@@ -66,7 +68,7 @@ define([
         this.createPieceElement(placedPiece);
       });
 
-      new Draggable(gamedatas.GEMSTONES);
+      new Draggable(this, this.orp.info.gemstones);
 
       if (!this.isSpectator) {
         const playerPanel = this.getPlayerPanelElement(this.player_id);
@@ -194,6 +196,10 @@ define([
 
     ///////////////////////////////////////////////////
     //// Utility methods
+
+    getUniqueId: function () {
+      return ++this.orp.managers.uid;
+    },
 
     setupBoard: function () {
       document.querySelectorAll("[data-cell]").forEach((cellElement) => {
@@ -362,7 +368,10 @@ define([
 
     createPieceElement: function ({ piece, color_id, x, y }) {
       if (piece > 0) {
+        const uid = this.getUniqueId();
+
         const pieceElement = document.createElement("div");
+        pieceElement.id = `orp_piece-${uid}`;
         pieceElement.dataset.piece = piece;
         pieceElement.dataset.color = color_id;
         pieceElement.classList.add("orp_piece");
@@ -376,20 +385,7 @@ define([
         const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
         cellElement.insertAdjacentElement("afterbegin", pieceElement);
 
-        if (piece < 5) {
-          pieceElement.classList.add("orp_piece-half");
-
-          pieceElement.onclick = () => {
-            piece++;
-            if (piece > 4) {
-              piece = 1;
-            }
-
-            pieceElement.dataset.piece = piece;
-          };
-
-          let piece = Number(pieceElement.dataset.piece);
-        }
+        this.enableRotation(pieceElement);
       }
     },
 
@@ -440,6 +436,30 @@ define([
           });
         });
       });
+    },
+
+    enableRotation: function (pieceElement) {
+      let piece = pieceElement.dataset.piece;
+      const uid = pieceElement.id.split("-")[1];
+
+      if (piece < 5) {
+        pieceElement.classList.add("orp_piece-half");
+
+        pieceElement.insertAdjacentHTML(
+          "beforeend",
+          `<div id="orp_rotatePieceButton-${uid}" class="orp_rotatePieceButton"></div>`
+        );
+
+        document.getElementById(`orp_rotatePieceButton-${uid}`).onclick =
+          () => {
+            piece++;
+            if (piece > 4) {
+              piece = 1;
+            }
+
+            pieceElement.dataset.piece = piece;
+          };
+      }
     },
 
     ///////////////////////////////////////////////////

@@ -292,6 +292,23 @@
   border-left-color: var(--pieceColorDarker);
 }
 
+.orp_rotatePieceButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: black;
+  border-radius: 100%;
+  aspect-ratio: 1;
+  width: 20px;
+}
+.orp_rotatePieceButton::after {
+  font-size: 16px;
+  text-align: center;
+  content: "↺";
+  display: block;
+  color: white;
+}
+
 .orp_dragContainer {
   transform: scale(1) !important;
 }

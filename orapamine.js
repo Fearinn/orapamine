@@ -64,13 +64,13 @@ define([
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
-      gamedatas.solutionSheet.forEach((placedPiece) => {
-        this.createPieceElement(placedPiece);
-      });
-
-      new Draggable(this, this.orp.info.gemstones);
-
       if (!this.isSpectator) {
+        gamedatas.solutionSheet.forEach((placedPiece) => {
+          this.createPieceElement(placedPiece);
+        });
+
+        new Draggable(this, this.orp.info.gemstones);
+
         const playerPanel = this.getPlayerPanelElement(this.player_id);
         playerPanel.insertAdjacentHTML(
           "beforeend",

@@ -34,7 +34,7 @@ const SELECTABLE_ORIGINS = "selectableOrigins";
 const ORIGIN = "origin";
 const REVEALED_LOCATIONS = "revealedLocations";
 const REVEALED_ORIGINS = "revealedOrigins";
-const SOLUTION_SHEET = "solutionSheet";
+const SOLUTION_SHEETS = "solutionSheets";
 
 class Game extends \Table
 {
@@ -50,6 +50,8 @@ class Game extends \Table
         require "material.inc.php";
 
         $this->initGameStateLabels([]);
+
+        $this->bSelectGlobalsForUpdate = true;
     }
 
     /**
@@ -247,8 +249,15 @@ class Game extends \Table
             throw new \BgaVisibleSystemException("Only players may perform this action");
         }
 
-        $this->globals->set(SOLUTION_SHEET, []);
-        $this->notify->player($player_id, "message", clienttranslate("Solution sheet successfully cleared"));
+        $solutionSheets = $this->globals->get(SOLUTION_SHEETS);
+        $solutionSheets[$player_id] = [];
+        $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
+
+        $this->notify->player(
+            $player_id,
+            "message",
+            clienttranslate("Solution sheet successfully cleared")
+        );
 
         $this->gamestate->nextState("nextPlayer");
     }
@@ -265,8 +274,15 @@ class Game extends \Table
             throw new \BgaVisibleSystemException("Only players may perform this action");
         }
 
-        $this->globals->set(SOLUTION_SHEET, $solutionSheet);
-        $this->notify->player($player_id, "message", clienttranslate("Solution sheet successfully saved"));
+        $solutionSheets = $this->globals->get(SOLUTION_SHEETS);
+        $solutionSheets[$player_id] = $solutionSheet;
+        $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
+
+        $this->notify->player(
+            $player_id,
+            "message",
+            clienttranslate("Solution sheet successfully saved")
+        );
 
         $this->gamestate->nextState("nextPlayer");
     }
@@ -358,7 +374,7 @@ class Game extends \Table
                     $board[$piece_x][$piece_y] = $piece;
                     $coloredBoard[$piece_x][$piece_y] = (int) $gemstone["color"];
                 }
-                
+
                 $piece_x++;
             }
 
@@ -732,7 +748,7 @@ class Game extends \Table
         $result["GEMSTONES"] = array_values($this->GEMSTONES);
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
-        $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEET, []);
+        $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
         // $result["board"] = $this->globals->get(BOARD);
         // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 
@@ -787,6 +803,12 @@ class Game extends \Table
         $this->setupBoard();
         $this->updateSelectableLocations("", true);
         $this->updateSelectableOrigins("", "", true);
+
+        $solutionSheets = [];
+        foreach ($players as $player_id => $player) {
+            $solutionSheets[$player_id] = [];
+            $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
+        }
 
         // Activate first player once everything has been initialized and ready.
         $this->activeNextPlayer();
@@ -847,10 +869,5 @@ class Game extends \Table
     public function debug_sendWave(string $origin): void
     {
         $this->actSendWave(null, $origin);
-    }
-
-    public function debug_resetSolution(): void
-    {
-        $this->globals->set(SOLUTION_SHEET, []);
     }
 }

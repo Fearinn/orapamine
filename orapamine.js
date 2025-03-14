@@ -90,15 +90,8 @@ define([
 
         new Draggable(this, this.orp.info.gemstones);
 
-        const playerPanel = this.getPlayerPanelElement(this.player_id);
-
-        playerPanel.insertAdjacentHTML(
-          "beforeend",
-          `<div id="orp_panelButtons" class="orp_panelButtons"></div>`
-        );
-
         this.statusBar.addActionButton(
-          `<i class="orp_icon-trash orp_icon"></i>`,
+          `<i class="fa fa-trash"></i>`,
           () => {
             this.confirmationDialog(
               _("Are you sure you want to clear the solution sheet?"),
@@ -108,25 +101,25 @@ define([
             );
           },
           {
-            id: "orp_clearSolutionButton",
-            color: "alert",
-            classes: ["orp_panelButton"],
-            destination: document.getElementById("orp_panelButtons"),
+            id: "orp_boardButton-clear",
             title: _("Clear solution"),
+            color: "alert",
+            classes: ["orp_boardButton", "orp_boardButton-clear"],
+            destination: document.getElementById("orp_boardButtons"),
           }
         );
 
         this.statusBar.addActionButton(
-          `<i class="orp_icon-disk orp_icon"></i>`,
+          `<i class="fa fa-floppy-o" aria-hidden="true"></i>`,
           () => {
             this.actSaveSolution();
           },
           {
-            id: "orp_saveSolutionButton",
-            color: "secondary",
-            classes: ["orp_panelButton", "orp_saveSolutionButton"],
-            destination: document.getElementById("orp_panelButtons"),
+            id: "orp_boardButton-save",
             title: _("Save solution"),
+            color: "secondary",
+            classes: ["orp_boardButton", "orp_boardButton-save"],
+            destination: document.getElementById("orp_boardButtons"),
           }
         );
       }
@@ -474,12 +467,8 @@ define([
       if (piece < 5) {
         pieceElement.classList.add("orp_piece-half");
 
-        pieceElement.insertAdjacentHTML(
-          "beforeend",
-          `<div id="orp_rotatePieceButton-${uid}" class="orp_rotatePieceButton"></div>`
-        );
-
-        document.getElementById(`orp_rotatePieceButton-${uid}`).onclick =
+        this.statusBar.addActionButton(
+          `<i class="fa fa-undo fa-inverse" aria-hidden="true"></i>`,
           () => {
             piece++;
             if (piece > 4) {
@@ -487,7 +476,14 @@ define([
             }
 
             pieceElement.dataset.piece = piece;
-          };
+          },
+          {
+            id: `orp_rotatePieceButton-${uid}`,
+            title: _("Rotate piece"),
+            classes: ["orp_rotatePieceButton"],
+            destination: pieceElement,
+          }
+        );
       }
     },
 

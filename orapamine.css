@@ -90,6 +90,7 @@
 :root {
   --boardHeight: 640px;
   --boardWidth: calc(1.25 * var(--boardHeight));
+  --boardContainerWidth: calc(var(--boardWidth) + 120px);
   --boardColor: rgba(200, 200, 200, 0.8);
   --cellWidth: calc(var(--boardWidth) / 10);
 }
@@ -113,38 +114,31 @@
   text-transform: capitalize;
 }
 
-.orp_panelButtons {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  margin-top: 4px;
-  width: fit-content;
-}
-
-.orp_panelButton {
-  font-size: 24px;
-  margin: 0;
-  padding: 0;
-  aspect-ratio: 1;
-  width: 40px !important;
-}
-.orp_panelButton .orp_icon {
-  font-style: normal;
-  display: block;
-}
-.orp_panelButton .orp_icon-trash::after {
-  content: "🗑";
-}
-.orp_panelButton .orp_icon-disk::after {
-  content: "💾";
-}
-
 .orp_boardContainer {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
+  aspect-ratio: 1.25;
+  width: var(--boardContainerWidth);
+}
+
+.orp_boardButtons {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+.orp_boardButtons .orp_boardButton {
+  font-size: 24px;
+  position: absolute;
+  top: 0.5%;
+  margin: 0;
+}
+.orp_boardButtons .orp_boardButton-clear {
+  left: 1%;
+}
+.orp_boardButtons .orp_boardButton-save {
+  right: 1%;
 }
 
 .orp_axis {
@@ -155,23 +149,23 @@
 }
 .orp_axis.orp_axis-x {
   grid-template-columns: repeat(10, var(--cellWidth));
-  left: 3.75%;
+  left: 6.5%;
 }
 .orp_axis.orp_axis-x[data-position=top] {
-  top: -0.5%;
+  top: 1%;
 }
 .orp_axis.orp_axis-x[data-position=bottom] {
-  bottom: -0.5%;
+  bottom: 1%;
 }
 .orp_axis.orp_axis-y {
   grid-template-rows: repeat(8, calc(var(--boardHeight) / 8));
-  top: 3.75%;
+  top: 6.5%;
 }
 .orp_axis.orp_axis-y[data-position=left] {
-  left: -1%;
+  left: 2%;
 }
 .orp_axis.orp_axis-y[data-position=right] {
-  right: -1%;
+  right: 2%;
 }
 
 .orp_origin {
@@ -294,19 +288,13 @@
 
 .orp_rotatePieceButton {
   position: absolute;
-  top: 0;
+  top: 1%;
   right: 0;
   background-color: black;
   border-radius: 100%;
+  padding: 4px;
   aspect-ratio: 1;
-  width: 20px;
-}
-.orp_rotatePieceButton::after {
-  font-size: 16px;
-  text-align: center;
-  content: "↺";
-  display: block;
-  color: white;
+  margin: 0;
 }
 
 .orp_dragContainer {

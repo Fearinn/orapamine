@@ -10,7 +10,8 @@
 -------
 -->
 <div id="orp_gameArea" class="orp_gameArea">
-  <div id="orp_boardContainer" class="orp_boardContainer">
+  <div id="orp_boardContainer" class="orp_boardContainer whiteblock">
+    <div id="orp_boardButtons" class="orp_boardButtons"></div>
     <div id="orp_letterAxis-y" class="orp_axis orp_axis-y" data-position="left">
       <div id="orp_origin-A" class="orp_origin" data-origin="A">A</div>
       <div id="orp_origin-B" class="orp_origin" data-origin="B">B</div>

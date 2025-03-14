@@ -97,7 +97,7 @@ class Game extends \Table
     {
         $player_id = (int) $this->getActivePlayerId();
         $this->giveExtraTime($player_id);
-        $this->activeNextPlayer($player_id);
+        $this->activeNextPlayer();
 
         $this->gamestate->nextState("nextPlayer");
     }
@@ -283,6 +283,66 @@ class Game extends \Table
             "message",
             clienttranslate("Solution sheet successfully saved")
         );
+
+        $this->gamestate->nextState("nextPlayer");
+    }
+
+    public function actSubmitSolution(int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $solutionSheet): void
+    {
+        $this->checkVersion($CLIENT_VERSION);
+
+        $player_id = (int) $this->getActivePlayerId();
+
+        $solutionSheets = $this->globals->get(SOLUTION_SHEETS);
+        $solutionSheets[$player_id] = $solutionSheet;
+        $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
+
+        $board = $this->globals->get(BOARD);
+        $coloredBoard = $this->globals->get(COLORED_BOARD);
+
+        $correct = true;
+
+        foreach ($solutionSheet as $solution) {
+            $x = (int) $solution["x"];
+            $y = (int) $solution["y"];
+            $color_id = (int) $solution["color_id"];
+            $piece = (int) $solution["piece"];
+
+            if ($board[$x][$y] !== $piece || $coloredBoard[$x][$y] !== $color_id) {
+                $correct = false;
+                break;
+            }
+        }
+
+        if (!$solutionSheet) {
+            throw new \BgaUserException(clienttranslate("You may not submit an empty answer"));
+        }
+
+        if ($correct) {
+            $this->DbQuery("UPDATE player SET player_score=1 WHERE player_id=$player_id");
+
+            $this->notify->all(
+                "correctSolution",
+                clienttranslate('${player_name} finds the correct answer!'),
+                [
+                    "player_id" => $player_id,
+                    "player_name" => $this->getPlayerNameById($player_id),
+                ]
+            );
+
+            $this->gamestate->nextState("gameEnd");
+            return;
+        }
+
+        $this->notify->all(
+            "wrongSolution",
+            clienttranslate('${player_name} gives an incorrect answer and loses one chance'),
+            [
+                "player_id" => $player_id,
+                "player_name" => $this->getPlayerNameById($player_id),
+            ]
+        );
+        $this->DbQuery("UPDATE player SET player_chances=player_chances-1 where player_id=$player_id");
 
         $this->gamestate->nextState("nextPlayer");
     }
@@ -741,7 +801,7 @@ class Game extends \Table
         $current_player_id = (int) $this->getCurrentPlayerId();
 
         $result["players"] = $this->getCollectionFromDb(
-            "SELECT `player_id` `id`, `player_score` `score` FROM `player`"
+            "SELECT `player_id` `id`, `player_score` `score`, `player_chances` `chances` FROM `player`"
         );
         $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $result["COLORS"] = $this->COLORS;

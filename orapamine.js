@@ -143,6 +143,15 @@ define([
               });
             }
           );
+
+          this.statusBar.addActionButton(_("Submit answer"), () => {
+            this.confirmationDialog(
+              _("Are you sure you want to submit an answer?"),
+              () => {
+                this.actSubmitSolution();
+              }
+            );
+          });
         }
 
         if (stateName === "client_sendWave") {
@@ -517,6 +526,27 @@ define([
           checkAction: false,
         }
       );
+    },
+
+    actSubmitSolution: function () {
+      const solutionSheet = [];
+      document
+        .getElementById("orp_board")
+        .querySelectorAll("[data-cell]")
+        .forEach((cellElement) => {
+          const pieceElement = cellElement.querySelector("[data-piece]");
+          if (pieceElement) {
+            const [x, y] = cellElement.dataset.cell.split("-");
+            const piece = pieceElement.dataset.piece;
+            const color_id = pieceElement.dataset.color;
+
+            solutionSheet.push({ piece, color_id, x, y });
+          }
+        });
+
+      this.performAction("actSubmitSolution", {
+        solutionSheet: JSON.stringify(solutionSheet),
+      });
     },
 
     ///////////////////////////////////////////////////

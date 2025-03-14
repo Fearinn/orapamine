@@ -118,6 +118,8 @@ function dropItemOntoXY(pieceElement, x, y) {
     return;
   }
   const cloneElement = pieceElement.cloneNode(true);
+  const uid = game.getUniqueId();
+  cloneElement.id = `orp_piece-${uid}`;
   cellElement.insertAdjacentElement("afterbegin", cloneElement);
   game.enableRotation(cloneElement);
 }

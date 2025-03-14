@@ -66,7 +66,7 @@ define([
 
       if (!this.isSpectator) {
         gamedatas.solutionSheet.forEach((placedPiece) => {
-          this.createPieceElement(placedPiece);
+          this.insertPieceElement(placedPiece);
         });
 
         new Draggable(this, this.orp.info.gemstones);
@@ -225,7 +225,7 @@ define([
           const piece = Number(row[y]);
 
           const color_id = coloredBoard[x][y];
-          this.createPieceElement({ piece, color_id, x, y });
+          this.insertPieceElement({ piece, color_id, x, y });
         });
       });
     },
@@ -375,7 +375,7 @@ define([
       });
     },
 
-    createPieceElement: function ({ piece, color_id, x, y }) {
+    insertPieceElement: function ({ piece, color_id, x, y }) {
       if (piece > 0) {
         const uid = this.getUniqueId();
 

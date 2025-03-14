@@ -335,7 +335,7 @@ class Game extends \Table
         }
 
         $this->notify->all(
-            "wrongSolution",
+            "incorrectSolution",
             clienttranslate('${player_name} gives an incorrect answer and loses one chance'),
             [
                 "player_id" => $player_id,

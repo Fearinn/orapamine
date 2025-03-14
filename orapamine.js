@@ -41,6 +41,7 @@ define([
         },
         managers: {
           uid: 0,
+          counters: {},
         },
       };
 
@@ -64,6 +65,24 @@ define([
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
+      for (const player_id in gamedatas.players) {
+        const playerPanel = this.getPlayerPanelElement(player_id);
+        const playerChances = gamedatas.players[player_id].chances;
+
+        playerPanel.insertAdjacentHTML(
+          "beforeend",
+          `<div class="orp_playerChancesContainer">
+            <span id="orp_playerChances-${player_id}" class="orp_playerChances">${playerChances}</span>
+            <i class="fa fa-heart"></i>
+          </div>`
+        );
+
+        this.orp.managers.counters[player_id] = { chances: new ebg.counter() };
+        const counter = this.orp.managers.counters[player_id].chances;
+        counter.create(`orp_playerChances-${player_id}`);
+        counter.setValue(playerChances);
+      }
+
       if (!this.isSpectator) {
         gamedatas.solutionSheet.forEach((placedPiece) => {
           this.insertPieceElement(placedPiece);
@@ -72,6 +91,7 @@ define([
         new Draggable(this, this.orp.info.gemstones);
 
         const playerPanel = this.getPlayerPanelElement(this.player_id);
+
         playerPanel.insertAdjacentHTML(
           "beforeend",
           `<div id="orp_panelButtons" class="orp_panelButtons"></div>`
@@ -569,6 +589,11 @@ define([
         { origin, color },
         { origin: exit, color },
       ]);
+    },
+
+    notif_incorrectSolution: function (args) {
+      const player_id = args.player_id;
+      this.orp.managers.counters[player_id].chances.incValue(-1);
     },
 
     format_string_recursive(log, args) {

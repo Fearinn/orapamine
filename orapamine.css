@@ -114,6 +114,13 @@
   text-transform: capitalize;
 }
 
+.orp_playerChances {
+  margin-left: 8px;
+}
+.orp_playerChances-icon {
+  color: #c92727;
+}
+
 .orp_boardContainer {
   position: relative;
   display: flex;
@@ -290,7 +297,6 @@
   position: absolute;
   top: 1%;
   right: 0;
-  background-color: black;
   border-radius: 100%;
   padding: 4px;
   aspect-ratio: 1;

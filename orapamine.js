@@ -73,7 +73,7 @@ define([
           "beforeend",
           `<div class="orp_playerChancesContainer">
             <span id="orp_playerChances-${player_id}" class="orp_playerChances">${playerChances}</span>
-            <i class="fa fa-heart"></i>
+            <i class="fa fa-heart orp_playerChances-icon"></i>
           </div>`
         );
 
@@ -102,7 +102,7 @@ define([
           },
           {
             id: "orp_boardButton-clear",
-            title: _("Clear solution"),
+            title: _("Clear solution sheet"),
             color: "alert",
             classes: ["orp_boardButton", "orp_boardButton-clear"],
             destination: document.getElementById("orp_boardButtons"),
@@ -116,8 +116,7 @@ define([
           },
           {
             id: "orp_boardButton-save",
-            title: _("Save solution"),
-            color: "secondary",
+            title: _("Save solution sheet"),
             classes: ["orp_boardButton", "orp_boardButton-save"],
             destination: document.getElementById("orp_boardButtons"),
           }

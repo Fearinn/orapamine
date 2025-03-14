@@ -99,6 +99,18 @@ class Game extends \Table
         $this->giveExtraTime($player_id);
         $this->activeNextPlayer();
 
+
+        $eliminatedPlayersCount = (int) $this->getUniqueValueFromDB("SELECT COUNT(player_eliminated) FROM player WHERE player_eliminated=1");
+        $playerChances = (int) $this->getUniqueValueFromDB("SELECT player_chances FROM player WHERE player_id=$player_id");
+        if ($playerChances === 0) {
+            if ($eliminatedPlayersCount + 1 === $this->getPlayersNumber()) {
+                $this->gamestate->nextState("gameEnd");
+                return;
+            }
+
+            $this->eliminatePlayer($player_id);
+        }
+
         $this->gamestate->nextState("nextPlayer");
     }
 

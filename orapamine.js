@@ -464,6 +464,20 @@ define([
       let piece = pieceElement.dataset.piece;
       const uid = pieceElement.id.split("-")[1];
 
+      this.statusBar.addActionButton(
+        `<i class="fa fa-trash fa-inverse" aria-hidden="true"></i>`,
+        () => {
+          pieceElement.remove();
+        },
+        {
+          id: `orp_pieceButton-delete-${uid}`,
+          title: _("Delete piece"),
+          classes: ["orp_pieceButton-delete", "orp_pieceButton"],
+          color: "alert",
+          destination: pieceElement,
+        }
+      );
+
       if (piece < 5) {
         pieceElement.classList.add("orp_piece-half");
 
@@ -478,9 +492,9 @@ define([
             pieceElement.dataset.piece = piece;
           },
           {
-            id: `orp_rotatePieceButton-${uid}`,
+            id: `orp_pieceButton-rotate-${uid}`,
             title: _("Rotate piece"),
-            classes: ["orp_rotatePieceButton"],
+            classes: ["orp_pieceButton-rotate", "orp_pieceButton"],
             destination: pieceElement,
           }
         );

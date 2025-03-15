@@ -234,8 +234,12 @@ define([
       Object.keys(board).forEach((x) => {
         const row = board[x];
         Object.keys(row).forEach((y) => {
-          const piece = Number(row[y]);
+          document
+            .querySelector(`[data-cell="${x}-${y}"]`)
+            .querySelector("[data-piece]")
+            ?.remove();
 
+          const piece = Number(row[y]);
           const color_id = coloredBoard[x][y];
           this.insertPieceElement({ piece, color_id, x, y });
         });
@@ -604,6 +608,14 @@ define([
     notif_incorrectSolution: function (args) {
       const player_id = args.player_id;
       this.orp.managers.counters[player_id].chances.incValue(-1);
+    },
+
+    notif_correctSolution: function (args) {
+      const { board, coloredBoard } = args;
+      this.revealBoard({
+        board,
+        coloredBoard,
+      });
     },
 
     format_string_recursive(log, args) {

@@ -339,6 +339,8 @@ class Game extends \Table
                 [
                     "player_id" => $player_id,
                     "player_name" => $this->getPlayerNameById($player_id),
+                    "board" => $this->globals->get(BOARD),
+                    "coloredBoard" => $this->globals->get(COLORED_BOARD),
                 ]
             );
 

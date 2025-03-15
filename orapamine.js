@@ -406,6 +406,7 @@ define([
         const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
         cellElement.insertAdjacentElement("afterbegin", pieceElement);
 
+        this.addTooltip(pieceElement.id, _(color.label), "");
         this.enableRotation(pieceElement);
       }
     },

@@ -117,10 +117,14 @@ function dropItemOntoXY(pieceElement, x, y) {
     game.enableRotation(pieceElement);
     return;
   }
+
   const cloneElement = pieceElement.cloneNode(true);
   const uid = game.getUniqueId();
   cloneElement.id = `orp_piece-${uid}`;
   cellElement.insertAdjacentElement("afterbegin", cloneElement);
+
+  const color = game.orp.info.colors[cloneElement.dataset.color];
+  game.addTooltip(cloneElement.id, _(color.label), "");
   game.enableRotation(cloneElement);
 }
 

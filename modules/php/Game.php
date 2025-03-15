@@ -303,6 +303,10 @@ class Game extends \Table
     {
         $this->checkVersion($CLIENT_VERSION);
 
+        if (!$this->isValidSolution($solutionSheet)) {
+            throw new \BgaUserException(clienttranslate("Please submit a valid answer"));
+        };
+
         $player_id = (int) $this->getActivePlayerId();
 
         $solutionSheets = $this->globals->get(SOLUTION_SHEETS);
@@ -324,10 +328,6 @@ class Game extends \Table
                 $correct = false;
                 break;
             }
-        }
-
-        if (!$solutionSheet) {
-            throw new \BgaUserException(clienttranslate("You may not submit an empty answer"));
         }
 
         if ($correct) {
@@ -354,6 +354,7 @@ class Game extends \Table
                 "player_name" => $this->getPlayerNameById($player_id),
             ]
         );
+
         $this->DbQuery("UPDATE player SET player_chances=player_chances-1 where player_id=$player_id");
 
         $this->gamestate->nextState("nextPlayer");
@@ -765,6 +766,87 @@ class Game extends \Table
         unset($selectableOrigins[$k_removedExit]);
 
         $this->globals->set(SELECTABLE_ORIGINS, $selectableOrigins);
+    }
+
+    public function isValidSolution(array $solutionSheet): bool
+    {
+        $gemstones = $this->GEMSTONES;
+
+        if (count($solutionSheet) !== 22) {
+            return false;
+        }
+
+        $test_board = array_fill(1, 10, array_fill(1, 8, 0));
+        $test_coloredBoard = array_fill(1, 10, array_fill(1, 8, 0));
+
+        foreach ($solutionSheet as $solution) {
+            $piece = (int) $solution["piece"];
+            $x = (int) $solution["x"];
+            $y = (int) $solution["y"];
+            $color_id = (int) $solution["color_id"];
+
+            $test_board[$x][$y] = $piece;
+            $test_coloredBoard[$x][$y] = $color_id;
+        }
+
+
+        $foundLocation = [];
+
+        foreach ($gemstones as $gemstone) {
+            $found = false;
+            $format = (array) $gemstone["format"];
+            $color_id = (int) $gemstone["color"];
+
+            if (!isset($foundLocation)) {
+                $foundLocation[$color_id] = [];
+            }
+
+            foreach ($format as $matrix) {
+                $rows = count($matrix);
+                $cols = count($matrix[0]);
+
+                for ($x = 1; $x <= 10 + 1 - $cols; $x++) {
+                    for ($y = 1; $y <= 8 + 1 - $rows; $y++) {
+                        if ($this->matchesGemstone($test_board, $test_coloredBoard, $color_id, $matrix, $x, $y) && !isset($foundLocation[$color_id][$x][$y])) {
+                            $foundLocation[$color_id][$x][$y] = true;
+                            $found = true;
+                            break 3;
+                        }
+                    }
+                }
+            }
+
+            if (!$found) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function matchesGemstone(array $board, array $coloredBoard, int $color_id, array $matrix, int $startX, int $startY): bool
+    {
+        $rows = count($matrix);
+        $cols = count($matrix[0]);
+
+        for ($j = 0; $j < $rows; $j++) {
+            for ($i = 0; $i < $cols; $i++) {
+                if ($matrix[$j][$i] !== 0) {
+                    $x = $startX + $i;
+                    $y = $startY + $j;
+
+                    if ($x < 1 || $x > 10 || $y < 1 || $y > 8 || !isset($board[$x][$y])) {
+                        return false;
+                    }
+
+                    if ($board[$x][$y] !== $matrix[$j][$i] || $coloredBoard[$x][$y] !== $color_id) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

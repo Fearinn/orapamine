@@ -20,6 +20,7 @@ define([
   "dojo/_base/declare",
   "ebg/core/gamegui",
   "ebg/counter",
+  `${g_gamethemeurl}modules/js/clickable.js`,
   `${g_gamethemeurl}modules/js/draggable.js`,
   `${g_gamethemeurl}modules/js/bga-zoom.js`,
 ], function (dojo, declare) {
@@ -88,7 +89,11 @@ define([
           this.insertPieceElement(placedPiece);
         });
 
-        new Draggable(this, this.orp.info.gemstones);
+        if (this.getGameUserPreference(100) == 1) {
+          new Draggable(this);
+        } else {
+          new Clickable(this);
+        }
 
         this.statusBar.addActionButton(
           `<i class="fa fa-trash"></i>`,
@@ -166,9 +171,7 @@ define([
           });
         }
 
-        if (stateName === "client_sendWave") {
-          const selectableOrigins = args.client_args.selectableOrigins;
-
+        if (stateName.includes("client_")) {
           this.statusBar.addActionButton(
             _("Cancel"),
             () => {
@@ -176,20 +179,38 @@ define([
             },
             { color: "alert" }
           );
+        }
+
+        if (stateName === "client_sendWave") {
+          const selectableOrigins = args.client_args.selectableOrigins;
           this.setSelectableOrigins(selectableOrigins);
         }
 
         if (stateName === "client_askLocation") {
           const selectableLocations = args.client_args.selectableLocations;
-
-          this.statusBar.addActionButton(
-            _("Cancel"),
-            () => {
-              this.restoreServerGameState();
-            },
-            { color: "alert" }
-          );
           this.setSelectableLocations(selectableLocations);
+        }
+
+        if (stateName === "client_placePiece") {
+          document.querySelectorAll("[data-cell]").forEach((cellElement) => {
+            if (cellElement.querySelector("[data-piece]")) {
+              return;
+            }
+
+            cellElement.classList.add("orp_cell-selectable");
+            cellElement.onclick = () => {
+              const pieceElement = this.orp.globals.pieceElement;
+              cellElement.insertAdjacentElement("afterbegin", pieceElement);
+
+              document
+                .querySelectorAll("[data-piece]")
+                .forEach((pieceElement) => {
+                  pieceElement.classList.remove("orp_piece-selected");
+                });
+
+              this.restoreServerGameState();
+            };
+          });
         }
       }
     },
@@ -204,6 +225,19 @@ define([
       if (stateName === "client_sendWave") {
         this.setSelectableOrigins(null, true);
       }
+
+      if (stateName === "client_placePiece") {
+        document.querySelectorAll("[data-piece]").forEach((pieceElement) => {
+          pieceElement.classList.remove("orp_piece-selected");
+        });
+
+        document.querySelectorAll("[data-cell]").forEach((cellElement) => {
+          cellElement.classList.remove("orp_cell-selectable");
+          cellElement.onclick = null;
+        });
+
+        this.orp.globals.pieceElement = null;
+      }
     },
 
     onUpdateActionButtons: function (stateName, args) {
@@ -217,6 +251,10 @@ define([
 
     ///////////////////////////////////////////////////
     //// Utility methods
+
+    getStateName: function () {
+      return this.gamedatas.gamestate.name;
+    },
 
     getUniqueId: function () {
       return ++this.orp.managers.uid;

@@ -5,7 +5,6 @@ let deltaY = null;
 let raf = null;
 let element = null;
 let scale = 1;
-let gemstones = null;
 let game = null;
 
 function userPressed(event) {
@@ -30,7 +29,7 @@ function userPressed(event) {
     passive: true,
   });
 
-  element.classList.add("orp_drag");
+  element.classList.add("orp_piece-drag");
 }
 
 function userMoved(event) {
@@ -129,9 +128,8 @@ function dropItemOntoXY(pieceElement, x, y) {
 }
 
 class Draggable {
-  constructor(g, g_gemstones) {
+  constructor(g) {
     game = g;
-    gemstones = g_gemstones;
 
     const gameAreaElement = document.getElementById("orp_gameArea");
     gameAreaElement.addEventListener("pointerdown", userPressed, {

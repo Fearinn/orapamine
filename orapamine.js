@@ -58,10 +58,7 @@ define([
 
       this.setupBoard();
       this.setupSolutionPieces();
-      // this.revealBoard({
-      //   board: gamedatas.board,
-      //   coloredBoard: gamedatas.coloredBoard,
-      // })
+      this.setupQuestionLog();
 
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
@@ -561,6 +558,65 @@ define([
       }
     },
 
+    setupQuestionLog: function () {
+      const questionLog = this.gamedatas.questionLog;
+      questionLog.forEach((logLine) => {
+        this.insertQuestionLogLine(logLine);
+      });
+
+      document.getElementById("orp_questionLogTitle").textContent =
+        _("Question Log");
+
+      this.statusBar.addActionButton(
+        `<i id="orp_questionLogButton-icon" class="fa fa-eye" aria-hidden="true"></i>`,
+        () => {
+          document
+            .getElementById("orp_questionLog")
+            .classList.toggle("orp_questionLog-hidden");
+
+          const logButtonIcon = document.getElementById(
+            "orp_questionLogButton-icon"
+          );
+          logButtonIcon.classList.toggle("fa-eye");
+          logButtonIcon.classList.toggle("fa-eye-slash");
+        },
+        {
+          id: "orp_questionLogButton",
+          title: _("Show/hide question log"),
+          classes: ["orp_questionLogButton"],
+          destination: document.getElementById("orp_gameArea"),
+        }
+      );
+    },
+
+    insertQuestionLogLine: function (logLine) {
+      const questionLogElement = document.getElementById("orp_questionLog");
+
+      const { type, color_id } = logLine;
+      const color = this.orp.info.colors[color_id];
+      const textColor = color.contrast === "light" ? "black" : "white";
+
+      let logLineHTML = "";
+
+      if (type === "wave") {
+        const { origin, exit } = logLine;
+
+        logLineHTML = `<div class="orp_logLine"><span class="orp_logHighlight">${origin}</span> 
+        <i class="fa fa-arrow-right" aria-label="to"></i> <span class="orp_logHighlight">${exit}</span> 
+        <span class="orp_logHighlight" style="background-color: ${
+          color.code
+        }; color: ${textColor}">${_(color.label)}</span></div>`;
+      } else {
+        const { x, y } = logLine;
+        logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>: 
+        <span class="orp_logHighlight" style="background-color: ${
+          color.code
+        }; color: ${textColor}">${_(color.label)}</span></div>`;
+      }
+
+      questionLogElement.insertAdjacentHTML("afterbegin", logLineHTML);
+    },
+
     ///////////////////////////////////////////////////
     //// Player's actions
 
@@ -648,17 +704,20 @@ define([
     },
 
     notif_answerLocation: function (args) {
-      const { x, y, color } = args;
+      const { x, y, color, logLine } = args;
       this.styleLocationFeedback([{ x, y, color }]);
+      this.insertQuestionLogLine(logLine);
     },
 
     notif_returnWave: function (args) {
-      const { color, origin, exit } = args;
+      const { color, origin, exit, logLine } = args;
 
       this.styleWaveFeedback([
         { origin, color },
         { origin: exit, color },
       ]);
+
+      this.insertQuestionLogLine(logLine);
     },
 
     notif_incorrectSolution: function (args) {

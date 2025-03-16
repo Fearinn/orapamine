@@ -35,6 +35,7 @@ const ORIGIN = "origin";
 const REVEALED_LOCATIONS = "revealedLocations";
 const REVEALED_ORIGINS = "revealedOrigins";
 const SOLUTION_SHEETS = "solutionSheets";
+const QUESTION_LOG = "questionLog";
 
 class Game extends \Table
 {
@@ -161,9 +162,14 @@ class Game extends \Table
             $color_label = null;
         }
 
-        $revelaedLocations = $this->globals->get(REVEALED_LOCATIONS);
-        $revelaedLocations[] = ["x" => $guess_x, "y" => $guess_y, "color" => $color];
-        $this->globals->set(REVEALED_LOCATIONS, $revelaedLocations);
+        $revealedLocations = $this->globals->get(REVEALED_LOCATIONS, []);
+        $revealedLocations[] = ["x" => $guess_x, "y" => $guess_y, "color" => $color];
+        $this->globals->set(REVEALED_LOCATIONS, $revealedLocations);
+
+        $questionLog = $this->globals->get(QUESTION_LOG, []);
+        $logLine = ["x" => $guess_x, "y" => $letter_y, "color_id" => $color_id];
+        $questionLog[] = $logLine;
+        $this->globals->set(QUESTION_LOG, $questionLog);
 
         $this->notify->all(
             "answerLocation",
@@ -172,6 +178,7 @@ class Game extends \Table
                 "color" => $color,
                 "x" => $guess_x,
                 "y" => $guess_y,
+                "logLine" => $logLine,
                 "preserve" => ["colorCode"],
                 "log_x" => $guess_x,
                 "log_y" => $letter_y,
@@ -726,10 +733,15 @@ class Game extends \Table
         $color_id = (int) $response["color"];
         $color = (array) $this->COLORS[$color_id];
 
-        $revealedOrigins = $this->globals->get(REVEALED_ORIGINS);
+        $revealedOrigins = $this->globals->get(REVEALED_ORIGINS, []);
         $revealedOrigins[] = ["origin" => $origin, "color" => $color];
         $revealedOrigins[] = ["origin" => $exit_id, "color" => $color];
-        $revealedOrigins = $this->globals->set(REVEALED_ORIGINS, $revealedOrigins);
+        $this->globals->set(REVEALED_ORIGINS, $revealedOrigins);
+
+        $questionLog = $this->globals->get(QUESTION_LOG, []);
+        $logLine = ["type" => "wave", "origin" => $origin, "exit" => $exit_id, "color_id" => $color_id];
+        $questionLog[] = $logLine;
+        $this->globals->set(QUESTION_LOG, $questionLog);
 
         $this->notify->all(
             "returnWave",
@@ -738,6 +750,7 @@ class Game extends \Table
                 "origin" => $origin,
                 "exit" => $exit_id,
                 "color" => $color,
+                "logLine" => $logLine,
                 "preserve" => ["color"],
                 "log_origin" => $origin,
                 "log_exit" => $exit_id,
@@ -905,6 +918,7 @@ class Game extends \Table
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
+        $result["questionLog"] = $this->globals->get(QUESTION_LOG, []);
         // $result["board"] = $this->globals->get(BOARD);
         // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 

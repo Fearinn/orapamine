@@ -316,3 +316,41 @@
 .orp_dragContainer {
   transform: scale(1) !important;
 }
+
+.orp_questionLogContainer {
+  font-family: "Cookie Run", serif;
+  position: absolute;
+  top: 0;
+  left: 55px;
+  background-color: #4871b6;
+  border-radius: 6px;
+  color: white;
+  margin: 0;
+  padding: 4px;
+  z-index: 1;
+}
+.orp_questionLogContainer .orp_questionLogTitle {
+  font-size: 20px;
+  margin: 0;
+}
+
+.orp_questionLog {
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: var(--boardHeight);
+  margin-top: 16px;
+}
+.orp_questionLog-hidden, .orp_questionLog:empty {
+  display: none;
+}
+
+.orp_questionLogButton {
+  font-size: 24px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+}

@@ -2,7 +2,6 @@ let c_game = null;
 
 function clickCallback(event) {
   if (c_game.getStateName().includes("client_")) {
-
     return;
   }
 
@@ -24,6 +23,8 @@ function clickCallback(event) {
       pieceElement = pieceElement.cloneNode();
     }
 
+    const uid = c_game.getUniqueId();
+    pieceElement.id = `orp_piece-${uid}`;
     c_game.orp.globals.pieceElement = pieceElement;
     return;
   }

@@ -108,12 +108,16 @@ function dropItemOntoXY(pieceElement, x, y) {
     innerCellElement &&
     innerCellElement.dataset.color != pieceElement.dataset.color
   ) {
+    game.showMessage(
+      _("This position has been confirmed as other color"),
+      "error"
+    );
     return;
   }
 
   if (boardElement.contains(pieceElement)) {
     cellElement.insertAdjacentElement("afterbegin", pieceElement);
-    game.enableRotation(pieceElement);
+    game.attachControls(pieceElement);
     return;
   }
 
@@ -122,9 +126,7 @@ function dropItemOntoXY(pieceElement, x, y) {
   cloneElement.id = `orp_piece-${uid}`;
   cellElement.insertAdjacentElement("afterbegin", cloneElement);
 
-  const color = game.orp.info.colors[cloneElement.dataset.color];
-  game.addTooltip(cloneElement.id, _(color.label), "");
-  game.enableRotation(cloneElement);
+  game.attachControls(cloneElement);
 }
 
 class Draggable {

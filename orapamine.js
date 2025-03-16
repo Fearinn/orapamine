@@ -200,7 +200,22 @@ define([
             cellElement.classList.add("orp_cell-selectable");
             cellElement.onclick = () => {
               const pieceElement = this.orp.globals.pieceElement;
+
+              const innerCellElement =
+                cellElement.querySelector(".orp_innerCell");
+              if (
+                innerCellElement &&
+                innerCellElement.dataset.color != pieceElement.dataset.color
+              ) {
+                this.showMessage(
+                  _("This position has been confirmed as other color"),
+                  "error"
+                );
+                return;
+              }
+
               cellElement.insertAdjacentElement("afterbegin", pieceElement);
+              this.attachControls(pieceElement);
 
               document
                 .querySelectorAll("[data-piece]")
@@ -448,8 +463,7 @@ define([
         const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
         cellElement.insertAdjacentElement("afterbegin", pieceElement);
 
-        this.addTooltip(pieceElement.id, _(color.label), "");
-        this.enableRotation(pieceElement);
+        this.attachControls(pieceElement);
       }
     },
 
@@ -502,7 +516,11 @@ define([
       });
     },
 
-    enableRotation: function (pieceElement) {
+    attachControls: function (pieceElement) {
+      const color_id = pieceElement.dataset.color;
+      const color = this.orp.info.colors[color_id];
+      this.addTooltip(pieceElement.id, _(color.label), "");
+
       let piece = pieceElement.dataset.piece;
       const uid = pieceElement.id.split("-")[1];
 

@@ -304,7 +304,7 @@ class Game extends \Table
         $this->checkVersion($CLIENT_VERSION);
 
         if (!$this->isValidSolution($solutionSheet)) {
-            throw new \BgaUserException(clienttranslate("Please submit a valid answer"));
+            throw new \BgaUserException(clienttranslate("Please build a valid solution sheet before submitting an answer"));
         };
 
         $player_id = (int) $this->getActivePlayerId();

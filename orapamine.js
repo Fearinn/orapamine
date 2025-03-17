@@ -71,9 +71,11 @@ define([
           "beforeend",
           `<div class="orp_playerChancesContainer">
             <span id="orp_playerChances-${player_id}" class="orp_playerChances">${playerChances}</span>
-            <i class="fa fa-heart orp_playerChances-icon"></i>
+            <i id="orp_playerChances-icon-${player_id}" class="orp_playerChances-icon fa fa-heart"></i>
           </div>`
         );
+
+        this.addTooltip(`orp_playerChances-icon-${player_id}`, _("Remaining chances"), "")
 
         this.orp.managers.counters[player_id] = { chances: new ebg.counter() };
         const counter = this.orp.managers.counters[player_id].chances;

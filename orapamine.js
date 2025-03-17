@@ -60,6 +60,11 @@ define([
       this.setupSolutionPieces();
       this.setupQuestionLog();
 
+      // this.revealBoard({
+      //   board: gamedatas.board,
+      //   coloredBoard: gamedatas.coloredBoard,
+      // })
+
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 

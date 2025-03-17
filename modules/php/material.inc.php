@@ -2,6 +2,7 @@
 
 $this->GEMSTONES = [
     1 => [
+        "id" => 1,
         "color" => 1,
         "columns" => 2,
         "rows" => 2,
@@ -26,6 +27,7 @@ $this->GEMSTONES = [
         ],
     ],
     2 => [
+        "id" => 2,
         "color" => 2,
         "columns" => 3,
         "rows" => 1,
@@ -46,6 +48,7 @@ $this->GEMSTONES = [
         ],
     ],
     3 => [
+        "id" => 3,
         "color" => 3,
         "columns" => 2,
         "rows" => 2,
@@ -70,6 +73,7 @@ $this->GEMSTONES = [
         ],
     ],
     4 => [
+        "id" => 4,
         "color" => 4,
         "columns" => 4,
         "rows" => 2,
@@ -98,6 +102,7 @@ $this->GEMSTONES = [
         ],
     ],
     5 => [
+        "id" => 5,
         "color" => 4,
         "columns" => 4,
         "rows" => 2,

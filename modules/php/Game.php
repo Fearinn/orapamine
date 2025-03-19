@@ -50,7 +50,10 @@ class Game extends \Table
 
         require "material.inc.php";
 
-        $this->initGameStateLabels([]);
+        $this->initGameStateLabels([
+            "diamondExpansion" => 100,
+            "blackbodyExpansion" => 101,
+        ]);
 
         $this->bSelectGlobalsForUpdate = true;
     }
@@ -370,13 +373,30 @@ class Game extends \Table
     }
 
     /** Utility methods */
+    public function GEMSTONES(): array
+    {
+        $gemstones = $this->GEMSTONES;
+
+        $diamondExpansion = (int) $this->getGameStateValue("diamondExpansion") === 1;
+        $blackbodyExpansion = (int) $this->getGameStateValue("blackbodyExpansion") === 1;
+
+        if ($diamondExpansion) {
+            $gemstones[6] = (array) $this->DIAMOND;
+        }
+
+        if ($blackbodyExpansion) {
+            $gemstones[7] = (array) $this->BLACKBODY;
+        }
+
+        return $gemstones;
+    }
 
     public function setupBoard(): void
     {
         $board = array_fill(1, 10, array_fill(1, 8, 0));
         $gemstoneBoard = array_fill(1, 10, array_fill(1, 8, 0));
 
-        $gemstones = $this->GEMSTONES;
+        $gemstones = $this->GEMSTONES();
         shuffle($gemstones);
 
         if (!$this->placeGemstones($board, $gemstoneBoard, $gemstones)) {
@@ -388,7 +408,7 @@ class Game extends \Table
         $coloredBoard = [];
         foreach ($gemstoneBoard as $x => $row) {
             foreach ($row as $y => $gemstone_id) {
-                $color_id = $gemstone_id > 0 ? (int) $this->GEMSTONES[$gemstone_id]["color"] : 0;
+                $color_id = $gemstone_id > 0 ? (int) $this->GEMSTONES()[$gemstone_id]["color"] : 0;
                 $coloredBoard[$x][$y] = $color_id;
             }
         }
@@ -834,7 +854,7 @@ class Game extends \Table
 
     public function isValidSolution(array $solutionSheet): bool
     {
-        $gemstones = $this->GEMSTONES;
+        $gemstones = $this->GEMSTONES();
 
         if (count($solutionSheet) !== 22) {
             return false;
@@ -963,13 +983,13 @@ class Game extends \Table
         );
         $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $result["COLORS"] = $this->COLORS;
-        $result["GEMSTONES"] = array_values($this->GEMSTONES);
+        $result["GEMSTONES"] = array_values($this->GEMSTONES());
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
         $result["questionLog"] = $this->globals->get(QUESTION_LOG, []);
-        // $result["board"] = $this->globals->get(BOARD);
-        // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
+        $result["board"] = $this->globals->get(BOARD);
+        $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 
         return $result;
     }

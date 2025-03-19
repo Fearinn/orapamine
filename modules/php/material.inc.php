@@ -132,6 +132,54 @@ $this->GEMSTONES = [
     ]
 ];
 
+$this->DIAMOND = [
+    "id" => 6,
+    "color" => 99,
+    "columns" => 2,
+    "rows" => 1,
+    "polygon" => "triangle",
+    "format" => [
+        0 => [
+            [1, 2],
+        ],
+        90 => [
+            [2],
+            [4],
+        ],
+        180 => [
+            [3, 4],
+        ],
+        270 => [
+            [1],
+            [3],
+        ]
+    ]
+];
+
+$this->BLACKBODY = [
+    "id" => 7,
+    "color" => 16,
+    "columns" => 2,
+    "rows" => 1,
+    "polygon" => "triangle",
+    "format" => [
+        0 => [
+            [1, 2],
+        ],
+        90 => [
+            [2],
+            [4],
+        ],
+        180 => [
+            [3, 4],
+        ],
+        270 => [
+            [1],
+            [3],
+        ]
+    ]
+];
+
 $this->COLORS = [
     0 => [
         "id" => 0,
@@ -264,6 +312,24 @@ $this->COLORS = [
         "components" => [1, 2, 3, 4],
         "code" => "#808080",
         "contrast" => "dark",
+    ],
+    16 => [
+        "id" => 17,
+        "name" => "navy",
+        "label" => clienttranslate("navy"),
+        "components" => [],
+        "code" => "#0c1533",
+        "darkerCode" => "#231815",
+        "contrast" => "light",
+    ],
+    99 => [
+        "id" => 99,
+        "name" => "transparent",
+        "label" => clienttranslate("transparent"),
+        "components" => [],
+        "code" => "#FFFFFFAA",
+        "darkerCode" => "#FFFFFFAA",
+        "contrast" => "light",
     ],
 ];
 

@@ -426,7 +426,9 @@ define([
         });
 
         cellElement.insertAdjacentHTML("beforeend", innerCellHTML);
-        this.addTooltip(`orp_innerCell-${x}-${y}`, _(color.label), "");
+
+        const color_label = color.id == 0 ? _("nothing") : color.label;
+        this.addTooltip(`orp_innerCell-${x}-${y}`, _(color_label), "");
       });
     },
 

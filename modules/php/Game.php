@@ -553,7 +553,7 @@ class Game extends \Table
 
     public function placeGemstones(array &$board, array  &$gemstoneBoard, array &$gemstones, int $index = 0): bool
     {
-        if ($index > 4) {
+        if ($index > count($gemstones) - 1) {
             return true;
         }
 
@@ -650,7 +650,7 @@ class Game extends \Table
                 $piece = $board[$x][$origin_y];
 
                 if ($piece > 0) {
-                    $this->changeWaveDirection($x, $origin_y, $direction_id, $visitedColors);
+                    $this->reflectWave($x, $origin_y, $direction_id, $visitedColors);
                     return;
                 }
 
@@ -666,7 +666,7 @@ class Game extends \Table
                 $piece = $board[$x][$origin_y];
 
                 if ($piece > 0) {
-                    $this->changeWaveDirection($x, $origin_y, $direction_id, $visitedColors);
+                    $this->reflectWave($x, $origin_y, $direction_id, $visitedColors);
                     return;
                 }
 
@@ -682,7 +682,7 @@ class Game extends \Table
                 $piece = $board[$origin_x][$y];
 
                 if ($piece > 0) {
-                    $this->changeWaveDirection($origin_x, $y, $direction_id, $visitedColors);
+                    $this->reflectWave($origin_x, $y, $direction_id, $visitedColors);
                     return;
                 }
 
@@ -698,7 +698,7 @@ class Game extends \Table
                 $piece = $board[$origin_x][$y];
 
                 if ($piece > 0) {
-                    $this->changeWaveDirection($origin_x, $y, $direction_id, $visitedColors);
+                    $this->reflectWave($origin_x, $y, $direction_id, $visitedColors);
                     return;
                 }
 
@@ -712,7 +712,7 @@ class Game extends \Table
         throw new \BgaVisibleSystemException("Couldn't send wave");
     }
 
-    public function changeWaveDirection(int $x, int $y, int $direction_id, array &$visitedColors): void
+    public function reflectWave(int $x, int $y, int $direction_id, array &$visitedColors): void
     {
         $board = (array) $this->globals->get(BOARD);
         $coloredBoard = (array) $this->globals->get(COLORED_BOARD);
@@ -734,6 +734,9 @@ class Game extends \Table
     {
         $response = [];
         $visitedColors = array_unique($visitedColors);
+        $visitedColors = array_filter($visitedColors, function ($color_id) {
+            return $color_id !== 99;
+        });
 
         if ($x < 1) {
             $x = 1;
@@ -856,7 +859,17 @@ class Game extends \Table
     {
         $gemstones = $this->GEMSTONES();
 
-        if (count($solutionSheet) !== 22) {
+        $piecesCount = 22;
+
+        if (count($gemstones) >= 6) {
+            $piecesCount += 2;
+        }
+
+        if (count($gemstones) === 7) {
+            $piecesCount += 2;
+        }
+
+        if (count($solutionSheet) !== $piecesCount) {
             return false;
         }
 

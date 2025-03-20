@@ -215,6 +215,7 @@
   display: grid;
   touch-action: none;
   will-change: transform;
+  gap: 1px;
 }
 
 .orp_piece {
@@ -224,13 +225,8 @@
   touch-action: none;
   width: var(--cellWidth);
 
-  &:not(.orp_piece-half, .orp_piece-empty) {
+  &:not(.orp_piece-half) {
     background-color: var(--pieceColor);
-    border-color: var(--pieceColorDarker);
-  }
-
-  &-empty {
-    visibility: hidden;
   }
 
   &-selected {
@@ -246,8 +242,8 @@
         #ffffff00 50%,
         var(--pieceColor) 50%
       );
-      border-bottom: 2px solid var(--pieceColorDarker);
-      border-right: 2px solid var(--pieceColorDarker);
+      // border-bottom: 2px solid var(--pieceColorDarker);
+      // border-right: 2px solid var(--pieceColorDarker);
     }
 
     &[data-piece="2"] {
@@ -256,8 +252,8 @@
         #ffffff00 50%,
         var(--pieceColor) 50%
       );
-      border-bottom: 2px solid var(--pieceColorDarker);
-      border-left: 2px solid var(--pieceColorDarker);
+      // border-bottom: 2px solid var(--pieceColorDarker);
+      // border-left: 2px solid var(--pieceColorDarker);
     }
 
     &[data-piece="3"] {
@@ -266,8 +262,8 @@
         #ffffff00 50%,
         var(--pieceColor) 50%
       );
-      border-top: 2px solid var(--pieceColorDarker);
-      border-right: 2px solid var(--pieceColorDarker);
+      // border-top: 2px solid var(--pieceColorDarker);
+      // border-right: 2px solid var(--pieceColorDarker);
     }
 
     &[data-piece="4"] {
@@ -276,8 +272,8 @@
         #ffffff00 50%,
         var(--pieceColor) 50%
       );
-      border-top: 2px solid var(--pieceColorDarker);
-      border-left: 2px solid var(--pieceColorDarker);
+      // border-top: 2px solid var(--pieceColorDarker);
+      // border-left: 2px solid var(--pieceColorDarker);
     }
   }
 }

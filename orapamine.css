@@ -256,6 +256,7 @@
   display: grid;
   touch-action: none;
   will-change: transform;
+  gap: 1px;
 }
 
 .orp_piece {
@@ -265,12 +266,8 @@
   touch-action: none;
   width: var(--cellWidth);
 }
-.orp_piece:not(.orp_piece-half, .orp_piece-empty) {
+.orp_piece:not(.orp_piece-half) {
   background-color: var(--pieceColor);
-  border-color: var(--pieceColorDarker);
-}
-.orp_piece-empty {
-  visibility: hidden;
 }
 .orp_piece-selected {
   transform: scale(1.1);
@@ -279,23 +276,15 @@
 }
 .orp_piece-half[data-piece="1"] {
   background: linear-gradient(to bottom right, rgba(255, 255, 255, 0) 50%, var(--pieceColor) 50%);
-  border-bottom: 2px solid var(--pieceColorDarker);
-  border-right: 2px solid var(--pieceColorDarker);
 }
 .orp_piece-half[data-piece="2"] {
   background: linear-gradient(to bottom left, rgba(255, 255, 255, 0) 50%, var(--pieceColor) 50%);
-  border-bottom: 2px solid var(--pieceColorDarker);
-  border-left: 2px solid var(--pieceColorDarker);
 }
 .orp_piece-half[data-piece="3"] {
   background: linear-gradient(to top right, rgba(255, 255, 255, 0) 50%, var(--pieceColor) 50%);
-  border-top: 2px solid var(--pieceColorDarker);
-  border-right: 2px solid var(--pieceColorDarker);
 }
 .orp_piece-half[data-piece="4"] {
   background: linear-gradient(to top left, rgba(255, 255, 255, 0) 50%, var(--pieceColor) 50%);
-  border-top: 2px solid var(--pieceColorDarker);
-  border-left: 2px solid var(--pieceColorDarker);
 }
 
 .orp_pieceButton {

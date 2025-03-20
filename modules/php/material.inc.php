@@ -314,13 +314,13 @@ $this->COLORS = [
         "contrast" => "dark",
     ],
     16 => [
-        "id" => 17,
+        "id" => 16,
         "name" => "navy",
-        "label" => clienttranslate("navy"),
+        "label" => clienttranslate("blackbody"),
         "components" => [],
         "code" => "#0c1533",
         "darkerCode" => "#231815",
-        "contrast" => "light",
+        "contrast" => "dark",
     ],
     99 => [
         "id" => 99,

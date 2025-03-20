@@ -10,5 +10,17 @@
         "description": "The transparent gem reflects ultrasound waves like other gemstones but does not change the beam's color"
       }
     }
+  },
+  "101": {
+    "name": "Blackbody expansion",
+    "values": {
+      "0": {
+        "name": "Off"
+      },
+      "1": {
+        "name": "On",
+        "description": "The blackbody absorbs gems instead of reflecting them"
+      }
+    }
   }
 }

@@ -720,6 +720,11 @@ class Game extends \Table
         $color_id = $coloredBoard[$x][$y];
         $visitedColors[] = $color_id;
 
+        if ($color_id === 16) {
+            $this->returnWave($x, $y, $direction_id, $visitedColors);
+            return;
+        }
+
         $piece = (int) $board[$x][$y];
         $nextDirection_id = (int) $this->DIRECTIONS[$direction_id]["conversions"][$piece];
         $shift = (array) $this->DIRECTIONS[$nextDirection_id]["shift"];
@@ -762,6 +767,15 @@ class Game extends \Table
                 $response["exit"] = $exit_id;
                 break;
             }
+        }
+
+        if (in_array($this->BLACKBODY["color"], $visitedColors)) {
+            $this->notify->all(
+                "waveAbsorbed",
+                clienttranslate("The wave was absorbed"),
+                [],
+            );
+            return;
         }
 
         if (!$visitedColors) {

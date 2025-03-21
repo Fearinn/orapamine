@@ -725,6 +725,11 @@ define([
           }
         });
 
+      if (solutionSheet.length === 0) {
+        this.showMessage(_("You can't save an empty sheet"), "error");
+        return;
+      }
+
       this.performAction(
         "actSaveSolution",
         {

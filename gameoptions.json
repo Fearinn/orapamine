@@ -19,7 +19,7 @@
       },
       "1": {
         "name": "On",
-        "description": "The blackbody absorbs gems instead of reflecting them"
+        "description": "The blackbody absorbs waves instead of reflecting them"
       }
     }
   }

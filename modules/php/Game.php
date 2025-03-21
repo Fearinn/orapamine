@@ -170,7 +170,7 @@ class Game extends \Table
         $this->globals->set(REVEALED_LOCATIONS, $revealedLocations);
 
         $questionLog = $this->globals->get(QUESTION_LOG, []);
-        $logLine = ["x" => $guess_x, "y" => $letter_y, "color_id" => $color_id];
+        $logLine = ["type" => "location", "x" => $guess_x, "y" => $letter_y, "color_id" => $color_id];
         $questionLog[] = $logLine;
         $this->globals->set(QUESTION_LOG, $questionLog);
 
@@ -769,11 +769,31 @@ class Game extends \Table
             }
         }
 
-        if (in_array($this->BLACKBODY["color"], $visitedColors)) {
+        $blackbodyColor_id = (int) $this->BLACKBODY["color"];
+
+        if (in_array($blackbodyColor_id, $visitedColors)) {
+            $origin = (string) $this->globals->get(ORIGIN);
+            $logLine = ["type" => "blackbody", "origin" => $origin, "color_id" => $blackbodyColor_id];
+            $questionLog = $this->globals->get(QUESTION_LOG, []);
+            $questionLog[] = $logLine;
+            $this->globals->set(QUESTION_LOG, $questionLog);
+
+            $this->updateSelectableOrigins($origin, $origin);
+
+            $color = $this->COLORS[$blackbodyColor_id];
+            $revealedOrigins = $this->globals->get(REVEALED_ORIGINS, []);
+            $revealedOrigins[] = ["origin" => $origin, "color" => $color];
+            $this->globals->set(REVEALED_ORIGINS, $revealedOrigins);
+
             $this->notify->all(
-                "waveAbsorbed",
+                "returnWave",
                 clienttranslate("The wave was absorbed"),
-                [],
+                [
+                    "logLine" => $logLine,
+                    "color" => $color,
+                    "origin" => $origin,
+                    "exit" => $origin,
+                ],
             );
             return;
         }
@@ -1015,8 +1035,8 @@ class Game extends \Table
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
         $result["questionLog"] = $this->globals->get(QUESTION_LOG, []);
-        $result["board"] = $this->globals->get(BOARD);
-        $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
+        // $result["board"] = $this->globals->get(BOARD);
+        // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
 
         return $result;
     }

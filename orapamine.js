@@ -60,10 +60,10 @@ define([
       this.setupSolutionPieces();
       this.setupQuestionLog();
 
-      this.revealBoard({
-        board: gamedatas.board,
-        coloredBoard: gamedatas.coloredBoard,
-      });
+      // this.revealBoard({
+      //   board: gamedatas.board,
+      //   coloredBoard: gamedatas.coloredBoard,
+      // });
 
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
@@ -80,7 +80,11 @@ define([
           </div>`
         );
 
-        this.addTooltip(`orp_playerChances-icon-${player_id}`, _("Remaining chances"), "")
+        this.addTooltip(
+          `orp_playerChances-icon-${player_id}`,
+          _("Remaining chances"),
+          ""
+        );
 
         this.orp.managers.counters[player_id] = { chances: new ebg.counter() };
         const counter = this.orp.managers.counters[player_id].chances;
@@ -615,12 +619,19 @@ define([
         <span class="orp_logHighlight" style="background-color: ${
           color.code
         }; color: ${textColor}">${_(color.label)}</span></div>`;
+      } else if (type === "blackbody") {
+        const { origin } = logLine;
+        logLineHTML = `<div class="orp_logLine"><span class="orp_logHighlight">${origin}</span> 
+        <i class="fa fa-arrow-right" aria-label="to"></i>
+        <span class="orp_logHighlight" style="background-color: ${
+          color.code
+        }; color: ${textColor}">${_("absorbed")}</span></div>`;
       } else {
         const { x, y } = logLine;
         logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>: 
-        <span class="orp_logHighlight" style="background-color: ${
-          color.code
-        }; color: ${textColor}">${_(color.label)}</span></div>`;
+      <span class="orp_logHighlight" style="background-color: ${
+        color.code
+      }; color: ${textColor}">${_(color.label)}</span></div>`;
       }
 
       questionLogElement.insertAdjacentHTML("afterbegin", logLineHTML);
@@ -720,6 +731,8 @@ define([
 
     notif_returnWave: function (args) {
       const { color, origin, exit, logLine } = args;
+
+      console.log(args);
 
       this.styleWaveFeedback([
         { origin, color },

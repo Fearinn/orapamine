@@ -138,13 +138,22 @@
 .orp_boardButtons .orp_boardButton {
   font-size: 24px;
   position: absolute;
-  top: 0.5%;
   margin: 0;
 }
 .orp_boardButtons .orp_boardButton-clear {
+  top: 0.5%;
   left: 1%;
 }
 .orp_boardButtons .orp_boardButton-save {
+  top: 0.5%;
+  right: 1%;
+}
+.orp_boardButtons .orp_boardButton-simplify {
+  bottom: 0.5%;
+  left: 1%;
+}
+.orp_boardButtons .orp_boardButton-hide {
+  bottom: 0.5%;
   right: 1%;
 }
 
@@ -238,7 +247,7 @@
   width: 100%;
 }
 
-.orp_piece ~ .orp_innerCell {
+.orp_piece:not(.orp_piece-hidden) ~ .orp_innerCell {
   display: none;
 }
 
@@ -262,17 +271,24 @@
 .orp_piece {
   position: relative;
   aspect-ratio: 1;
+  background-color: var(--pieceColor);
   cursor: pointer;
   touch-action: none;
   width: var(--cellWidth);
 }
-.orp_piece:not(.orp_piece-half) {
-  background-color: var(--pieceColor);
+.orp_piece-hiddenControls .orp_pieceButton {
+  visibility: hidden;
+}
+.orp_piece-hidden {
+  display: none;
 }
 .orp_piece-selected {
   transform: scale(1.1);
   outline: 2px dashed green;
   z-index: 1;
+}
+.orp_piece-half {
+  background: none;
 }
 .orp_piece-half[data-piece="1"] {
   background: linear-gradient(to bottom right, rgba(255, 255, 255, 0) 50%, var(--pieceColor) 50%);
@@ -299,6 +315,9 @@
 }
 .orp_pieceButton-rotate {
   right: 1%;
+}
+.orp_pieceButton-hidden {
+  visibility: hidden;
 }
 
 .orp_dragContainer {

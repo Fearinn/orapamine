@@ -81,14 +81,25 @@
   .orp_boardButton {
     font-size: 24px;
     position: absolute;
-    top: 0.5%;
     margin: 0;
 
     &-clear {
+      top: 0.5%;
       left: 1%;
     }
 
     &-save {
+      top: 0.5%;
+      right: 1%;
+    }
+
+    &-simplify {
+      bottom: 0.5%;
+      left: 1%;
+    }
+
+    &-hide {
+      bottom: 0.5%;
       right: 1%;
     }
   }
@@ -197,7 +208,7 @@
   width: 100%;
 }
 
-.orp_piece ~ .orp_innerCell {
+.orp_piece:not(.orp_piece-hidden) ~ .orp_innerCell {
   display: none;
 }
 
@@ -221,12 +232,19 @@
 .orp_piece {
   position: relative;
   aspect-ratio: 1;
+  background-color: var(--pieceColor);
   cursor: pointer;
   touch-action: none;
   width: var(--cellWidth);
 
-  &:not(.orp_piece-half) {
-    background-color: var(--pieceColor);
+  &-hiddenControls {
+    .orp_pieceButton {
+      visibility: hidden;
+    }
+  }
+
+  &-hidden {
+    display: none;
   }
 
   &-selected {
@@ -236,6 +254,8 @@
   }
 
   &-half {
+    background: none;
+
     &[data-piece="1"] {
       background: linear-gradient(
         to bottom right,
@@ -291,6 +311,10 @@
 
   &-rotate {
     right: 1%;
+  }
+
+  &-hidden {
+    visibility: hidden;
   }
 }
 

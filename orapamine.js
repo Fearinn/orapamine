@@ -134,6 +134,48 @@ define([
             destination: document.getElementById("orp_boardButtons"),
           }
         );
+
+        this.statusBar.addActionButton(
+          `<i id="orp_boardButton-simplify-icon" class="fa fa-minus-square-o" aria-hidden="true"></i>`,
+          () => {
+            document.querySelectorAll(".orp_piece").forEach((buttonElement) => {
+              buttonElement.classList.toggle("orp_piece-hiddenControls");
+            });
+
+            const logButtonIcon = document.getElementById(
+              "orp_boardButton-simplify-icon"
+            );
+            logButtonIcon.classList.toggle("fa-plus-square-o");
+            logButtonIcon.classList.toggle("fa-minus-square-o");
+          },
+          {
+            id: "orp_boardButton-simplify",
+            title: _("Show/hide piece controls"),
+            classes: ["orp_boardButton", "orp_boardButton-simplify"],
+            destination: document.getElementById("orp_boardButtons"),
+          }
+        );
+
+        this.statusBar.addActionButton(
+          `<i id="orp_boardButton-hide-icon" class="fa fa-eye-slash" aria-hidden="true"></i>`,
+          () => {
+            document.querySelectorAll(".orp_piece").forEach((buttonElement) => {
+              buttonElement.classList.toggle("orp_piece-hidden");
+            });
+
+            const logButtonIcon = document.getElementById(
+              "orp_boardButton-hide-icon"
+            );
+            logButtonIcon.classList.toggle("fa-eye");
+            logButtonIcon.classList.toggle("fa-eye-slash");
+          },
+          {
+            id: "orp_boardButton-hide",
+            title: _("Show/hide pieces"),
+            classes: ["orp_boardButton", "orp_boardButton-hide"],
+            destination: document.getElementById("orp_boardButtons"),
+          }
+        );
       }
 
       // Setup game notifications to handle (see "setupNotifications" method below)

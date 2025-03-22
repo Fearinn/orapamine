@@ -43,6 +43,8 @@ class Game extends \Table
     private array $COLORS;
     private array $AXIS_LETTERS;
     private array $ORIGINS;
+    private array $DIAMOND;
+    private array $BLACKBODY;
 
     public function __construct()
     {
@@ -340,6 +342,12 @@ class Game extends \Table
             $y = (int) $solution["y"];
             $color_id = (int) $solution["color_id"];
             $piece = (int) $solution["piece"];
+
+            $blackbodyColor_id = (int) $this->BLACKBODY["color"];
+
+            if ($color_id === $blackbodyColor_id && $coloredBoard[$x][$y]) {
+                continue;
+            }
 
             if ($board[$x][$y] !== $piece || $coloredBoard[$x][$y] !== $color_id) {
                 $correct = false;

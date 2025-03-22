@@ -258,7 +258,7 @@ define([
                 innerCellElement.dataset.color != pieceElement.dataset.color
               ) {
                 this.showMessage(
-                  _("This position has been confirmed as other color"),
+                  _("This position has been confirmed as another color"),
                   "error"
                 );
                 return;
@@ -779,8 +779,6 @@ define([
     notif_returnWave: function (args) {
       const { color, origin, exit, logLine } = args;
 
-      console.log(args);
-
       this.styleWaveFeedback([
         { origin, color },
         { origin: exit, color },
@@ -792,6 +790,14 @@ define([
     notif_incorrectSolution: function (args) {
       const player_id = args.player_id;
       this.orp.managers.counters[player_id].chances.incValue(-1);
+    },
+
+    notif_clearSolution: function (args) {
+      this.showMessage(_("Solution cleared"), "info");
+    },
+
+    notif_saveSolution: function (args) {
+      this.showMessage(_("Solution saved"), "info");
     },
 
     notif_correctSolution: function (args) {

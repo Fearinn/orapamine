@@ -277,8 +277,8 @@ class Game extends \Table
 
         $this->notify->player(
             $player_id,
-            "message",
-            clienttranslate("Solution sheet successfully cleared")
+            "clearSolution",
+            "",
         );
 
         $this->gamestate->nextState("nextPlayer");
@@ -302,8 +302,7 @@ class Game extends \Table
 
         $this->notify->player(
             $player_id,
-            "message",
-            clienttranslate("Solution sheet successfully saved")
+            "saveSolution",
         );
 
         $this->gamestate->nextState("nextPlayer");

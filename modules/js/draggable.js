@@ -109,7 +109,7 @@ function dropItemOntoXY(pieceElement, x, y) {
     innerCellElement.dataset.color != pieceElement.dataset.color
   ) {
     game.showMessage(
-      _("This position has been confirmed as other color"),
+      _("This position has been confirmed as another color"),
       "error"
     );
     return;

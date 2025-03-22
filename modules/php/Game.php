@@ -80,9 +80,17 @@ class Game extends \Table
      */
     public function getGameProgression()
     {
-        // TODO: compute and return the game progression
+        $questionCount = count($this->globals->get(QUESTION_LOG, []));
 
-        return 0;
+        $progression = $questionCount / 10 * 50;
+
+        if ($progression > 50) {
+            $progression = 50;
+        }
+
+        $progression = round($progression);
+
+        return $progression;
     }
 
     /** Game state arguments and actions*/

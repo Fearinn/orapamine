@@ -201,6 +201,10 @@ define([
         }
 
         if (stateName === "client_placePiece") {
+          document.querySelectorAll("[data-piece]").forEach((pieceElement) => {
+            pieceElement.classList.add("orp_piece-unselectable");
+          });
+
           document.querySelectorAll("[data-cell]").forEach((cellElement) => {
             if (cellElement.querySelector("[data-piece]")) {
               return;
@@ -296,6 +300,7 @@ define([
       if (stateName === "client_placePiece") {
         document.querySelectorAll("[data-piece]").forEach((pieceElement) => {
           pieceElement.classList.remove("orp_piece-selected");
+          pieceElement.classList.remove("orp_piece-unselectable");
         });
 
         document.querySelectorAll("[data-cell]").forEach((cellElement) => {

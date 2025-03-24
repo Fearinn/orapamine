@@ -1,36 +1,39 @@
 let c_game = null;
 
 function clickCallback(event) {
-  if (c_game.getStateName().includes("client_")) {
-    return;
-  }
-
+  const stateName = c_game.getStateName();
   const selectedClass = "orp_piece-selected";
   let pieceElement = event.target;
 
-  if (!pieceElement.classList.contains(selectedClass)) {
-    document.querySelectorAll("[data-piece]").forEach((other_pieceElement) => {
-      other_pieceElement.classList.remove(selectedClass);
-    });
-
-    pieceElement.classList.add(selectedClass);
-    c_game.setClientState("client_placePiece", {
-      descriptionmyturn: _("${you} must pick a position to place this piece"),
-      client_args: {},
-    });
-
-    if (document.getElementById("orp_solutionPieces").contains(pieceElement)) {
-      pieceElement = pieceElement.cloneNode();
-    }
-
-    const uid = c_game.getUniqueId();
-    pieceElement.id = `orp_piece-${uid}`;
-    c_game.orp.globals.pieceElement = pieceElement;
+  if (pieceElement.classList.contains(selectedClass)) {
+    pieceElement.classList.remove(selectedClass);
+    c_game.restoreServerGameState();
     return;
   }
 
-  pieceElement.classList.remove(selectedClass);
-  c_game.restoreServerGameState();
+  if (stateName.includes("client_")) {
+    return;
+  }
+
+  document.querySelectorAll("[data-piece]").forEach((other_pieceElement) => {
+    other_pieceElement.classList.remove(selectedClass);
+  });
+
+  pieceElement.classList.add(selectedClass);
+  c_game.setClientState("client_placePiece", {
+    descriptionmyturn: _("${you} must pick a position to place this piece"),
+    description: _("You must pick a position to place this piece"),
+    client_args: {},
+  });
+
+  if (document.getElementById("orp_solutionPieces").contains(pieceElement)) {
+    pieceElement = pieceElement.cloneNode();
+  }
+
+  const uid = c_game.getUniqueId();
+  pieceElement.id = `orp_piece-${uid}`;
+  c_game.orp.globals.pieceElement = pieceElement;
+  return;
 }
 
 class Clickable {

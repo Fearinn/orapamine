@@ -247,7 +247,12 @@
     display: none;
   }
 
+  &-unselectable {
+    cursor: not-allowed;
+  }
+
   &-selected {
+    cursor: pointer;
     transform: scale(1.1);
     outline: 2px dashed green;
     z-index: 1;

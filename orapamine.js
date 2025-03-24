@@ -189,38 +189,7 @@ define([
     onEnteringState: function (stateName, args) {
       console.log("Entering state: " + stateName, args);
 
-      if (this.isCurrentPlayerActive()) {
-        if (stateName === "playerTurn") {
-          const selectableLocations = args.args.selectableLocations;
-          const selectableOrigins = args.args.selectableOrigins;
-
-          this.statusBar.addActionButton(_("Send ultrasound wave"), () => {
-            this.setClientState("client_sendWave", {
-              descriptionmyturn: _("${you} must pick the origin of the wave"),
-              client_args: { selectableOrigins: selectableOrigins },
-            });
-          });
-
-          this.statusBar.addActionButton(
-            _("Ask about specific position"),
-            () => {
-              this.setClientState("client_askLocation", {
-                descriptionmyturn: _("${you} must pick the position"),
-                client_args: { selectableLocations: selectableLocations },
-              });
-            }
-          );
-
-          this.statusBar.addActionButton(_("Submit answer"), () => {
-            this.confirmationDialog(
-              _("Are you sure you want to submit an answer?"),
-              () => {
-                this.actSubmitSolution();
-              }
-            );
-          });
-        }
-
+      if (!this.isSpectator) {
         if (stateName.includes("client_")) {
           this.statusBar.addActionButton(
             _("Cancel"),
@@ -229,16 +198,6 @@ define([
             },
             { color: "alert" }
           );
-        }
-
-        if (stateName === "client_sendWave") {
-          const selectableOrigins = args.client_args.selectableOrigins;
-          this.setSelectableOrigins(selectableOrigins);
-        }
-
-        if (stateName === "client_askLocation") {
-          const selectableLocations = args.client_args.selectableLocations;
-          this.setSelectableLocations(selectableLocations);
         }
 
         if (stateName === "client_placePiece") {
@@ -276,6 +235,49 @@ define([
               this.restoreServerGameState();
             };
           });
+        }
+      }
+
+      if (this.isCurrentPlayerActive()) {
+        if (stateName === "playerTurn") {
+          const selectableLocations = args.args.selectableLocations;
+          const selectableOrigins = args.args.selectableOrigins;
+
+          this.statusBar.addActionButton(_("Send ultrasound wave"), () => {
+            this.setClientState("client_sendWave", {
+              descriptionmyturn: _("${you} must pick the origin of the wave"),
+              client_args: { selectableOrigins: selectableOrigins },
+            });
+          });
+
+          this.statusBar.addActionButton(
+            _("Ask about specific position"),
+            () => {
+              this.setClientState("client_askLocation", {
+                descriptionmyturn: _("${you} must pick the position"),
+                client_args: { selectableLocations: selectableLocations },
+              });
+            }
+          );
+
+          this.statusBar.addActionButton(_("Submit answer"), () => {
+            this.confirmationDialog(
+              _("Are you sure you want to submit an answer?"),
+              () => {
+                this.actSubmitSolution();
+              }
+            );
+          });
+        }
+
+        if (stateName === "client_sendWave") {
+          const selectableOrigins = args.client_args.selectableOrigins;
+          this.setSelectableOrigins(selectableOrigins);
+        }
+
+        if (stateName === "client_askLocation") {
+          const selectableLocations = args.client_args.selectableLocations;
+          this.setSelectableLocations(selectableLocations);
         }
       }
     },

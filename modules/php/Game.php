@@ -166,11 +166,15 @@ class Game extends \Table
         $color_id = $coloredBoard[$guess_x][$guess_y];
 
         if ($color_id > 0) {
-            $message = clienttranslate('${log_x}${log_y}: ${color_label} gem');
+            if ($color_id === 16) {
+                $message = clienttranslate('The signal was absorbed');
+            } else {
+                $message = clienttranslate('${log_x}${log_y}: ${color_label} gem');
+            }
             $color = (array) $this->COLORS[$color_id];
             $color_label = (string) $color["label"];
         } else {
-            $message = clienttranslate('${log_x}${log_y}: nothing is there!');
+            $message = clienttranslate('${log_x}${log_y}: nothing is there');
             $color = null;
             $color_label = null;
         }
@@ -342,12 +346,6 @@ class Game extends \Table
             $y = (int) $solution["y"];
             $color_id = (int) $solution["color_id"];
             $piece = (int) $solution["piece"];
-
-            $blackbodyColor_id = (int) $this->BLACKBODY["color"];
-
-            if ($color_id === $blackbodyColor_id && $coloredBoard[$x][$y]) {
-                continue;
-            }
 
             if ($board[$x][$y] !== $piece || $coloredBoard[$x][$y] !== $color_id) {
                 $correct = false;

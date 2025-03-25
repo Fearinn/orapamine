@@ -3,7 +3,7 @@
 $this->GEMSTONES = [
     1 => [
         "id" => 1,
-        "color" => 1,
+        "color" => 4,
         "columns" => 2,
         "rows" => 2,
         "polygon" => "square",
@@ -103,7 +103,7 @@ $this->GEMSTONES = [
     ],
     5 => [
         "id" => 5,
-        "color" => 4,
+        "color" => 1,
         "columns" => 4,
         "rows" => 2,
         "polygon" => "triangle",
@@ -164,18 +164,18 @@ $this->BLACKBODY = [
     "polygon" => "triangle",
     "format" => [
         0 => [
-            [1, 2],
+            [5, 5],
         ],
         90 => [
-            [2],
-            [4],
+            [5],
+            [5],
         ],
         180 => [
-            [3, 4],
+            [5, 5],
         ],
         270 => [
-            [1],
-            [3],
+            [5],
+            [5],
         ]
     ]
 ];
@@ -315,8 +315,8 @@ $this->COLORS = [
     ],
     16 => [
         "id" => 16,
-        "name" => "navy",
-        "label" => clienttranslate("blackbody"),
+        "name" => "blackbody",
+        "label" => clienttranslate("absorbed"),
         "components" => [],
         "code" => "#0c1533",
         "darkerCode" => "#231815",

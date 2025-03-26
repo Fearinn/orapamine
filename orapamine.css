@@ -277,6 +277,9 @@
   touch-action: none;
   width: var(--cellWidth);
 }
+.orp_piece-empty {
+  cursor: initial;
+}
 .orp_piece-hiddenControls .orp_pieceButton {
   visibility: hidden;
 }

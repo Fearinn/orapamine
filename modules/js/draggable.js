@@ -10,7 +10,10 @@ let game = null;
 function userPressed(event) {
   element = event.target;
 
-  if (!element.classList.contains("orp_piece")) {
+  if (
+    !element.classList.contains("orp_piece") ||
+    event.target.classList.contains("orp_piece-empty")
+  ) {
     return;
   }
 

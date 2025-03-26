@@ -43,7 +43,10 @@ class Clickable {
     document
       .getElementById("orp_gameArea")
       .addEventListener("click", (event) => {
-        if (event.target.dataset.piece) {
+        if (
+          event.target.dataset.piece &&
+          !event.target.classList.contains("orp_piece-empty")
+        ) {
           clickCallback(event);
         }
       });

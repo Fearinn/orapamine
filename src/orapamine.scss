@@ -238,6 +238,10 @@
   touch-action: none;
   width: var(--cellWidth);
 
+  &-empty {
+    cursor: initial;
+  }
+
   &-hiddenControls {
     .orp_pieceButton {
       visibility: hidden;

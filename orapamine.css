@@ -377,12 +377,15 @@
   font-size: 24px;
   position: absolute;
   top: 0;
-  left: 55px;
+  left: 60px;
   background-color: rgba(248, 248, 248, 0.6666666667);
   border-radius: 6px;
   margin: 0;
   padding: 4px;
   z-index: 1;
+}
+.orp_questionLogContainer-hidden {
+  display: none;
 }
 .orp_questionLogContainer .orp_questionLogTitle {
   font-size: 28px;
@@ -397,7 +400,7 @@
   max-height: var(--boardHeight);
   margin-top: 16px;
 }
-.orp_questionLog-hidden, .orp_questionLog:empty {
+.orp_questionLog:empty {
   display: none;
 }
 
@@ -405,6 +408,6 @@
   font-size: 24px;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 8px;
   margin: 0;
 }

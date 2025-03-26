@@ -12,10 +12,10 @@
 <div id="orp_gameArea" class="orp_gameArea">
   <div
     id="orp_questionLogContainer"
-    class="orp_questionLogContainer"
+    class="orp_questionLogContainer-hidden orp_questionLogContainer"
   >
     <h3 id="orp_questionLogTitle" class="orp_questionLogTitle">Question Log</h3>
-    <div id="orp_questionLog" class="orp_questionLog-hidden orp_questionLog"></div>
+    <div id="orp_questionLog" class="orp_questionLog"></div>
   </div>
   <div id="orp_boardContainer" class="orp_boardContainer whiteblock">
     <div id="orp_boardButtons" class="orp_boardButtons"></div>

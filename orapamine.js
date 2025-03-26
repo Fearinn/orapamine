@@ -61,7 +61,7 @@ define([
         zoomControls: {
           color: "white",
         },
-        zoomLevels: [0.4, 0.5, 0.75, 1, 1.25, 1.5],
+        zoomLevels: [0.25, 0.4, 0.5, 0.75, 1, 1.25, 1.5],
         smooth: true,
       });
 
@@ -755,8 +755,8 @@ define([
         `<i id="orp_questionLogButton-icon" class="fa fa-eye" aria-hidden="true"></i>`,
         () => {
           document
-            .getElementById("orp_questionLog")
-            .classList.toggle("orp_questionLog-hidden");
+            .getElementById("orp_questionLogContainer")
+            .classList.toggle("orp_questionLogContainer-hidden");
 
           const logButtonIcon = document.getElementById(
             "orp_questionLogButton-icon"

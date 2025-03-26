@@ -247,22 +247,26 @@ define([
           const selectableLocations = args.args.selectableLocations;
           const selectableOrigins = args.args.selectableOrigins;
 
-          this.statusBar.addActionButton(_("Send ultrasound wave"), () => {
-            this.setClientState("client_sendWave", {
-              descriptionmyturn: _("${you} must pick the origin of the wave"),
-              client_args: { selectableOrigins: selectableOrigins },
-            });
-          });
-
-          this.statusBar.addActionButton(
-            _("Ask about specific position"),
-            () => {
-              this.setClientState("client_askLocation", {
-                descriptionmyturn: _("${you} must pick the position"),
-                client_args: { selectableLocations: selectableLocations },
+          if (selectableOrigins.length > 0) {
+            this.statusBar.addActionButton(_("Send ultrasound wave"), () => {
+              this.setClientState("client_sendWave", {
+                descriptionmyturn: _("${you} must pick the origin of the wave"),
+                client_args: { selectableOrigins: selectableOrigins },
               });
-            }
-          );
+            });
+          }
+
+          if (selectableLocations.length > 0) {
+            this.statusBar.addActionButton(
+              _("Ask about specific position"),
+              () => {
+                this.setClientState("client_askLocation", {
+                  descriptionmyturn: _("${you} must pick the position"),
+                  client_args: { selectableLocations: selectableLocations },
+                });
+              }
+            );
+          }
 
           this.statusBar.addActionButton(_("Submit answer"), () => {
             this.confirmationDialog(

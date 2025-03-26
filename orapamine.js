@@ -587,6 +587,7 @@ define([
         `<i class="fa fa-trash fa-inverse" aria-hidden="true"></i>`,
         () => {
           pieceElement.remove();
+          this.restoreServerGameState();
         },
         {
           id: `orp_pieceButton-delete-${uid}`,

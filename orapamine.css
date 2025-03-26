@@ -292,6 +292,7 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 4px;
+  margin: 0 auto;
   padding: 4px;
   max-width: var(--boardWidth);
   width: fit-content;

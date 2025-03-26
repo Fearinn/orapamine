@@ -61,7 +61,7 @@ define([
         zoomControls: {
           color: "white",
         },
-        zoomLevels: [0.5, 0.75, 1, 1.25, 1.5],
+        zoomLevels: [0.4, 0.5, 0.75, 1, 1.25, 1.5],
         smooth: true,
       });
 

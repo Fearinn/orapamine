@@ -7,8 +7,13 @@
         "name": "Disabled"
       },
       "1": {
-        "name": "Enabled",
-        "cssPref": "orp_pref-thematicBackground",
+        "name": "Blue",
+        "cssPref": "orp_pref-thematicBackground-blue",
+        "default": true
+      },
+      "2": {
+        "name": "Red",
+        "cssPref": "orp_pref-thematicBackground-red",
         "default": true
       }
     }

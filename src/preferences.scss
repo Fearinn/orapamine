@@ -1,11 +1,15 @@
-.orp_pref-thematicBackground {
-    background-image: url("img/background.png");
-    background-size: cover;
+.orp_pref-thematicBackground-blue, .orp_pref-thematicBackground-red {
+  background-image: url("img/background.png");
+  background-size: cover;
 
-    .orp_questionLogContainer {
-        color: white;
-        -webkit-text-stroke: 1.5px navy;
-    }
+  .orp_questionLogContainer {
+    color: white;
+    -webkit-text-stroke: 1.5px navy;
+  }
+}
+
+.orp_pref-thematicBackground-red {
+  background-image: url("img/background-red.png");
 }
 
 .orp_pref-colorblind {

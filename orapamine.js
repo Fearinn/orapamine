@@ -767,6 +767,7 @@ define([
         {
           id: "orp_questionLogButton",
           title: _("Show/hide question log"),
+          color: "secondary",
           classes: ["orp_questionLogButton"],
           destination: document.getElementById("orp_gameArea"),
         }

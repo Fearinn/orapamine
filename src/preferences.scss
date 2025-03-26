@@ -1,0 +1,27 @@
+.orp_pref-thematicBackground {
+    background-image: url("img/background.png");
+    background-size: cover;
+
+    .orp_questionLogContainer {
+        color: white;
+        -webkit-text-stroke: 1.5px navy;
+    }
+}
+
+.orp_pref-colorblind {
+  .orp_colorblindSupport {
+    display: block;
+  }
+}
+
+.orp_colorblindSupport {
+  font-size: 12px;
+  font-weight: bold;
+  display: none;
+  position: absolute;
+  bottom: 2%;
+  left: 2%;
+  background-color: whitesmoke;
+  padding: 0 2px;
+  z-index: 1;
+}

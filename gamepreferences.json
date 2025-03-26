@@ -1,11 +1,14 @@
 {
   "100": {
-    "name": "Draggable pieces",
+    "name": "Thematic background",
     "needReload": true,
     "values": {
-      "0": { "name": "Disabled" },
+      "0": {
+        "name": "Disabled"
+      },
       "1": {
         "name": "Enabled",
+        "cssPref": "orp_pref-thematicBackground",
         "default": true
       }
     }
@@ -21,6 +24,17 @@
       "1": {
         "name": "Enabled",
         "cssPref": "orp_pref-colorblind"
+      }
+    }
+  },
+  "102": {
+    "name": "Draggable pieces",
+    "needReload": true,
+    "values": {
+      "0": { "name": "Disabled" },
+      "1": {
+        "name": "Enabled",
+        "default": true
       }
     }
   }

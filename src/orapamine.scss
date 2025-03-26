@@ -13,7 +13,7 @@
  *
  */
 @use "bga-zoom";
-@use "colorblind";
+@use "preferences";
 
 @font-face {
   font-family: "Cookie Run";
@@ -40,10 +40,10 @@
 .orp_gameArea {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 860px);
+  grid-template-columns: repeat(auto-fit, 900px);
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 32px;
   padding: 0 8px;
   width: 100%;
 
@@ -230,8 +230,10 @@
   align-items: flex-end;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px;
+  padding: 4px;
   max-width: var(--boardWidth);
+  width: fit-content;
 }
 
 .orp_gemstone {
@@ -350,24 +352,23 @@
 
 .orp_questionLogContainer {
   font-family: "Cookie Run", serif;
+  font-size: 24px;
   position: absolute;
   top: 0;
   left: 55px;
-  background-color: #4871b6;
+  background-color: #f8f8f8aa;
   border-radius: 6px;
-  color: white;
   margin: 0;
   padding: 4px;
   z-index: 1;
 
   .orp_questionLogTitle {
-    font-size: 20px;
+    font-size: 28px;
     margin: 0;
   }
 }
 
 .orp_questionLog {
-  font-size: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;

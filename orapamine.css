@@ -277,6 +277,9 @@
   touch-action: none;
   width: var(--cellWidth);
 }
+.orp_piece-drag {
+  cursor: grabbing;
+}
 .orp_piece-empty {
   cursor: initial;
 }

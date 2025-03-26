@@ -179,7 +179,7 @@
 .orp_cell {
   position: relative;
   background-color: var(--boardColor);
-  border: 1.5px solid whitesmoke;
+  border: 1px solid whitesmoke;
   aspect-ratio: 1;
   width: 100%;
 
@@ -233,6 +233,7 @@
   position: relative;
   aspect-ratio: 1;
   background-color: var(--pieceColor);
+  border: 0 solid var(--pieceColorDarker);
   cursor: pointer;
   touch-action: none;
   width: var(--cellWidth);

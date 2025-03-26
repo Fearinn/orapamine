@@ -576,6 +576,8 @@ define([
     },
 
     attachControls: function (pieceElement) {
+      this.styleGaps();
+
       const color_id = pieceElement.dataset.color;
       const color = this.orp.info.colors[color_id];
       this.addTooltip(pieceElement.id, _(color.label), "");
@@ -619,6 +621,46 @@ define([
           }
         );
       }
+    },
+
+    styleGaps: function () {
+      const borders = {
+        Right: [1, 0],
+        Left: [-1, 0],
+        Bottom: [0, 1],
+        Top: [0, -1],
+      };
+
+      document
+        .getElementById("orp_board")
+        .querySelectorAll("[data-piece]")
+        .forEach((pieceElement) => {
+          const cellElement = pieceElement.parentElement;
+          const [x, y] = cellElement.dataset.cell.split("-");
+
+          for (const border in borders) {
+            pieceElement.style[`border${border}Width`] = "0";
+            cellElement.style[`border${border}Width`] = "1px";
+          }
+
+          for (const border in borders) {
+            const [shift_x, shift_y] = borders[border];
+
+            const siblingElement = document.querySelector(
+              `[data-cell="${Number(x) + Number(shift_x)}-${
+                Number(y) + Number(shift_y)
+              }"]`
+            );
+
+            const siblingColor =
+              siblingElement?.querySelector("[data-piece]")?.dataset.color;
+
+            if (siblingColor == pieceElement.dataset.color) {
+              pieceElement.style[`border${border}Width`] = "2px";
+              cellElement.style[`border${border}Width`] = "0";
+            }
+          }
+        });
     },
 
     setupQuestionLog: function () {

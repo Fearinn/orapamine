@@ -791,14 +791,16 @@ define([
           color.code
         }; color: ${textColor}">${_("absorbed")}</span></div>`;
       } else {
-        const { x, y, half } = logLine;
+        const { x, y, half} = logLine;
+
+        const color_label = color.id == 0 ? _("nothing") : _(color.label);
 
         logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>: ${
           half ? _("half") : ""
         } 
         <span class="orp_logHighlight" style="background-color: ${
           color.code
-        }; color: ${textColor}">${_(color.label)}</span></div>`;
+        }; color: ${textColor}">${_(color_label)}</span></div>`;
       }
 
       questionLogElement.insertAdjacentHTML("afterbegin", logLineHTML);

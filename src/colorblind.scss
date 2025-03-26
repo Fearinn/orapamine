@@ -1,4 +1,4 @@
-.orp_colorblind {
+.orp_colorblindSupport {
     font-size: 12px;
     font-weight: bold;
     display: none;
@@ -11,7 +11,7 @@
 }
 
 .orp_pref-colorblind {
-    .orp_colorblind{
+    .orp_colorblindSupport {
         display: block;
     }
 }

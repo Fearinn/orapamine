@@ -36,6 +36,15 @@ define([
         info: {
           colors: gamedatas.COLORS,
           gemstones: gamedatas.GEMSTONES,
+          colorToColorblind: {
+            0: "X",
+            1: "A",
+            2: "B",
+            3: "C",
+            4: "D",
+            99: "E",
+            16: "F",
+          },
         },
         globals: {
           solutionSheet: gamedatas.solutionSheet,
@@ -484,14 +493,19 @@ define([
 
         cellElement.insertAdjacentHTML("beforeend", locationFeedbackHTML);
 
+        const locationFeedbackElement = document.getElementById(
+          `orp_locationFeedback-${x}-${y}`
+        );
         if (half) {
-          document
-            .getElementById(`orp_locationFeedback-${x}-${y}`)
-            .classList.add("orp_locationFeedback-half");
+          locationFeedbackElement.classList.add("orp_locationFeedback-half");
         }
 
         const color_label = color.id == 0 ? _("nothing") : color.label;
-        this.addTooltip(`orp_locationFeedback-${x}-${y}`, _(color_label), "");
+        this.addTooltip(locationFeedbackElement.id, _(color_label), "");
+
+        const colorblindSupport = this.orp.info.colorToColorblind[color.id];
+
+        locationFeedbackElement.insertAdjacentHTML("beforeend", `<span class="orp_colorblindSupport">${colorblindSupport}</span>`);
       });
     },
 
@@ -590,19 +604,12 @@ define([
 
       const color_id = pieceElement.dataset.color;
 
-      if (!pieceElement.querySelector(".orp_colorblind")) {
-        const colorToColorblind = {
-          1: "A",
-          2: "B",
-          3: "C",
-          4: "D",
-          99: "E",
-          16: "F",
-        };
+      if (!pieceElement.querySelector(".orp_colorblindSupport")) {
+        const colorblindSupport = this.orp.info.colorToColorblind[color_id];
 
         pieceElement.insertAdjacentHTML(
           "beforeend",
-          `<span class="orp_colorblind">${colorToColorblind[color_id]}</span>`
+          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
         );
       }
 
@@ -791,7 +798,7 @@ define([
           color.code
         }; color: ${textColor}">${_("absorbed")}</span></div>`;
       } else {
-        const { x, y, half} = logLine;
+        const { x, y, half } = logLine;
 
         const color_label = color.id == 0 ? _("nothing") : _(color.label);
 

@@ -579,6 +579,23 @@ define([
       this.styleGaps();
 
       const color_id = pieceElement.dataset.color;
+
+      if (!pieceElement.querySelector(".orp_colorblind")) {
+        const colorToColorblind = {
+          1: "A",
+          2: "B",
+          3: "C",
+          4: "D",
+          99: "E",
+          16: "F",
+        };
+        
+        pieceElement.insertAdjacentHTML(
+          "beforeend",
+          `<span class="orp_colorblind">${colorToColorblind[color_id]}</span>`
+        );
+      }
+      
       const color = this.orp.info.colors[color_id];
       this.addTooltip(pieceElement.id, _(color.label), "");
 

@@ -13,6 +13,7 @@
  *
  */
 @use "bga-zoom";
+@use "colorblind";
 
 @font-face {
   font-family: "Cookie Run";
@@ -182,6 +183,10 @@
   border: 1px solid whitesmoke;
   aspect-ratio: 1;
   width: 100%;
+
+  &:has(.orp_piece-hidden) {
+    border-width: 1px !important;
+  }
 
   &-selectable {
     cursor: pointer;

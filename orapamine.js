@@ -106,7 +106,7 @@ define([
           this.insertPieceElement(placedPiece);
         });
 
-        if (this.getGameUserPreference(100) == 1) {
+        if (this.getGameUserPreference(102) == 1) {
           new Draggable(this);
         } else {
           new Clickable(this);

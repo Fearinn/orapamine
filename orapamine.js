@@ -214,16 +214,16 @@ define([
             cellElement.onclick = () => {
               const pieceElement = this.orp.globals.pieceElement;
 
-              const innerCellElement =
-                cellElement.querySelector(".orp_innerCell");
+              const locationFeedbackElement = cellElement.querySelector(
+                ".orp_locationFeedback"
+              );
+
               if (
-                innerCellElement &&
-                innerCellElement.dataset.color != pieceElement.dataset.color
+                !this.comparePieceToRevealedLocation(
+                  locationFeedbackElement,
+                  pieceElement
+                )
               ) {
-                this.showMessage(
-                  _("This position has been confirmed as another color"),
-                  "error"
-                );
                 return;
               }
 
@@ -462,14 +462,14 @@ define([
     styleLocationFeedback: function (revealedLocations) {
       revealedLocations.forEach((location) => {
         let color = location.color;
-        const { x, y } = location;
+        const { x, y, half } = location;
 
         if (!color) {
           color = this.orp.info.colors[0];
         }
 
-        const innerCellHTML = `<div id="orp_innerCell-${x}-${y}" class="orp_innerCell" 
-        data-color="${color.id}" style="background-color: ${color.code}; border-color: ${color.code}"></div>`;
+        const locationFeedbackHTML = `<div id="orp_locationFeedback-${x}-${y}" class="orp_locationFeedback" 
+        data-color="${color.id}" style="--pieceColor: ${color.code};"></div>`;
 
         const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
         cellElement.childNodes.forEach((pieceElement) => {
@@ -478,10 +478,16 @@ define([
           }
         });
 
-        cellElement.insertAdjacentHTML("beforeend", innerCellHTML);
+        cellElement.insertAdjacentHTML("beforeend", locationFeedbackHTML);
+
+        if (half) {
+          document
+            .getElementById(`orp_locationFeedback-${x}-${y}`)
+            .classList.add("orp_locationFeedback-half");
+        }
 
         const color_label = color.id == 0 ? _("nothing") : color.label;
-        this.addTooltip(`orp_innerCell-${x}-${y}`, _(color_label), "");
+        this.addTooltip(`orp_locationFeedback-${x}-${y}`, _(color_label), "");
       });
     },
 
@@ -589,13 +595,13 @@ define([
           99: "E",
           16: "F",
         };
-        
+
         pieceElement.insertAdjacentHTML(
           "beforeend",
           `<span class="orp_colorblind">${colorToColorblind[color_id]}</span>`
         );
       }
-      
+
       const color = this.orp.info.colors[color_id];
       this.addTooltip(pieceElement.id, _(color.label), "");
 
@@ -680,6 +686,51 @@ define([
         });
     },
 
+    comparePieceToRevealedLocation: function (
+      locationFeedbackElement,
+      pieceElement
+    ) {
+      if (!locationFeedbackElement) {
+        return true;
+      }
+
+      if (locationFeedbackElement.dataset.color != pieceElement.dataset.color) {
+        this.showMessage(
+          _("This position has been confirmed as another color"),
+          "error"
+        );
+        return false;
+      }
+
+      if (
+        locationFeedbackElement.classList.contains(
+          "orp_locationFeedback-half"
+        ) &&
+        pieceElement.dataset.piece == 5
+      ) {
+        this.showMessage(
+          _("This position has been confirmed as a half gem"),
+          "error"
+        );
+        return false;
+      }
+
+      if (
+        !locationFeedbackElement.classList.contains(
+          "orp_locationFeedback-half"
+        ) &&
+        pieceElement.dataset.piece != 5
+      ) {
+        this.showMessage(
+          _("This position has been confirmed as a whole gem"),
+          "error"
+        );
+        return false;
+      }
+
+      return true;
+    },
+
     setupQuestionLog: function () {
       const questionLog = this.gamedatas.questionLog;
       questionLog.forEach((logLine) => {
@@ -736,9 +787,11 @@ define([
           color.code
         }; color: ${textColor}">${_("absorbed")}</span></div>`;
       } else {
-        const { x, y } = logLine;
+        const { x, y, half } = logLine;
 
-        logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>: 
+        logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>: ${
+          half ? _("half") : ""
+        } 
         <span class="orp_logHighlight" style="background-color: ${
           color.code
         }; color: ${textColor}">${_(color.label)}</span></div>`;
@@ -839,8 +892,8 @@ define([
     },
 
     notif_answerLocation: function (args) {
-      const { x, y, color, logLine } = args;
-      this.styleLocationFeedback([{ x, y, color }]);
+      const { x, y, color, logLine, half } = args;
+      this.styleLocationFeedback([{ x, y, color, half }]);
       this.insertQuestionLogLine(logLine);
     },
 

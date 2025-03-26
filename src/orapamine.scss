@@ -205,15 +205,22 @@
   }
 }
 
-.orp_innerCell {
+.orp_locationFeedback {
   aspect-ratio: 1;
-  border: 1px solid;
+  background-color: var(--pieceColor);
   border-radius: 100%;
-  opacity: 0.75;
   width: 100%;
+
+  &-half {
+    background: linear-gradient(
+        to bottom left,
+        #ffffff00 50%,
+        var(--pieceColor) 50%
+      );
+  }
 }
 
-.orp_piece:not(.orp_piece-hidden) ~ .orp_innerCell {
+.orp_piece:not(.orp_piece-hidden) ~ .orp_locationFeedback {
   display: none;
 }
 

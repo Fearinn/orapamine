@@ -106,15 +106,12 @@ function dropItemOntoXY(pieceElement, x, y) {
     return;
   }
 
-  const innerCellElement = cellElement.querySelector(".orp_innerCell");
+  const locationFeedbackElement = cellElement.querySelector(
+    ".orp_locationFeedback"
+  );
   if (
-    innerCellElement &&
-    innerCellElement.dataset.color != pieceElement.dataset.color
+    !game.comparePieceToRevealedLocation(locationFeedbackElement, pieceElement)
   ) {
-    game.showMessage(
-      _("This position has been confirmed as another color"),
-      "error"
-    );
     return;
   }
 

@@ -1,14 +1,16 @@
-.orp_pref-thematicBackground-blue, .orp_pref-thematicBackground-red {
+:root.orp_pref-thematicBackground-blue, .orp_pref-thematicBackground-red {
   background-image: url("img/background.png");
   background-size: cover;
 
   .orp_questionLogContainer {
     color: white;
-    -webkit-text-stroke: 1.5px navy;
+    -webkit-text-stroke: 1.5px var(--text-stroke-color);
   }
 }
 
-.orp_pref-thematicBackground-red {
+:root.orp_pref-thematicBackground-red {
+  --text-stroke-color: darkred;
+
   background-image: url("img/background-red.png");
 }
 

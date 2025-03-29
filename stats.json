@@ -1,1 +1,24 @@
-{}
+{
+  "player": {
+    "win%": {
+      "id": 10,
+      "name": "Win %",
+      "type": "int"
+    },
+    "locationsAsked": {
+      "id": 11,
+      "name": "Positions asked",
+      "type": "int"
+    },
+    "wavesSent": {
+      "id": 12,
+      "name": "Waves sent",
+      "type": "int"
+    },
+    "chancesLost": {
+      "id": 13,
+      "name": "Chances lost",
+      "type": "int"
+    }
+  }
+}

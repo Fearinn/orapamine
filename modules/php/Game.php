@@ -163,6 +163,8 @@ class Game extends \Table
             ]
         );
 
+        $this->incStat(1, "locationsAsked", $player_id);
+
         $color_id = $coloredBoard[$guess_x][$guess_y];
 
         if ($color_id > 0) {
@@ -273,6 +275,8 @@ class Game extends \Table
             ]
         );
 
+        $this->incStat(1, "wavesSent", $player_id);
+
         $visitedColors = [];
         $this->sendWave($origin_x, $origin_y, $direction_id, $visitedColors, $origin);
 
@@ -360,8 +364,6 @@ class Game extends \Table
         }
 
         if ($correct) {
-            $this->DbQuery("UPDATE player SET player_score=1 WHERE player_id=$player_id");
-
             $this->notify->all(
                 "correctSolution",
                 clienttranslate('${player_name} finds the correct answer!'),
@@ -372,6 +374,9 @@ class Game extends \Table
                     "coloredBoard" => $this->globals->get(COLORED_BOARD),
                 ]
             );
+
+            $this->setStat(100, "win%", $player_id);
+            $this->DbQuery("UPDATE player SET player_score=1 WHERE player_id=$player_id");
 
             $this->gamestate->nextState("gameEnd");
             return;
@@ -386,6 +391,7 @@ class Game extends \Table
             ]
         );
 
+        $this->incStat(1, "chancesLost", $player_id);
         $this->DbQuery("UPDATE player SET player_chances=player_chances-1 where player_id=$player_id");
 
         $this->gamestate->nextState("nextPlayer");
@@ -1091,10 +1097,6 @@ class Game extends \Table
             ]);
         }
 
-        // Create players based on generic information.
-        //
-        // NOTE: You can add extra field on player table in the database (see dbmodel.sql) and initialize
-        // additional fields directly here.
         static::DbQuery(
             sprintf(
                 "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES %s",
@@ -1113,6 +1115,11 @@ class Game extends \Table
         foreach ($players as $player_id => $player) {
             $solutionSheets[$player_id] = [];
             $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
+
+            $this->initStat("player", "win%", 0, $player_id);
+            $this->initStat("player", "locationsAsked", 0, $player_id);
+            $this->initStat("player", "wavesSent", 0, $player_id);
+            $this->initStat("player", "chancesLost", 0, $player_id);
         }
 
         // Activate first player once everything has been initialized and ready.

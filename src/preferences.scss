@@ -1,4 +1,5 @@
-:root.orp_pref-thematicBackground-blue, .orp_pref-thematicBackground-red {
+:root.orp_pref-thematicBackground-blue,
+.orp_pref-thematicBackground-red {
   background-image: url("img/background.png");
   background-size: cover;
 
@@ -30,4 +31,10 @@
   background-color: whitesmoke;
   padding: 0 2px;
   z-index: 1;
+}
+
+.orp_pref-draggable {
+  .orp_piece:not(.orp_piece-drag) {
+    cursor: grab;
+  }
 }

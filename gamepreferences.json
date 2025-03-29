@@ -39,6 +39,7 @@
       "0": { "name": "Disabled" },
       "1": {
         "name": "Enabled",
+        "cssPref": "orp_pref-draggable",
         "default": true
       }
     }

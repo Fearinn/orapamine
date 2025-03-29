@@ -224,7 +224,7 @@
   display: none;
 }
 
-.orp_solutionPieces {
+.orp_draftPieces {
   position: relative;
   display: flex;
   align-items: flex-end;
@@ -237,9 +237,9 @@
 }
 
 .orp_gemstone {
+  position: relative;
   display: grid;
   touch-action: none;
-  gap: 1px;
 }
 
 .orp_piece {

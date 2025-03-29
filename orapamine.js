@@ -45,6 +45,12 @@ define([
             99: "E",
             16: "F",
           },
+          borders: {
+            Right: [1, 0],
+            Left: [-1, 0],
+            Bottom: [0, 1],
+            Top: [0, -1],
+          },
         },
         globals: {
           solutionSheet: gamedatas.solutionSheet,
@@ -175,8 +181,10 @@ define([
         this.statusBar.addActionButton(
           `<i id="orp_boardButton-hide-icon" class="fa fa-eye-slash" aria-hidden="true"></i>`,
           () => {
-            document.querySelectorAll(".orp_piece").forEach((buttonElement) => {
-              buttonElement.classList.toggle("orp_piece-hidden");
+            document.querySelectorAll(".orp_piece").forEach((pieceElement) => {
+              if (document.getElementById("orp_board").contains(pieceElement)) {
+                pieceElement.classList.toggle("orp_piece-hidden");
+              }
             });
 
             const logButtonIcon = document.getElementById(
@@ -561,60 +569,83 @@ define([
     },
 
     setupSolutionPieces: function () {
-      const solutionPiecesElement =
-        document.getElementById("orp_solutionPieces");
+      const draftPiecesElement =
+        document.getElementById("orp_draftPieces");
 
       this.orp.info.gemstones.forEach((gemstone, index) => {
         const gemstone_id = index + 1;
 
-        solutionPiecesElement.insertAdjacentHTML(
+        draftPiecesElement.insertAdjacentHTML(
           "beforeend",
           `<div id="orp_gemstone-${gemstone_id}" data-gemstone="${gemstone_id}"></div>`
         );
 
+        const gemstoneElement = document.getElementById(
+          `orp_gemstone-${gemstone_id}`
+        );
+        gemstoneElement.classList.add("orp_gemstone");
+        gemstoneElement.style.gridTemplateColumns = `repeat(${gemstone.columns}, var(--cellWidth))`;
+        gemstoneElement.style.gridTemplateRows = `repeat(${gemstone.rows}, var(--cellWidth))`;
+
+        const color_id = gemstone.color;
+        const color = this.orp.info.colors[color_id];
+
+        const colorblindSupport = this.orp.info.colorToColorblind[color_id];
+        gemstoneElement.insertAdjacentHTML(
+          "beforeend",
+          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
+        );
+
+        let y = 0;
         gemstone.format[0].forEach((row) => {
-          const gemstoneElement = document.getElementById(
-            `orp_gemstone-${gemstone_id}`
-          );
-          gemstoneElement.classList.add("orp_gemstone");
-          gemstoneElement.style.gridTemplateColumns = `repeat(${gemstone.columns}, var(--cellWidth))`;
-          gemstoneElement.style.gridTemplateRows = `repeat(${gemstone.rows}, var(--cellWidth))`;
+          y++;
 
+          let x = 0;
           row.forEach((piece) => {
-            const pieceElement = document.createElement("div");
-            gemstoneElement.insertAdjacentElement("beforeend", pieceElement);
-            pieceElement.classList.add("orp_piece");
+            x++;
 
-            if (piece === 0) {
-              pieceElement.classList.add("orp_piece-empty");
+            const cellElement_id = `orp_gemstoneCell-${gemstone_id}-${x}-${y}`;
+            const cellHTML = `<div id="${cellElement_id}"></div>`;
+            gemstoneElement.insertAdjacentHTML("beforeend", cellHTML);
+            const cellElement = document.getElementById(cellElement_id);
+
+            if (piece == 0) {
+              return;
             }
 
-            const color_id = gemstone.color;
-            const color = this.orp.info.colors[color_id];
+            const pieceElement_id = `orp_gemstonePiece-${gemstone_id}-${x}-${y}`;
+            const pieceHTML = `<div id="${pieceElement_id}" class="orp_piece" data-piece="${piece}" data-color="${color_id}" 
+            style="--pieceColor: ${color.code}; --pieceColorDarker: ${color.darkerCode}"></div>`;
+            cellElement.insertAdjacentHTML("beforeend", pieceHTML);
 
-            pieceElement.dataset.color = color_id;
-            pieceElement.dataset.piece = piece;
-
-            pieceElement.style.setProperty("--pieceColor", color.code);
-            pieceElement.style.setProperty(
-              "--pieceColorDarker",
-              color.darkerCode
-            );
+            const pieceElement = document.getElementById(pieceElement_id);
+            this.addTooltip(pieceElement_id, color.label, "");
 
             if (piece < 5) {
               pieceElement.classList.add("orp_piece-half");
+            }
+
+            const borders = this.orp.info.borders;
+            for (const border in borders) {
+              const [shift_x, shift_y] = borders[border];
+              const siblingElement = document.getElementById(
+                `orp_gemstonePiece-${gemstone_id}-${Number(x) + shift_x}-${
+                  Number(y) + shift_y
+                }`
+              );
+
+              if (siblingElement) {
+                pieceElement.style[`border${border}Width`] = "2px";
+              }
             }
           });
         });
       });
     },
 
-    attachControls: function (pieceElement) {
-      this.styleGaps();
-
-      const color_id = pieceElement.dataset.color;
-
+    attachColorBlindSupport: function (pieceElement) {
       if (!pieceElement.querySelector(".orp_colorblindSupport")) {
+        const color_id = pieceElement.dataset.color;
         const colorblindSupport = this.orp.info.colorToColorblind[color_id];
 
         pieceElement.insertAdjacentHTML(
@@ -622,6 +653,13 @@ define([
           `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
         );
       }
+    },
+
+    attachControls: function (pieceElement) {
+      this.styleGaps();
+      this.attachColorBlindSupport(pieceElement);
+
+      const color_id = pieceElement.dataset.color;
 
       const color = this.orp.info.colors[color_id];
       this.addTooltip(pieceElement.id, _(color.label), "");
@@ -668,12 +706,7 @@ define([
     },
 
     styleGaps: function () {
-      const borders = {
-        Right: [1, 0],
-        Left: [-1, 0],
-        Bottom: [0, 1],
-        Top: [0, -1],
-      };
+      const borders = this.orp.info.borders;
 
       document
         .getElementById("orp_board")

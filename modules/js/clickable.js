@@ -26,7 +26,7 @@ function clickCallback(event) {
     client_args: {},
   });
 
-  if (document.getElementById("orp_solutionPieces").contains(pieceElement)) {
+  if (document.getElementById("orp_draftPieces").contains(pieceElement)) {
     pieceElement = pieceElement.cloneNode();
   }
 

@@ -152,6 +152,7 @@ define([
           {
             id: "orp_boardButton-save",
             title: _("Save solution sheet"),
+            color: "secondary",
             classes: ["orp_boardButton", "orp_boardButton-save"],
             destination: document.getElementById("orp_boardButtons"),
           }
@@ -173,6 +174,7 @@ define([
           {
             id: "orp_boardButton-simplify",
             title: _("Show/hide piece controls"),
+            color: "secondary",
             classes: ["orp_boardButton", "orp_boardButton-simplify"],
             destination: document.getElementById("orp_boardButtons"),
           }
@@ -196,6 +198,7 @@ define([
           {
             id: "orp_boardButton-hide",
             title: _("Show/hide pieces"),
+            color: "secondary",
             classes: ["orp_boardButton", "orp_boardButton-hide"],
             destination: document.getElementById("orp_boardButtons"),
           }
@@ -686,7 +689,7 @@ define([
         pieceElement.classList.add("orp_piece-half");
 
         this.statusBar.addActionButton(
-          `<i class="fa fa-undo fa-inverse" aria-hidden="true"></i>`,
+          `<i class="fa fa-undo" aria-hidden="true"></i>`,
           () => {
             piece++;
             if (piece > 4) {
@@ -698,6 +701,7 @@ define([
           {
             id: `orp_pieceButton-rotate-${uid}`,
             title: _("Rotate piece"),
+            color: "secondary",
             classes: ["orp_pieceButton-rotate", "orp_pieceButton"],
             destination: pieceElement,
           }

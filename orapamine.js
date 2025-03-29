@@ -118,6 +118,13 @@ define([
             this.confirmationDialog(
               _("Are you sure you want to clear the solution sheet?"),
               () => {
+                document
+                  .querySelectorAll("[data-cell]")
+                  .forEach((cellElement) => {
+                    if (cellElement.querySelector("[data-piece]")) {
+                      cellElement.style.borderWidth = "1px";
+                    }
+                  });
                 this.actClearSolution();
               }
             );
@@ -505,7 +512,10 @@ define([
 
         const colorblindSupport = this.orp.info.colorToColorblind[color.id];
 
-        locationFeedbackElement.insertAdjacentHTML("beforeend", `<span class="orp_colorblindSupport">${colorblindSupport}</span>`);
+        locationFeedbackElement.insertAdjacentHTML(
+          "beforeend",
+          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
+        );
       });
     },
 

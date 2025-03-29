@@ -289,19 +289,17 @@
   position: relative;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: space-evenly;
   flex-wrap: wrap;
   gap: 4px;
   margin: 0 auto;
   padding: 4px;
   max-width: var(--boardWidth);
-  width: fit-content;
 }
 
 .orp_gemstone {
   display: grid;
   touch-action: none;
-  will-change: transform;
   gap: 1px;
 }
 
@@ -314,11 +312,11 @@
   touch-action: none;
   width: var(--cellWidth);
 }
-.orp_piece-drag {
-  cursor: grabbing;
-}
 .orp_piece-empty {
   cursor: initial;
+}
+.orp_piece-drag {
+  cursor: grabbing;
 }
 .orp_piece-hiddenControls .orp_pieceButton {
   visibility: hidden;

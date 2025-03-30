@@ -501,12 +501,14 @@ define([
 
     styleLocationFeedback: function (revealedLocations) {
       revealedLocations.forEach((location) => {
-        let color = location.color;
+        let color_id = location.color_id;
         const { x, y, half } = location;
 
-        if (!color) {
-          color = this.orp.info.colors[0];
+        if (!color_id) {
+          color_id = 0;
         }
+
+        const color = this.orp.info.colors[color_id];
 
         const locationFeedbackHTML = `<div id="orp_locationFeedback-${x}-${y}" class="orp_locationFeedback" 
         data-color="${color.id}" style="--pieceColor: ${color.code};"></div>`;
@@ -541,7 +543,9 @@ define([
 
     styleWaveFeedback: function (revealedOrigins) {
       revealedOrigins.forEach((feedback) => {
-        const { origin, color } = feedback;
+        const { origin, color_id } = feedback;
+
+        const color = this.orp.info.colors[color_id];
 
         if (!origin) {
           return;
@@ -630,7 +634,9 @@ define([
             cellElement.insertAdjacentHTML("beforeend", pieceHTML);
 
             const pieceElement = document.getElementById(pieceElement_id);
-            this.addTooltip(pieceElement_id, color.label, "");
+
+            const color_label = color.id == 16 ? _("blackbody") : color.label;
+            this.addTooltip(pieceElement_id, color_label, "");
 
             if (piece < 5) {
               pieceElement.classList.add("orp_piece-half");
@@ -673,7 +679,8 @@ define([
       const color_id = pieceElement.dataset.color;
 
       const color = this.orp.info.colors[color_id];
-      this.addTooltip(pieceElement.id, _(color.label), "");
+      const color_label = color.id == 16 ? _("blackbody") : color.label;
+      this.addTooltip(pieceElement.id, _(color_label), "");
 
       let piece = pieceElement.dataset.piece;
       const uid = pieceElement.id.split("-")[1];
@@ -962,17 +969,18 @@ define([
     },
 
     notif_answerLocation: function (args) {
-      const { x, y, color, logLine, half } = args;
-      this.styleLocationFeedback([{ x, y, color, half }]);
+      const { x, y, color_id, logLine, half } = args;
+
+      this.styleLocationFeedback([{ x, y, color_id, half }]);
       this.insertQuestionLogLine(logLine);
     },
 
     notif_returnWave: function (args) {
-      const { color, origin, exit, logLine } = args;
+      const { color_id, origin, exit, logLine } = args;
 
       this.styleWaveFeedback([
-        { origin, color },
-        { origin: exit, color },
+        { origin, color_id },
+        { origin: exit, color_id },
       ]);
 
       this.insertQuestionLogLine(logLine);

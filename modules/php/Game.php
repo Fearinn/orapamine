@@ -186,7 +186,7 @@ class Game extends \Table
         }
 
         $revealedLocations = $this->globals->get(REVEALED_LOCATIONS, []);
-        $revealedLocations[] = ["x" => $guess_x, "y" => $guess_y, "color" => $color, "half" => $half];
+        $revealedLocations[] = ["x" => $guess_x, "y" => $guess_y, "color_id" => $color_id, "half" => $half];
         $this->globals->set(REVEALED_LOCATIONS, $revealedLocations);
 
         $questionLog = $this->globals->get(QUESTION_LOG, []);
@@ -199,7 +199,7 @@ class Game extends \Table
             $message,
             [
                 "half" => $half,
-                "color" => $color,
+                "color_id" => $color_id,
                 "x" => $guess_x,
                 "y" => $guess_y,
                 "logLine" => $logLine,
@@ -807,7 +807,7 @@ class Game extends \Table
 
             $color = $this->COLORS[$blackbodyColor_id];
             $revealedOrigins = $this->globals->get(REVEALED_ORIGINS, []);
-            $revealedOrigins[] = ["origin" => $origin, "color" => $color];
+            $revealedOrigins[] = ["origin" => $origin, "color_id" => $blackbodyColor_id];
             $this->globals->set(REVEALED_ORIGINS, $revealedOrigins);
 
             $this->notify->all(
@@ -815,7 +815,7 @@ class Game extends \Table
                 clienttranslate("The wave was absorbed"),
                 [
                     "logLine" => $logLine,
-                    "color" => $color,
+                    "color_id" => $blackbodyColor_id,
                     "origin" => $origin,
                     "exit" => $origin,
                 ],
@@ -865,8 +865,8 @@ class Game extends \Table
         $color = (array) $this->COLORS[$color_id];
 
         $revealedOrigins = $this->globals->get(REVEALED_ORIGINS, []);
-        $revealedOrigins[] = ["origin" => $origin, "color" => $color];
-        $revealedOrigins[] = ["origin" => $exit_id, "color" => $color];
+        $revealedOrigins[] = ["origin" => $origin, "color_id" => $color_id];
+        $revealedOrigins[] = ["origin" => $exit_id, "color_id" => $color_id];
         $this->globals->set(REVEALED_ORIGINS, $revealedOrigins);
 
         $questionLog = $this->globals->get(QUESTION_LOG, []);
@@ -880,7 +880,7 @@ class Game extends \Table
             [
                 "origin" => $origin,
                 "exit" => $exit_id,
-                "color" => $color,
+                "color_id" => $color_id,
                 "logLine" => $logLine,
                 "preserve" => ["color"],
                 "log_origin" => $origin,

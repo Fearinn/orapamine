@@ -363,6 +363,15 @@ define([
       return ++this.orp.managers.uid;
     },
 
+    playSound: function (sound) {
+      if (this.getGameUserPreference(103) == 0) {
+        return;
+      }
+
+      this.disableNextMoveSound();
+      playSound(`orapamine_${sound}`);
+    },
+
     setupBoard: function () {
       document.querySelectorAll("[data-cell]").forEach((cellElement) => {
         const x = cellElement.dataset.cell.split("-")[0];
@@ -572,8 +581,7 @@ define([
     },
 
     setupSolutionPieces: function () {
-      const draftPiecesElement =
-        document.getElementById("orp_draftPieces");
+      const draftPiecesElement = document.getElementById("orp_draftPieces");
 
       this.orp.info.gemstones.forEach((gemstone, index) => {
         const gemstone_id = index + 1;
@@ -877,6 +885,7 @@ define([
     },
 
     actSendWave: function (origin) {
+      this.playSound("laser");
       this.performAction("actSendWave", { origin });
     },
 

@@ -43,5 +43,16 @@
         "default": true
       }
     }
+  },
+  "103": {
+    "name": "Sound effects",
+    "needReload": false,
+    "values": {
+      "0": { "name": "Disabled" },
+      "1": {
+        "name": "Enabled",
+        "default": true
+      }
+    }
   }
 }

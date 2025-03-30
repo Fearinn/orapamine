@@ -9,6 +9,18 @@
 -- See http://en.boardgamearena.com/#!doc/Studio for more information.
 -------
 -->
+<audio
+  id="audiosrc_orapamine_laser"
+  src="{GAMETHEMEURL}img/sounds/orapamine_laser.mp3"
+  preload="none"
+  autobuffer
+></audio>
+<audio
+  id="audiosrc_o_orapamine_laser"
+  src="{GAMETHEMEURL}img/sounds/orapamine_laser.ogg"
+  preload="none"
+  autobuffer
+></audio>
 <div id="orp_gameArea" class="orp_gameArea">
   <div
     id="orp_questionLogContainer"

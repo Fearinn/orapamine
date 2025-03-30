@@ -231,7 +231,7 @@
   align-items: flex-end;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 8px;
   margin: 0 auto;
   padding: 4px;
   max-width: var(--boardWidth);
@@ -278,7 +278,7 @@
   &-selected {
     cursor: pointer;
     transform: scale(1.1);
-    outline: 2px dashed green;
+    outline: 3px dashed limegreen;
     z-index: 1;
   }
 

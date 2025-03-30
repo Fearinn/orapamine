@@ -83,11 +83,11 @@
 :root.orp_pref-thematicBackground-blue .orp_questionLogContainer,
 .orp_pref-thematicBackground-red .orp_questionLogContainer {
   color: white;
-  -webkit-text-stroke: 1.5px var(--text-stroke-color);
+  -webkit-text-stroke: 1.5px var(--theme-color);
 }
 
 :root.orp_pref-thematicBackground-red {
-  --text-stroke-color: darkred;
+  --theme-color: darkred;
   background-image: url("img/background-red.png");
 }
 
@@ -129,7 +129,7 @@
   --boardContainerWidth: calc(var(--boardWidth) + 120px);
   --boardColor: rgba(200, 200, 200, 0.8);
   --cellWidth: calc(var(--boardWidth) / 10);
-  --text-stroke-color: navy;
+  --theme-color: navy;
 }
 
 .orp_gameArea {
@@ -155,7 +155,7 @@
   margin-left: 8px;
 }
 .orp_playerChances-icon {
-  color: #c92727;
+  color: var(--theme-color);
 }
 
 .orp_boardContainer {
@@ -227,8 +227,8 @@
   font-weight: bold;
   font-size: 24px;
   text-align: center;
-  -webkit-text-stroke: 1.5px var(--text-stroke-color);
-  text-shadow: var(--text-stroke-color) 1px 0 10px;
+  -webkit-text-stroke: 1.5px var(--theme-color);
+  text-shadow: var(--theme-color) 1px 0 10px;
   margin: auto auto;
   padding: 0 4px;
   width: fit-content;

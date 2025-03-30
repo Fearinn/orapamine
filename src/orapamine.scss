@@ -35,7 +35,7 @@
   --boardContainerWidth: calc(var(--boardWidth) + 120px);
   --boardColor: rgba(200, 200, 200, 0.8);
   --cellWidth: calc(var(--boardWidth) / 10);
-  --text-stroke-color: navy;
+  --theme-color: navy;
 }
 
 .orp_gameArea {
@@ -62,7 +62,7 @@
   margin-left: 8px;
 
   &-icon {
-    color: #c92727;
+    color: var(--theme-color);
   }
 }
 
@@ -146,8 +146,8 @@
   font-weight: bold;
   font-size: 24px;
   text-align: center;
-  -webkit-text-stroke: 1.5px var(--text-stroke-color);
-  text-shadow: var(--text-stroke-color) 1px 0 10px;
+  -webkit-text-stroke: 1.5px var(--theme-color);
+  text-shadow: var(--theme-color) 1px 0 10px;
 
   margin: auto auto;
   padding: 0 4px;

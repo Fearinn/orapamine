@@ -8,29 +8,28 @@
       },
       "1": {
         "name": "Blue",
-        "cssPref": "orp_pref-thematicBackground-blue",
-        "default": true
+        "cssPref": "orp_pref-thematicBackground-blue"
       },
       "2": {
         "name": "Red",
-        "cssPref": "orp_pref-thematicBackground-red",
-        "default": true
+        "cssPref": "orp_pref-thematicBackground-red"
       }
-    }
+    },
+    "default": 1
   },
   "101": {
     "name": "Colorblind support",
     "needReload": true,
     "values": {
       "0": {
-        "name": "Disabled",
-        "default": true
+        "name": "Disabled"
       },
       "1": {
         "name": "Enabled",
         "cssPref": "orp_pref-colorblind"
       }
-    }
+    },
+    "default": 0
   },
   "102": {
     "name": "Draggable pieces",
@@ -39,10 +38,10 @@
       "0": { "name": "Disabled" },
       "1": {
         "name": "Enabled",
-        "cssPref": "orp_pref-draggable",
-        "default": true
+        "cssPref": "orp_pref-draggable"
       }
-    }
+    },
+    "default": 1
   },
   "103": {
     "name": "Sound effects",
@@ -50,9 +49,9 @@
     "values": {
       "0": { "name": "Disabled" },
       "1": {
-        "name": "Enabled",
-        "default": true
+        "name": "Enabled"
       }
-    }
+    },
+    "default": 1
   }
 }

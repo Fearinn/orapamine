@@ -780,8 +780,8 @@ class Game extends \Table
             $y = 1;
         }
 
-        if ($y > 10) {
-            $y = 10;
+        if ($y > 8) {
+            $y = 8;
         }
 
         foreach ($this->ORIGINS as $exit_id => $exit) {
@@ -1166,20 +1166,21 @@ class Game extends \Table
         throw new \feException("Zombie mode not supported at this game state: \"{$state_name}\".");
     }
 
+    public function debug_setLocation(int $x, int $y, int $piece, int $color_id): void
+    {
+        $board = $this->globals->get(BOARD);
+        $board[$x][$y] = $piece;
+        $this->globals->set(BOARD, $board);
+
+        $coloredBoard = $this->globals->get(COLORED_BOARD);
+        $coloredBoard[$x][$y] = $color_id;
+        $this->globals->set(COLORED_BOARD, $coloredBoard);
+    }
+
     public function debug_setupBoard(): void
     {
         $this->setupBoard();
         $this->updateSelectableLocations("", true);
         $this->updateSelectableOrigins("", "", true);
-    }
-
-    public function debug_askLocation(int $x = 1, int $y = 8): void
-    {
-        $this->actAskLocation(null, $x, $y);
-    }
-
-    public function debug_sendWave(string $origin): void
-    {
-        $this->actSendWave(null, $origin);
     }
 }

@@ -286,7 +286,7 @@
   width: 100%;
 }
 .orp_locationFeedback-half {
-  background: linear-gradient(to bottom left, rgba(255, 255, 255, 0) 50%, var(--pieceColor) 50%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, var(--pieceColor) 50%);
 }
 
 .orp_piece:not(.orp_piece-hidden) ~ .orp_locationFeedback {

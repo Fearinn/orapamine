@@ -75,11 +75,6 @@ define([
       this.setupSolutionPieces();
       this.setupQuestionLog();
 
-      // this.revealBoard({
-      //   board: gamedatas.board,
-      //   coloredBoard: gamedatas.coloredBoard,
-      // });
-
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
@@ -165,11 +160,11 @@ define([
               buttonElement.classList.toggle("orp_piece-hiddenControls");
             });
 
-            const logButtonIcon = document.getElementById(
+            const buttonIcon = document.getElementById(
               "orp_boardButton-simplify-icon"
             );
-            logButtonIcon.classList.toggle("fa-plus-square-o");
-            logButtonIcon.classList.toggle("fa-minus-square-o");
+            buttonIcon.classList.toggle("fa-plus-square-o");
+            buttonIcon.classList.toggle("fa-minus-square-o");
           },
           {
             id: "orp_boardButton-simplify",
@@ -189,11 +184,11 @@ define([
               }
             });
 
-            const logButtonIcon = document.getElementById(
+            const buttonIcon = document.getElementById(
               "orp_boardButton-hide-icon"
             );
-            logButtonIcon.classList.toggle("fa-eye");
-            logButtonIcon.classList.toggle("fa-eye-slash");
+            buttonIcon.classList.toggle("fa-eye");
+            buttonIcon.classList.toggle("fa-eye-slash");
           },
           {
             id: "orp_boardButton-hide",
@@ -203,6 +198,13 @@ define([
             destination: document.getElementById("orp_boardButtons"),
           }
         );
+      }
+
+      if (gamedatas.boardRevealed) {
+        this.revealBoard({
+          board: gamedatas.board,
+          coloredBoard: gamedatas.coloredBoard,
+        });
       }
 
       // Setup game notifications to handle (see "setupNotifications" method below)
@@ -384,16 +386,31 @@ define([
       Object.keys(board).forEach((x) => {
         const row = board[x];
         Object.keys(row).forEach((y) => {
-          document
-            .querySelector(`[data-cell="${x}-${y}"]`)
-            .querySelector("[data-piece]")
-            ?.remove();
+          const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
+
+          const pieceElement = cellElement.querySelector("[data-piece]");
+
+          if (pieceElement) {
+            pieceElement.remove();
+            cellElement.style.borderWidth = "1px";
+          }
 
           const piece = Number(row[y]);
           const color_id = coloredBoard[x][y];
           this.insertPieceElement({ piece, color_id, x, y });
         });
       });
+
+      document.querySelectorAll(".orp_boardButton").forEach((buttonElement) => {
+        buttonElement.classList.add("disabled");
+      });
+
+      document
+        .getElementById("orp_board")
+        .querySelectorAll("[data-piece]")
+        .forEach((pieceElement) => {
+          pieceElement.classList.add("orp_piece-hiddenControls");
+        });
     },
 
     setSelectableLocations: function (selectableLocations, unset = false) {
@@ -791,11 +808,11 @@ define([
             .getElementById("orp_questionLogContainer")
             .classList.toggle("orp_questionLogContainer-hidden");
 
-          const logButtonIcon = document.getElementById(
+          const buttonIcon = document.getElementById(
             "orp_questionLogButton-icon"
           );
-          logButtonIcon.classList.toggle("fa-eye");
-          logButtonIcon.classList.toggle("fa-eye-slash");
+          buttonIcon.classList.toggle("fa-eye");
+          buttonIcon.classList.toggle("fa-eye-slash");
         },
         {
           id: "orp_questionLogButton",
@@ -968,7 +985,7 @@ define([
       this.showMessage(_("Solution saved"), "info");
     },
 
-    notif_correctSolution: function (args) {
+    notif_revealBoard: function (args) {
       const { board, coloredBoard } = args;
       this.revealBoard({
         board,

@@ -29,6 +29,7 @@ require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 
 const BOARD = "board";
 const COLORED_BOARD = "coloredBoard";
+const BOARD_REVEALED = "boardRevealed";
 const SELECTABLE_LOCATIONS = "selectableLocations";
 const SELECTABLE_ORIGINS = "selectableOrigins";
 const ORIGIN = "origin";
@@ -113,11 +114,21 @@ class Game extends \Table
         $this->giveExtraTime($player_id);
         $this->activeNextPlayer();
 
-
         $eliminatedPlayersCount = (int) $this->getUniqueValueFromDB("SELECT COUNT(player_eliminated) FROM player WHERE player_eliminated=1");
         $playerChances = (int) $this->getUniqueValueFromDB("SELECT player_chances FROM player WHERE player_id=$player_id");
         if ($playerChances === 0) {
             if ($eliminatedPlayersCount + 1 === $this->getPlayersNumber()) {
+                $this->notify->all(
+                    "revealBoard",
+                    "",
+                    [
+                        "board" => $this->globals->get(BOARD),
+                        "coloredBoard" => $this->globals->get(COLORED_BOARD),
+                    ]
+                );
+
+                $this->globals->set(BOARD_REVEALED, true);
+
                 $this->gamestate->nextState("gameEnd");
                 return;
             }
@@ -360,7 +371,7 @@ class Game extends \Table
 
         if ($correct) {
             $this->notify->all(
-                "correctSolution",
+                "revealBoard",
                 clienttranslate('${player_name} finds the correct answer!'),
                 [
                     "player_id" => $player_id,
@@ -370,6 +381,8 @@ class Game extends \Table
                 ]
             );
 
+            $this->globals->set(BOARD_REVEALED, true);
+
             $this->setStat(100, "win%", $player_id);
             $this->DbQuery("UPDATE player SET player_score=1 WHERE player_id=$player_id");
 
@@ -378,7 +391,7 @@ class Game extends \Table
         }
 
         $this->notify->all(
-            "incorrectSolution",
+            "message",
             clienttranslate('${player_name} gives an incorrect answer and loses one chance'),
             [
                 "player_id" => $player_id,
@@ -423,8 +436,6 @@ class Game extends \Table
             throw new \BgaUserException(clienttranslate("Failed to set-up board. Please try again"));
         };
 
-        $this->globals->set(BOARD, $board);
-
         $coloredBoard = [];
         foreach ($gemstoneBoard as $x => $row) {
             foreach ($row as $y => $gemstone_id) {
@@ -432,7 +443,10 @@ class Game extends \Table
                 $coloredBoard[$x][$y] = $color_id;
             }
         }
+
+        $this->globals->set(BOARD, $board);
         $this->globals->set(COLORED_BOARD, $coloredBoard);
+        $this->globals->set(BOARD_REVEALED, false);
     }
 
     public function isValidPlacement(array $board, array $gemstoneBoard, array $gemstone, int $base_x, int $base_y, int $rotation): bool
@@ -1045,6 +1059,8 @@ class Game extends \Table
         // WARNING: We must only return information visible by the current player.
         $current_player_id = (int) $this->getCurrentPlayerId();
 
+        $boardRevealed = $this->globals->get(BOARD_REVEALED);
+
         $result["players"] = $this->getCollectionFromDb(
             "SELECT `player_id` `id`, `player_score` `score`, `player_chances` `chances` FROM `player`"
         );
@@ -1055,8 +1071,9 @@ class Game extends \Table
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
         $result["questionLog"] = $this->globals->get(QUESTION_LOG, []);
-        // $result["board"] = $this->globals->get(BOARD);
-        // $result["coloredBoard"] = $this->globals->get(COLORED_BOARD);
+        $result["board"] = $boardRevealed ? $this->globals->get(BOARD) : [];
+        $result["coloredBoard"] = $boardRevealed ? $this->globals->get(COLORED_BOARD) : [];
+        $result["boardRevealed"] = $boardRevealed;
 
         return $result;
     }
@@ -1177,5 +1194,19 @@ class Game extends \Table
         $this->setupBoard();
         $this->updateSelectableLocations("", true);
         $this->updateSelectableOrigins("", "", true);
+    }
+
+    public function debug_revealBoard(): void
+    {
+        $this->notify->all(
+            "revealBoard",
+            "",
+            [
+                "board" => $this->globals->get(BOARD),
+                "coloredBoard" => $this->globals->get(COLORED_BOARD),
+            ]
+        );
+
+        $this->globals->set(BOARD_REVEALED, true);
     }
 }

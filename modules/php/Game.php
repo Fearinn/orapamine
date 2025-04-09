@@ -171,13 +171,10 @@ class Game extends \Table
             if ($color_id === 16) {
                 $message = clienttranslate('The signal was absorbed');
             } else {
-                $message = clienttranslate('${log_x}${log_y}: ${log_half} ${color_label} gem');
+                $message = clienttranslate('${log_x}${log_y}: ${color_label} gem');
             }
             $color = (array) $this->COLORS[$color_id];
             $color_label = (string) $color["label"];
-
-            $board = $this->globals->get(BOARD);
-            $half = $board[$guess_x][$guess_y] !== 5;
         } else {
             $message = clienttranslate('${log_x}${log_y}: nothing is there');
             $color = null;
@@ -186,11 +183,11 @@ class Game extends \Table
         }
 
         $revealedLocations = $this->globals->get(REVEALED_LOCATIONS, []);
-        $revealedLocations[] = ["x" => $guess_x, "y" => $guess_y, "color_id" => $color_id, "half" => $half];
+        $revealedLocations[] = ["x" => $guess_x, "y" => $guess_y, "color_id" => $color_id];
         $this->globals->set(REVEALED_LOCATIONS, $revealedLocations);
 
         $questionLog = $this->globals->get(QUESTION_LOG, []);
-        $logLine = ["type" => "location", "x" => $guess_x, "y" => $letter_y, "color_id" => $color_id, "half" => $half];
+        $logLine = ["type" => "location", "x" => $guess_x, "y" => $letter_y, "color_id" => $color_id];
         $questionLog[] = $logLine;
         $this->globals->set(QUESTION_LOG, $questionLog);
 
@@ -198,7 +195,6 @@ class Game extends \Table
             "answerLocation",
             $message,
             [
-                "half" => $half,
                 "color_id" => $color_id,
                 "x" => $guess_x,
                 "y" => $guess_y,
@@ -206,9 +202,8 @@ class Game extends \Table
                 "preserve" => ["colorCode"],
                 "log_x" => $guess_x,
                 "log_y" => $letter_y,
-                "log_half" => $half ? clienttranslate("half") : "",
                 "color_label" => $color_label,
-                "i18n" => ["log_half", "color_label"],
+                "i18n" => ["color_label"],
             ]
         );
 

@@ -502,7 +502,7 @@ define([
     styleLocationFeedback: function (revealedLocations) {
       revealedLocations.forEach((location) => {
         let color_id = location.color_id;
-        const { x, y, half } = location;
+        const { x, y } = location;
 
         if (!color_id) {
           color_id = 0;
@@ -525,9 +525,6 @@ define([
         const locationFeedbackElement = document.getElementById(
           `orp_locationFeedback-${x}-${y}`
         );
-        if (half) {
-          locationFeedbackElement.classList.add("orp_locationFeedback-half");
-        }
 
         const color_label = color.id == 0 ? _("nothing") : color.label;
         this.addTooltip(locationFeedbackElement.id, _(color_label), "");
@@ -775,32 +772,6 @@ define([
         return false;
       }
 
-      if (
-        locationFeedbackElement.classList.contains(
-          "orp_locationFeedback-half"
-        ) &&
-        pieceElement.dataset.piece == 5
-      ) {
-        this.showMessage(
-          _("This position has been confirmed as a half gem"),
-          "error"
-        );
-        return false;
-      }
-
-      if (
-        !locationFeedbackElement.classList.contains(
-          "orp_locationFeedback-half"
-        ) &&
-        pieceElement.dataset.piece != 5
-      ) {
-        this.showMessage(
-          _("This position has been confirmed as a whole gem"),
-          "error"
-        );
-        return false;
-      }
-
       return true;
     },
 
@@ -861,13 +832,11 @@ define([
           color.code
         }; color: ${textColor}">${_("absorbed")}</span></div>`;
       } else {
-        const { x, y, half } = logLine;
+        const { x, y } = logLine;
 
         const color_label = color.id == 0 ? _("nothing") : _(color.label);
 
-        logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>: ${
-          half ? _("half") : ""
-        } 
+        logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>:
         <span class="orp_logHighlight" style="background-color: ${
           color.code
         }; color: ${textColor}">${_(color_label)}</span></div>`;
@@ -969,9 +938,9 @@ define([
     },
 
     notif_answerLocation: function (args) {
-      const { x, y, color_id, logLine, half } = args;
+      const { x, y, color_id, logLine } = args;
 
-      this.styleLocationFeedback([{ x, y, color_id, half }]);
+      this.styleLocationFeedback([{ x, y, color_id }]);
       this.insertQuestionLogLine(logLine);
     },
 

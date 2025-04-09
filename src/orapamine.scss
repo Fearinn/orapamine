@@ -211,14 +211,6 @@
   background-color: var(--pieceColor);
   border-radius: 100%;
   width: 100%;
-
-  &-half {
-    background: linear-gradient(
-        to bottom,
-        #ffffff00 50%,
-        var(--pieceColor) 50%
-      );
-  }
 }
 
 .orp_piece:not(.orp_piece-hidden) ~ .orp_locationFeedback {
@@ -243,6 +235,13 @@
   touch-action: none;
 }
 
+.orp_blankSpace {
+  text-align: center;
+  font-size: 64px;
+  user-select: none;
+  background: none;
+}
+
 .orp_piece {
   position: relative;
   aspect-ratio: 1;
@@ -259,7 +258,6 @@
   &-drag {
     cursor: grabbing;
   }
-
 
   &-hiddenControls {
     .orp_pieceButton {

@@ -72,7 +72,7 @@ define([
       });
 
       this.setupBoard();
-      this.setupSolutionPieces();
+      this.setupDraftPieces();
       this.setupQuestionLog();
 
       this.styleLocationFeedback(gamedatas.revealedLocations);
@@ -544,7 +544,14 @@ define([
           `orp_locationFeedback-${x}-${y}`
         );
 
-        const color_label = color.id == 0 ? _("nothing") : color.label;
+        let color_label = color.label;
+
+        if (color.id == 0) {
+          color_label = _("blank");
+          locationFeedbackElement.textContent = "X";
+          locationFeedbackElement.classList.add("orp_blankSpace");
+        }
+
         this.addTooltip(locationFeedbackElement.id, _(color_label), "");
 
         const colorblindSupport = this.orp.info.colorToColorblind[color.id];
@@ -577,30 +584,46 @@ define([
     },
 
     insertPieceElement: function ({ piece, color_id, x, y }) {
-      if (piece > 0) {
-        const uid = this.getUniqueId();
-
-        const pieceElement = document.createElement("div");
-        pieceElement.id = `orp_piece-${uid}`;
-        pieceElement.dataset.piece = piece;
-        pieceElement.dataset.color = color_id;
-        pieceElement.classList.add("orp_piece");
-        pieceElement.classList.add(`orp_piece-${piece}`);
-
-        const color = this.orp.info.colors[color_id];
-
-        pieceElement.style.setProperty("--pieceColor", color.code);
-        pieceElement.style.setProperty("--pieceColorDarker", color.darkerCode);
-
-        const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
-        cellElement.insertAdjacentElement("afterbegin", pieceElement);
-
-        this.attachControls(pieceElement);
+      if (piece < 0) {
+        return;
       }
+
+      const uid = this.getUniqueId();
+
+      if (piece == 6) {
+        const blankSpaceHTML = `<div id="orp_piece-${uid}" class="orp_piece orp_blankSpace" data-piece="6" data-color="0">X</div>`;
+        const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
+        cellElement.insertAdjacentHTML("afterbegin", blankSpaceHTML);
+
+        const blankSpaceElement = document.getElementById(`orp_piece-${uid}`);
+        this.attachControls(blankSpaceElement);
+        return;
+      }
+
+      const pieceElement = document.createElement("div");
+      pieceElement.id = `orp_piece-${uid}`;
+      pieceElement.dataset.piece = piece;
+      pieceElement.dataset.color = color_id;
+      pieceElement.classList.add("orp_piece");
+      pieceElement.classList.add(`orp_piece-${piece}`);
+
+      const color = this.orp.info.colors[color_id];
+
+      pieceElement.style.setProperty("--pieceColor", color.code);
+      pieceElement.style.setProperty("--pieceColorDarker", color.darkerCode);
+
+      const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
+      cellElement.insertAdjacentElement("afterbegin", pieceElement);
+
+      this.attachControls(pieceElement);
     },
 
-    setupSolutionPieces: function () {
+    setupDraftPieces: function () {
       const draftPiecesElement = document.getElementById("orp_draftPieces");
+
+      const blankSpaceHTML = `<div id="orp_piece-${this.getUniqueId()}" class="orp_piece orp_blankSpace" data-piece="6" data-color="99">X</div>`;
+
+      draftPiecesElement.insertAdjacentHTML("beforeend", blankSpaceHTML);
 
       this.orp.info.gemstones.forEach((gemstone, index) => {
         const gemstone_id = index + 1;
@@ -650,8 +673,10 @@ define([
 
             const pieceElement = document.getElementById(pieceElement_id);
 
-            const color_label = color.id == 16 ? _("blackbody") : color.label;
-            this.addTooltip(pieceElement_id, color_label, "");
+            if (piece != 6) {
+              let color_label = color.id == 16 ? _("blackbody") : color.label;
+              this.addTooltip(pieceElement_id, color_label, "");
+            }
 
             if (piece < 5) {
               pieceElement.classList.add("orp_piece-half");
@@ -695,9 +720,13 @@ define([
 
       const color = this.orp.info.colors[color_id];
       const color_label = color.id == 16 ? _("blackbody") : color.label;
-      this.addTooltip(pieceElement.id, _(color_label), "");
 
       let piece = pieceElement.dataset.piece;
+
+      if (piece != 6) {
+        this.addTooltip(pieceElement.id, _(color_label), "");
+      }
+
       const uid = pieceElement.id.split("-")[1];
 
       this.statusBar.addActionButton(
@@ -715,7 +744,7 @@ define([
         }
       );
 
-      if (piece < 5) {
+      if (piece < 5 && piece) {
         pieceElement.classList.add("orp_piece-half");
 
         this.statusBar.addActionButton(
@@ -780,6 +809,14 @@ define([
     ) {
       if (!locationFeedbackElement) {
         return true;
+      }
+
+      if (locationFeedbackElement.dataset.color == 0) {
+        this.showMessage(
+          _("This position has been confirmed as blank"),
+          "error"
+        );
+        return;
       }
 
       if (locationFeedbackElement.dataset.color != pieceElement.dataset.color) {
@@ -852,7 +889,7 @@ define([
       } else {
         const { x, y } = logLine;
 
-        const color_label = color.id == 0 ? _("nothing") : _(color.label);
+        const color_label = color.id == 0 ? _("blank") : _(color.label);
 
         logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>:
         <span class="orp_logHighlight" style="background-color: ${

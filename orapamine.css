@@ -285,9 +285,6 @@
   border-radius: 100%;
   width: 100%;
 }
-.orp_locationFeedback-half {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, var(--pieceColor) 50%);
-}
 
 .orp_piece:not(.orp_piece-hidden) ~ .orp_locationFeedback {
   display: none;
@@ -309,6 +306,13 @@
   position: relative;
   display: grid;
   touch-action: none;
+}
+
+.orp_blankSpace {
+  text-align: center;
+  font-size: 64px;
+  user-select: none;
+  background: none;
 }
 
 .orp_piece {

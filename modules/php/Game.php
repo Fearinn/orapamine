@@ -294,6 +294,10 @@ class Game extends \Table
     {
         $this->checkVersion($CLIENT_VERSION);
 
+        if ($this->gamestate->state_id() === 99) {
+            throw new \BgaUserException("This table is finished");
+        }
+
         $players = $this->loadPlayersBasicInfos();
         $player_id = (int) $this->getCurrentPlayerId();
 
@@ -318,6 +322,10 @@ class Game extends \Table
     public function actSaveSolution(?int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $solutionSheet): void
     {
         $this->checkVersion($CLIENT_VERSION);
+
+        if ($this->gamestate->state_id() === 99) {
+            throw new \BgaUserException("This table is finished");
+        }
 
         $players = $this->loadPlayersBasicInfos();
         $player_id = (int) $this->getCurrentPlayerId();

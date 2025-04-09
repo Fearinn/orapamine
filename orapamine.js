@@ -403,6 +403,7 @@ define([
 
       document.querySelectorAll(".orp_boardButton").forEach((buttonElement) => {
         buttonElement.classList.add("disabled");
+        buttonElement.disabled = true;
       });
 
       document

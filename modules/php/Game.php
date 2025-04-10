@@ -190,7 +190,6 @@ class Game extends \Table
             $message = clienttranslate('${log_x}${log_y}: nothing is there');
             $color = null;
             $color_label = null;
-            $half = false;
         }
 
         $revealedLocations = $this->globals->get(REVEALED_LOCATIONS, []);
@@ -210,7 +209,7 @@ class Game extends \Table
                 "x" => $guess_x,
                 "y" => $guess_y,
                 "logLine" => $logLine,
-                "preserve" => ["colorCode"],
+                "preserve" => ["color_id"],
                 "log_x" => $guess_x,
                 "log_y" => $letter_y,
                 "color_label" => $color_label,
@@ -899,7 +898,7 @@ class Game extends \Table
                 "exit" => $exit_id,
                 "color_id" => $color_id,
                 "logLine" => $logLine,
-                "preserve" => ["color"],
+                "preserve" => ["color_id"],
                 "log_origin" => $origin,
                 "log_exit" => $exit_id,
                 "color_label" => (string) $color["label"],

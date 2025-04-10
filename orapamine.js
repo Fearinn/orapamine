@@ -83,9 +83,9 @@ define([
           const component = gamedatas.COLORS[component_id];
           const textColor = component.contrast === "light" ? "black" : "white";
 
-          const componentHTML = `<span class="orp_logHighlight" style="color: ${textColor}; background-color: ${component.code}">${_(
-            component.label
-          )}</span>`;
+          const componentHTML = `<span class="orp_logHighlight" style="color: ${textColor}; background-color: ${
+            component.code
+          }">${_(component.label)}</span>`;
 
           mixElement.insertAdjacentHTML("beforeend", componentHTML);
         });
@@ -94,9 +94,9 @@ define([
 
         mixElement.insertAdjacentHTML(
           "beforeend",
-          `<span> = </span><span class="orp_logHighlight" style="color: ${textColor}; background-color: ${color.code}">${_(
-            color.label
-          )}</span>`
+          `<span> = </span><span class="orp_logHighlight" style="color: ${textColor}; background-color: ${
+            color.code
+          }">${_(color.label)}</span>`
         );
 
         aidElement.insertAdjacentElement("beforeend", mixElement);
@@ -1093,13 +1093,14 @@ define([
         if (log && args && !args.processed) {
           args.processed = true;
 
-          if (args.color_label && args.color) {
-            const textColor =
-              args.color.contrast === "light" ? "black" : "white";
+          if (args.color_label && args.color_id) {
+            const color = this.orp.info.colors[args.color_id];
+
+            const textColor = color.contrast === "light" ? "black" : "white";
 
             args.color_label = `<span class="orp_logHighlight" style="color: ${textColor}; background-color: ${
-              args.color.code
-            }; padding: 0 4px;">${_(args.color_label)}</span>`;
+              color.code
+            }; padding: 0 4px;">${_(color.label)}</span>`;
           }
 
           highlighted = ["log_x", "log_y", "log_origin", "log_exit"];

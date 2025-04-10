@@ -23,6 +23,7 @@ define([
   `${g_gamethemeurl}modules/js/clickable.js`,
   `${g_gamethemeurl}modules/js/draggable.js`,
   `${g_gamethemeurl}modules/js/bga-zoom.js`,
+  `${g_gamethemeurl}modules/js/bga-help.js`,
 ], function (dojo, declare) {
   return declare("bgagame.orapamine", ebg.core.gamegui, {
     constructor: function () {
@@ -60,6 +61,62 @@ define([
           counters: {},
         },
       };
+
+      let aidElement = document.createElement("div");
+      aidElement.id = "orp_mixingAid";
+      aidElement.classList.add("orp_mixingAid");
+
+      for (const color_id in gamedatas.COLORS) {
+        if (color_id <= 4 || color_id == 16 || color_id == 99) {
+          continue;
+        }
+
+        const color = gamedatas.COLORS[color_id];
+
+        const mixElement = document.createElement("div");
+
+        color.components.forEach((component_id, index) => {
+          if (index > 0) {
+            mixElement.insertAdjacentHTML("beforeend", "<span> + </span>");
+          }
+
+          const component = gamedatas.COLORS[component_id];
+          const textColor = component.contrast === "light" ? "black" : "white";
+
+          const componentHTML = `<span class="orp_logHighlight" style="color: ${textColor}; background-color: ${component.code}">${_(
+            component.label
+          )}</span>`;
+
+          mixElement.insertAdjacentHTML("beforeend", componentHTML);
+        });
+
+        const textColor = color.contrast === "light" ? "black" : "white";
+
+        mixElement.insertAdjacentHTML(
+          "beforeend",
+          `<span> = </span><span class="orp_logHighlight" style="color: ${textColor}; background-color: ${color.code}">${_(
+            color.label
+          )}</span>`
+        );
+
+        aidElement.insertAdjacentElement("beforeend", mixElement);
+      }
+
+      document
+        .getElementById("orp_gameArea")
+        .insertAdjacentElement("beforeend", aidElement);
+
+      this.orp.managers.help = new HelpManager(this, {
+        buttons: [
+          new BgaHelpExpandableButton({
+            title: _("Color Mixing Aid"),
+            foldedHtml: `<span class="orp_helpFolded">?</span>`,
+            unfoldedHtml: aidElement.outerHTML,
+          }),
+        ],
+      });
+
+      aidElement.remove();
 
       this.orp.managers.zoom = new ZoomManager({
         element: document.getElementById("orp_gameArea"),
@@ -1037,9 +1094,10 @@ define([
           args.processed = true;
 
           if (args.color_label && args.color) {
-            const color = args.color.contrast === "light" ? "black" : "white";
+            const textColor =
+              args.color.contrast === "light" ? "black" : "white";
 
-            args.color_label = `<span class="orp_logHighlight" style="color: ${color}; background-color: ${
+            args.color_label = `<span class="orp_logHighlight" style="color: ${textColor}; background-color: ${
               args.color.code
             }; padding: 0 4px;">${_(args.color_label)}</span>`;
           }

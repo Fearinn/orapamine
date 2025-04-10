@@ -12,6 +12,7 @@
  * OrapaMine stylesheet
  *
  */
+@use "bga-help";
 @use "bga-zoom";
 @use "preferences";
 
@@ -53,9 +54,22 @@
   }
 }
 
+.orp_mixingAid {
+  font-family: "Cookie Run", sans-serif;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+}
+
 .orp_logHighlight {
+  color: black;
   font-weight: bold;
   text-transform: capitalize;
+  -webkit-text-stroke: 0;
+  padding: 0 1px;
 }
 
 .orp_playerChances {

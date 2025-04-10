@@ -1032,6 +1032,10 @@ define([
             const piece = pieceElement.dataset.piece;
             const color_id = pieceElement.dataset.color;
 
+            if (piece == 6) {
+              return;
+            }
+
             solutionSheet.push({ piece, color_id, x, y });
           }
         });

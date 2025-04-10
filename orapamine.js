@@ -948,7 +948,7 @@ define([
 
         const color_label = color.id == 0 ? _("blank") : _(color.label);
 
-        logLineHTML = `<div class="orp_logLine">Position <span class="orp_logHighlight">${x}${y}</span>:
+        logLineHTML = `<div class="orp_logLine"><span class="orp_logHighlight">${x}${y}:</span>
         <span class="orp_logHighlight" style="background-color: ${
           color.code
         }; color: ${textColor}">${_(color_label)}</span></div>`;

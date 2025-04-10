@@ -30,6 +30,7 @@ require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 const BOARD = "board";
 const COLORED_BOARD = "coloredBoard";
 const BOARD_REVEALED = "boardRevealed";
+const PREVIOUS_ANSWERS = "previousAnswers";
 const SELECTABLE_LOCATIONS = "selectableLocations";
 const SELECTABLE_ORIGINS = "selectableOrigins";
 const ORIGIN = "origin";
@@ -362,13 +363,46 @@ class Game extends \Table
         $board = $this->globals->get(BOARD);
         $coloredBoard = $this->globals->get(COLORED_BOARD);
 
+        $previousAnswers = $this->globals->get(PREVIOUS_ANSWERS);
+
+        // throw new \BgaUserException(json_encode($previousAnswers));
+
+        foreach ($previousAnswers[$player_id] as $answer) {
+            $isEqual = true;
+
+            foreach ($answer as $answer_cell) {
+                $x = (int) $answer_cell["x"];
+                $y = (int) $answer_cell["y"];
+
+                $hasMatch = false;
+                foreach ($solutionSheet as $solution_cell) {
+                    if (!array_diff($answer_cell, $solution_cell)) {
+                        $hasMatch = true;
+                        break;
+                    };
+                }
+
+                if (!$hasMatch) {
+                    $isEqual = false;
+                    break;
+                }
+            }
+
+
+            if ($isEqual) {
+                throw new \BgaUserException(clienttranslate("You've already submitted this answer. It's incorret!"));
+            }
+        }
+        $previousAnswers[$player_id][] = $solutionSheet;
+        $this->globals->set(PREVIOUS_ANSWERS, $previousAnswers);
+
         $correct = true;
 
-        foreach ($solutionSheet as $solution) {
-            $x = (int) $solution["x"];
-            $y = (int) $solution["y"];
-            $color_id = (int) $solution["color_id"];
-            $piece = (int) $solution["piece"];
+        foreach ($solutionSheet as $cell) {
+            $x = (int) $cell["x"];
+            $y = (int) $cell["y"];
+            $color_id = (int) $cell["color_id"];
+            $piece = (int) $cell["piece"];
 
             if ($board[$x][$y] !== $piece || $coloredBoard[$x][$y] !== $color_id) {
                 $correct = false;
@@ -1131,9 +1165,13 @@ class Game extends \Table
         $this->updateSelectableOrigins("", "", true);
 
         $solutionSheets = [];
+        $previousAnswers = [];
         foreach ($players as $player_id => $player) {
             $solutionSheets[$player_id] = [];
             $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
+
+            $previousAnswers[$player_id] = [];
+            $this->globals->set(PREVIOUS_ANSWERS, $previousAnswers);
 
             $this->initStat("player", "win%", 0, $player_id);
             $this->initStat("player", "locationsAsked", 0, $player_id);

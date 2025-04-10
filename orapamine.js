@@ -641,7 +641,7 @@ define([
     },
 
     insertPieceElement: function ({ piece, color_id, x, y }) {
-      if (piece < 0) {
+      if (piece <= 0) {
         return;
       }
 

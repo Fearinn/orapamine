@@ -314,8 +314,6 @@ class Game extends \Table
             "clearSolution",
             "",
         );
-
-        $this->gamestate->nextState("nextPlayer");
     }
 
     #[CheckAction(false)]
@@ -342,8 +340,6 @@ class Game extends \Table
             $player_id,
             "saveSolution",
         );
-
-        $this->gamestate->nextState("nextPlayer");
     }
 
     public function actSubmitSolution(int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $solutionSheet): void

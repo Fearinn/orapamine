@@ -378,7 +378,7 @@
   aspect-ratio: 1;
   width: 100%;
 }
-.orp_cell:has(.orp_piece-hidden) {
+.orp_cell:empty, .orp_cell:has(.orp_piece-hidden) {
   border-width: 1px !important;
 }
 .orp_cell-selectable {

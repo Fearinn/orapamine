@@ -352,19 +352,16 @@ class Game extends \Table
 
         $player_id = (int) $this->getActivePlayerId();
 
-        $solutionSheets = $this->globals->get(SOLUTION_SHEETS);
-        $solutionSheets[$player_id] = $solutionSheet;
-        $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
-
         $board = $this->globals->get(BOARD);
         $coloredBoard = $this->globals->get(COLORED_BOARD);
 
         $previousAnswers = $this->globals->get(PREVIOUS_ANSWERS);
 
-        // throw new \BgaUserException(json_encode($previousAnswers));
-
         foreach ($previousAnswers[$player_id] as $answer) {
             $isEqual = true;
+
+            // $this->dump("answer", $answer);
+            // $this->dump("sheet", $solutionSheet);
 
             foreach ($answer as $answer_cell) {
                 $x = (int) $answer_cell["x"];
@@ -372,7 +369,10 @@ class Game extends \Table
 
                 $hasMatch = false;
                 foreach ($solutionSheet as $solution_cell) {
-                    if (!array_diff($answer_cell, $solution_cell)) {
+                    $diff_1 = array_diff($solution_cell, $answer_cell);
+                    $diff_2 = array_diff($answer_cell, $solution_cell);
+
+                    if (!$diff_1 && !$diff_2) {
                         $hasMatch = true;
                         break;
                     };
@@ -384,11 +384,15 @@ class Game extends \Table
                 }
             }
 
-
             if ($isEqual) {
-                throw new \BgaUserException(clienttranslate("You've already submitted this answer. It's incorret!"));
+                throw new \BgaUserException(clienttranslate("You've already submitted this answer. It's incorrect!"));
             }
         }
+
+        $solutionSheets = $this->globals->get(SOLUTION_SHEETS);
+        $solutionSheets[$player_id] = $solutionSheet;
+        $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
+
         $previousAnswers[$player_id][] = $solutionSheet;
         $this->globals->set(PREVIOUS_ANSWERS, $previousAnswers);
 

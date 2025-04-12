@@ -199,6 +199,7 @@
   aspect-ratio: 1;
   width: 100%;
 
+  &:empty,
   &:has(.orp_piece-hidden) {
     border-width: 1px !important;
   }
@@ -241,7 +242,6 @@
   margin: 0 auto;
   padding: 8px;
   max-width: var(--boardWidth);
-
 
   &-hidden {
     display: none;

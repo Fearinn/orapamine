@@ -32,13 +32,15 @@
     "default": 0
   },
   "102": {
-    "name": "Draggable pieces",
+    "name": "Move pieces",
     "needReload": true,
     "values": {
-      "0": { "name": "Disabled" },
       "1": {
-        "name": "Enabled",
+        "name": "Drag'n drop",
         "cssPref": "orp_pref-draggable"
+      },
+      "2": {
+        "name": "Click"
       }
     },
     "default": 1

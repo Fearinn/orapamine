@@ -236,10 +236,9 @@ define([
           `<i id="orp_boardButton-hide-icon" class="fa fa-eye-slash" aria-hidden="true"></i>`,
           () => {
             document.querySelectorAll(".orp_piece").forEach((pieceElement) => {
-              if (document.getElementById("orp_board").contains(pieceElement)) {
-                pieceElement.classList.toggle("orp_piece-hidden");
-              }
+              pieceElement.classList.toggle("orp_piece-hidden");
             });
+            document.getElementById("orp_draftPieces").classList.toggle("orp_draftPieces-hidden");
 
             const buttonIcon = document.getElementById(
               "orp_boardButton-hide-icon"

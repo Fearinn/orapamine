@@ -241,6 +241,11 @@
   margin: 0 auto;
   padding: 8px;
   max-width: var(--boardWidth);
+
+
+  &-hidden {
+    display: none;
+  }
 }
 
 .orp_gemstone {

@@ -1103,7 +1103,7 @@ class Game extends \Table
         );
         $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $result["COLORS"] = $this->COLORS;
-        $result["GEMSTONES"] = array_values($this->GEMSTONES());
+        $result["GEMSTONES"] = $this->GEMSTONES;
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];

@@ -682,23 +682,20 @@ define([
 
       draftPiecesElement.insertAdjacentHTML("beforeend", blankSpaceHTML);
 
-      this.orp.info.gemstones.forEach((gemstone, index) => {
-        const gemstone_id = index + 1;
+      for (const gemstone_id in this.orp.info.gemstones) {
+        const gemstone = this.orp.info.gemstones[gemstone_id];
 
         draftPiecesElement.insertAdjacentHTML(
           "beforeend",
-          `<div id="orp_gemstone-${gemstone_id}" data-gemstone="${gemstone_id}"></div>`
+          `<div id="orp_gemstone-${gemstone_id}" data-gemstone="${gemstone_id}" data-rotation="0"></div>`
         );
 
         const gemstoneElement = document.getElementById(
           `orp_gemstone-${gemstone_id}`
         );
         gemstoneElement.classList.add("orp_gemstone");
-        gemstoneElement.style.gridTemplateColumns = `repeat(${gemstone.columns}, var(--cellWidth))`;
-        gemstoneElement.style.gridTemplateRows = `repeat(${gemstone.rows}, var(--cellWidth))`;
 
         const color_id = gemstone.color;
-        const color = this.orp.info.colors[color_id];
 
         const colorblindSupport = this.orp.info.colorToColorblind[color_id];
         gemstoneElement.insertAdjacentHTML(
@@ -706,55 +703,131 @@ define([
           `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
         );
 
-        let y = 0;
-        gemstone.format[0].forEach((row) => {
-          y++;
+        this.statusBar.addActionButton(
+          `<i class="fa fa-arrows" aria-hidden="true"></i>`,
+          undefined,
+          {
+            title: _("Move gemstone"),
+            color: "secondary",
+            classes: [
+              "orp_gemstoneButton-move",
+              "orp_gemstoneButton",
+              "action-button",
+              "bgabutton",
+            ],
+            destination: gemstoneElement,
+          }
+        );
 
-          let x = 0;
-          row.forEach((piece) => {
-            x++;
-
-            const cellElement_id = `orp_gemstoneCell-${gemstone_id}-${x}-${y}`;
-            const cellHTML = `<div id="${cellElement_id}"></div>`;
-            gemstoneElement.insertAdjacentHTML("beforeend", cellHTML);
-            const cellElement = document.getElementById(cellElement_id);
-
-            if (piece == 0) {
-              return;
+        if (gemstone_id != 1) {
+          this.statusBar.addActionButton(
+            `<i class="fa fa-undo"></i>`,
+            () => {
+              this.rotateGemstone(gemstoneElement);
+            },
+            {
+              title: _("Rotate gemstone"),
+              color: "secondary",
+              classes: [
+                "orp_gemstoneButton-rotate",
+                "orp_gemstoneButton",
+                "action-button",
+                "bgabutton",
+              ],
+              destination: gemstoneElement,
             }
+          );
+        }
 
-            const pieceElement_id = `orp_gemstonePiece-${gemstone_id}-${x}-${y}`;
-            const pieceHTML = `<div id="${pieceElement_id}" class="orp_piece" data-piece="${piece}" data-color="${color_id}" 
-            style="--pieceColor: ${color.code}; --pieceColorDarker: ${color.darkerCode}"></div>`;
-            cellElement.insertAdjacentHTML("beforeend", pieceHTML);
+        this.insertGemstonePieces(gemstoneElement, 0);
+      }
+    },
 
-            const pieceElement = document.getElementById(pieceElement_id);
+    insertGemstonePieces: function (gemstoneElement) {
+      const gemstone_id = gemstoneElement.dataset.gemstone;
+      const rotation = Number(gemstoneElement.dataset.rotation);
+      const gemstone = this.orp.info.gemstones[gemstone_id];
 
-            if (piece != 6) {
-              let color_label = color.id == 16 ? _("blackbody") : color.label;
-              this.addTooltip(pieceElement_id, color_label, "");
+      const rows =
+        rotation == 0 || rotation == 180 ? gemstone.rows : gemstone.columns;
+
+      const columns =
+        rotation == 0 || rotation == 180 ? gemstone.columns : gemstone.rows;
+
+      gemstoneElement.style.gridTemplateColumns = `repeat(${columns}, var(--cellWidth))`;
+      gemstoneElement.style.gridTemplateRows = `repeat(${rows}, var(--cellWidth))`;
+
+      const color_id = gemstone.color;
+      const color = this.orp.info.colors[color_id];
+
+      let y = 0;
+      gemstone.format[rotation].forEach((row) => {
+        y++;
+
+        let x = 0;
+        row.forEach((piece) => {
+          x++;
+
+          const cellElement_id = `orp_gemstoneCell-${gemstone_id}-${x}-${y}`;
+          const cellHTML = `<div id="${cellElement_id}" data-gemstoneCell="${x}-${y}"></div>`;
+          gemstoneElement.insertAdjacentHTML("beforeend", cellHTML);
+          const cellElement = document.getElementById(cellElement_id);
+
+          if (piece == 0) {
+            return;
+          }
+
+          const pieceElement_id = `orp_gemstonePiece-${gemstone_id}-${x}-${y}`;
+          const pieceHTML = `<div id="${pieceElement_id}" class="orp_piece" data-piece="${piece}" data-color="${color_id}" 
+          style="--pieceColor: ${color.code}; --pieceColorDarker: ${color.darkerCode}"></div>`;
+          cellElement.insertAdjacentHTML("beforeend", pieceHTML);
+
+          const pieceElement = document.getElementById(pieceElement_id);
+
+          if (piece != 6) {
+            let color_label = color.id == 16 ? _("blackbody") : color.label;
+            this.addTooltip(pieceElement_id, color_label, "");
+          }
+
+          if (piece < 5) {
+            pieceElement.classList.add("orp_piece-half");
+          }
+
+          const borders = this.orp.info.borders;
+          for (const border in borders) {
+            const [shift_x, shift_y] = borders[border];
+            const siblingElement = document.getElementById(
+              `orp_gemstonePiece-${gemstone_id}-${Number(x) + shift_x}-${
+                Number(y) + shift_y
+              }`
+            );
+
+            if (siblingElement) {
+              pieceElement.style[`border${border}Width`] = "2px";
             }
-
-            if (piece < 5) {
-              pieceElement.classList.add("orp_piece-half");
-            }
-
-            const borders = this.orp.info.borders;
-            for (const border in borders) {
-              const [shift_x, shift_y] = borders[border];
-              const siblingElement = document.getElementById(
-                `orp_gemstonePiece-${gemstone_id}-${Number(x) + shift_x}-${
-                  Number(y) + shift_y
-                }`
-              );
-
-              if (siblingElement) {
-                pieceElement.style[`border${border}Width`] = "2px";
-              }
-            }
-          });
+          }
         });
       });
+    },
+
+    rotateGemstone: function (gemstoneElement) {
+      let rotation = Number(gemstoneElement.dataset.rotation);
+
+      rotation += 90;
+
+      if (rotation > 270) {
+        rotation = 0;
+      }
+
+      gemstoneElement.dataset.rotation = rotation;
+
+      gemstoneElement
+        .querySelectorAll("[data-gemstoneCell]")
+        .forEach((pieceElement) => {
+          pieceElement.remove();
+        });
+
+      this.insertGemstonePieces(gemstoneElement, rotation);
     },
 
     attachColorBlindSupport: function (pieceElement) {

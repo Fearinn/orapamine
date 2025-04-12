@@ -199,7 +199,7 @@
 }
 
 .orp_colorblindSupport {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: bold;
   display: none;
   position: absolute;
@@ -412,9 +412,9 @@
   align-items: flex-end;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 64px;
   margin: 0 auto;
-  padding: 4px;
+  padding: 8px;
   max-width: var(--boardWidth);
 }
 
@@ -422,6 +422,24 @@
   position: relative;
   display: grid;
   touch-action: none;
+}
+
+.orp_gemstoneButton {
+  font-size: 20px;
+  position: absolute;
+  z-index: 1;
+}
+.orp_gemstoneButton i {
+  pointer-events: none;
+}
+.orp_gemstoneButton-rotate {
+  top: -16px;
+  right: -16px;
+}
+.orp_gemstoneButton-move {
+  cursor: grab;
+  top: -16px;
+  left: -16px;
 }
 
 .orp_blankSpace {

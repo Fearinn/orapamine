@@ -237,9 +237,9 @@
   align-items: flex-end;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 64px;
   margin: 0 auto;
-  padding: 4px;
+  padding: 8px;
   max-width: var(--boardWidth);
 }
 
@@ -247,6 +247,27 @@
   position: relative;
   display: grid;
   touch-action: none;
+}
+
+.orp_gemstoneButton {
+  font-size: 20px;
+  position: absolute;
+  z-index: 1;
+
+  i {
+    pointer-events: none;
+  }
+
+  &-rotate {
+    top: -16px;
+    right: -16px;
+  }
+
+  &-move {
+    cursor: grab;
+    top: -16px;
+    left: -16px;
+  }
 }
 
 .orp_blankSpace {

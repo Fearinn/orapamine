@@ -6,15 +6,19 @@ let raf = null;
 let element = null;
 let scale = 1;
 let game = null;
+let isGemstoneMove = false;
 
 function userPressed(event) {
   element = event.target;
 
-  if (
-    !element.classList.contains("orp_piece") ||
-    event.target.classList.contains("orp_piece-empty")
-  ) {
+  isGemstoneMove = element.classList.contains("orp_gemstoneButton-move");
+
+  if (!element.dataset.piece && !isGemstoneMove) {
     return;
+  }
+
+  if (isGemstoneMove) {
+    element = element.parentNode;
   }
 
   startX = event.clientX;
@@ -74,7 +78,17 @@ function userReleased(event) {
 
   element.style.setProperty("transform", null);
 
-  dropItemOntoXY(element, deltaX * scale + startX, deltaY * scale + startY);
+  if (isGemstoneMove) {
+    element.querySelectorAll("[data-piece]").forEach((pieceElement) => {
+      const rect = pieceElement.getBoundingClientRect();
+      const targetX = rect.left + deltaX * scale;
+      const targetY = rect.top + deltaY * scale;
+
+      dropItemOntoXY(pieceElement, targetX, targetY);
+    });
+  } else {
+    dropItemOntoXY(element, startX + deltaX * scale, startY + deltaY * scale);
+  }
 
   deltaX = null;
   deltaY = null;
@@ -87,7 +101,7 @@ function dropItemOntoXY(pieceElement, x, y) {
   const pointsTo = document.elementFromPoint(x, y);
 
   gameAreaElement.classList.remove("orp_dragContainer");
-  pieceElement.classList.remove("orp_piece-drag");
+  document.querySelector("orp_piece-drag")?.classList.remove("orp_piece-drag");
 
   if (!pointsTo) {
     return;

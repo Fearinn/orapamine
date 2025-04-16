@@ -109,17 +109,33 @@ class Game extends \Table
         ];
     }
 
+    public function st_playerTurn(): void
+    {
+        $player_id = $this->getActivePlayerId();
+
+        if ($this->isPlayerEliminated($player_id)) {
+            $this->gamestate->nextState("nextPlayer");
+        }
+    }
+
     public function st_betweenPlayers(): void
     {
         $player_id = (int) $this->getActivePlayerId();
         $this->giveExtraTime($player_id);
         $this->activeNextPlayer();
 
+        if ($this->isPlayerEliminated($player_id)) {
+            $this->gamestate->nextState("nextPlayer");
+            return;
+        }
+
         $eliminatedPlayersCount = (int) $this->getUniqueValueFromDB("SELECT COUNT(player_eliminated) FROM player WHERE player_eliminated=1");
         $playerChances = (int) $this->getUniqueValueFromDB("SELECT player_chances FROM player WHERE player_id=$player_id");
 
+        $isLastPlayer = $eliminatedPlayersCount + 1 === $this->getPlayersNumber();
+
         if ($playerChances === 0) {
-            if ($eliminatedPlayersCount + 1 === $this->getPlayersNumber()) {
+            if ($isLastPlayer) {
                 $this->notify->all(
                     "revealBoard",
                     "",
@@ -461,6 +477,11 @@ class Game extends \Table
         }
 
         return $gemstones;
+    }
+
+    public function isPlayerEliminated(int $player_id): bool
+    {
+        return !!$this->getUniqueValueFromDB("SELECT player_eliminated FROM player WHERE player_id={$player_id}");
     }
 
     public function setupBoard(): void

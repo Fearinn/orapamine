@@ -124,7 +124,7 @@ class Game extends \Table
         $this->giveExtraTime($player_id);
         $this->activeNextPlayer();
 
-        if ($this->isPlayerEliminated($player_id)) {
+        if ($this->isPlayerEliminated($player_id) || $this->isCurrentPlayerZombie()) {
             $this->gamestate->nextState("nextPlayer");
             return;
         }
@@ -132,7 +132,7 @@ class Game extends \Table
         $eliminatedPlayersCount = (int) $this->getUniqueValueFromDB("SELECT COUNT(player_eliminated) FROM player WHERE player_eliminated=1");
         $playerChances = (int) $this->getUniqueValueFromDB("SELECT player_chances FROM player WHERE player_id=$player_id");
 
-        $isLastPlayer = $eliminatedPlayersCount + 1 === $this->getPlayersNumber();
+        $isLastPlayer = $eliminatedPlayersCount + 1 === $this->nz_getPlayersNumber();
 
         if ($playerChances === 0) {
             if ($isLastPlayer) {
@@ -410,7 +410,7 @@ class Game extends \Table
         $previousAnswers[$player_id][] = $solutionSheet;
         $this->globals->set(PREVIOUS_ANSWERS, $previousAnswers);
 
-        $correct = true;
+        $isCorrect = true;
 
         foreach ($solutionSheet as $cell) {
             $x = (int) $cell["x"];
@@ -419,12 +419,12 @@ class Game extends \Table
             $piece = (int) $cell["piece"];
 
             if ($board[$x][$y] !== $piece || $coloredBoard[$x][$y] !== $color_id) {
-                $correct = false;
+                $isCorrect = false;
                 break;
             }
         }
 
-        if ($correct) {
+        if ($isCorrect) {
             $this->notify->all(
                 "revealBoard",
                 clienttranslate('${player_name} finds the correct answer!'),
@@ -482,6 +482,10 @@ class Game extends \Table
     public function isPlayerEliminated(int $player_id): bool
     {
         return !!$this->getUniqueValueFromDB("SELECT player_eliminated FROM player WHERE player_id={$player_id}");
+    }
+
+    public function nz_getPlayersNumber(): int {
+        return (int) $this->getUniqueValueFromDB("SELECT COUNT(player_id) FROM player WHERE player_zombie=0");
     }
 
     public function setupBoard(): void
@@ -1226,13 +1230,7 @@ class Game extends \Table
         $state_name = $state["name"];
 
         if ($state["type"] === "activeplayer") {
-            switch ($state_name) {
-                default: {
-                        $this->gamestate->nextState("zombiePass");
-                        break;
-                    }
-            }
-
+            $this->gamestate->nextState("zombiePass");
             return;
         }
 

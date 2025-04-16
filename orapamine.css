@@ -441,7 +441,7 @@
 }
 .orp_gemstoneButton-move {
   cursor: grab;
-  top: -16px;
+  top: -8px;
   left: -16px;
 }
 
@@ -557,4 +557,11 @@
   top: 0;
   left: 8px;
   margin: 0;
+}
+
+.orp_submitAnswerBtn {
+  background: var(--theme-color);
+}
+.orp_submitAnswerBtn:hover {
+  background: var(--theme-color) !important;
 }

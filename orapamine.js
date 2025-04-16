@@ -124,7 +124,7 @@ define([
         zoomControls: {
           color: "white",
         },
-        zoomLevels: [0.25, 0.4, 0.5, 0.75, 1, 1.25, 1.5],
+        zoomLevels: [0.25, 0.3, 0.4, 0.5, 0.75, 1, 1.25, 1.5],
         smooth: true,
       });
 
@@ -238,7 +238,9 @@ define([
             document.querySelectorAll(".orp_piece").forEach((pieceElement) => {
               pieceElement.classList.toggle("orp_piece-hidden");
             });
-            document.getElementById("orp_draftPieces").classList.toggle("orp_draftPieces-hidden");
+            document
+              .getElementById("orp_draftPieces")
+              .classList.toggle("orp_draftPieces-hidden");
 
             const buttonIcon = document.getElementById(
               "orp_boardButton-hide-icon"
@@ -333,7 +335,7 @@ define([
           const selectableOrigins = args.args.selectableOrigins;
 
           if (selectableOrigins.length > 0) {
-            this.statusBar.addActionButton(_("Send ultrasound wave"), () => {
+            this.statusBar.addActionButton(_("send ultrasound wave"), () => {
               this.setClientState("client_sendWave", {
                 descriptionmyturn: _("${you} must pick the origin of the wave"),
                 client_args: { selectableOrigins: selectableOrigins },
@@ -343,7 +345,7 @@ define([
 
           if (selectableLocations.length > 0) {
             this.statusBar.addActionButton(
-              _("Ask about specific position"),
+              _("ask about specific position"),
               () => {
                 this.setClientState("client_askLocation", {
                   descriptionmyturn: _("${you} must pick the position"),
@@ -353,14 +355,20 @@ define([
             );
           }
 
-          this.statusBar.addActionButton(_("Submit answer"), () => {
-            this.confirmationDialog(
-              _("Are you sure you want to submit an answer?"),
-              () => {
-                this.actSubmitSolution();
-              }
-            );
-          });
+          this.statusBar.addActionButton(
+            _("submit answer"),
+            () => {
+              this.confirmationDialog(
+                _("Do you really want to submit an answer?"),
+                () => {
+                  this.actSubmitSolution();
+                }
+              );
+            },
+            {
+              classes: ["orp_submitAnswerBtn"],
+            }
+          );
         }
 
         if (stateName === "client_sendWave") {
@@ -503,7 +511,7 @@ define([
             cellElement.classList.add(selectedClass);
 
             this.statusBar.addActionButton(
-              _("Confirm selection"),
+              _("confirm selection"),
               () => {
                 this.actAskLocation(location);
               },
@@ -557,7 +565,7 @@ define([
             originElement.classList.toggle(selectedClass);
 
             this.statusBar.addActionButton(
-              _("Confirm selection"),
+              _("confirm selection"),
               () => {
                 this.actSendWave(origin);
               },

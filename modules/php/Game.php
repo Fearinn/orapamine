@@ -117,6 +117,7 @@ class Game extends \Table
 
         $eliminatedPlayersCount = (int) $this->getUniqueValueFromDB("SELECT COUNT(player_eliminated) FROM player WHERE player_eliminated=1");
         $playerChances = (int) $this->getUniqueValueFromDB("SELECT player_chances FROM player WHERE player_id=$player_id");
+
         if ($playerChances === 0) {
             if ($eliminatedPlayersCount + 1 === $this->getPlayersNumber()) {
                 $this->notify->all(
@@ -360,9 +361,6 @@ class Game extends \Table
         foreach ($previousAnswers[$player_id] as $answer) {
             $isEqual = true;
 
-            // $this->dump("answer", $answer);
-            // $this->dump("sheet", $solutionSheet);
-
             foreach ($answer as $answer_cell) {
                 $x = (int) $answer_cell["x"];
                 $y = (int) $answer_cell["y"];
@@ -432,7 +430,7 @@ class Game extends \Table
         }
 
         $this->notify->all(
-            "message",
+            "incorrectSolution",
             clienttranslate('${player_name} gives an incorrect answer and loses one chance'),
             [
                 "player_id" => $player_id,
@@ -1110,11 +1108,14 @@ class Game extends \Table
         $result["GEMSTONES"] = $this->GEMSTONES();
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
-        $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
         $result["questionLog"] = $this->globals->get(QUESTION_LOG, []);
         $result["board"] = $boardRevealed ? $this->globals->get(BOARD) : [];
         $result["coloredBoard"] = $boardRevealed ? $this->globals->get(COLORED_BOARD) : [];
         $result["boardRevealed"] = $boardRevealed;
+
+        if (!$this->isSpectator()) {
+            $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
+        }
 
         return $result;
     }

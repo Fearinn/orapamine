@@ -132,9 +132,6 @@ define([
       this.setupDraftPieces();
       this.setupQuestionLog();
 
-      this.styleLocationFeedback(gamedatas.revealedLocations);
-      this.styleWaveFeedback(gamedatas.revealedOrigins);
-
       for (const player_id in gamedatas.players) {
         const playerPanel = this.getPlayerPanelElement(player_id);
         const playerChances = gamedatas.players[player_id].chances;
@@ -163,13 +160,18 @@ define([
         gamedatas.solutionSheet.forEach((placedPiece) => {
           this.insertPieceElement(placedPiece);
         });
+      }
 
-        if (this.getGameUserPreference(102) == 1) {
-          new Draggable(this);
-        } else {
-          new Clickable(this);
-        }
+      this.styleLocationFeedback(gamedatas.revealedLocations);
+      this.styleWaveFeedback(gamedatas.revealedOrigins);
 
+      if (this.getGameUserPreference(102) == 1) {
+        new Draggable(this);
+      } else {
+        new Clickable(this);
+      }
+
+      if (!this.isSpectator) {
         this.statusBar.addActionButton(
           `<i class="fa fa-trash"></i>`,
           () => {
@@ -209,54 +211,54 @@ define([
             destination: document.getElementById("orp_boardButtons"),
           }
         );
-
-        this.statusBar.addActionButton(
-          `<i id="orp_boardButton-simplify-icon" class="fa fa-minus-square-o" aria-hidden="true"></i>`,
-          () => {
-            document.querySelectorAll(".orp_piece").forEach((buttonElement) => {
-              buttonElement.classList.toggle("orp_piece-hiddenControls");
-            });
-
-            const buttonIcon = document.getElementById(
-              "orp_boardButton-simplify-icon"
-            );
-            buttonIcon.classList.toggle("fa-plus-square-o");
-            buttonIcon.classList.toggle("fa-minus-square-o");
-          },
-          {
-            id: "orp_boardButton-simplify",
-            title: _("Show/hide piece controls"),
-            color: "secondary",
-            classes: ["orp_boardButton", "orp_boardButton-simplify"],
-            destination: document.getElementById("orp_boardButtons"),
-          }
-        );
-
-        this.statusBar.addActionButton(
-          `<i id="orp_boardButton-hide-icon" class="fa fa-eye-slash" aria-hidden="true"></i>`,
-          () => {
-            document.querySelectorAll(".orp_piece").forEach((pieceElement) => {
-              pieceElement.classList.toggle("orp_piece-hidden");
-            });
-            document
-              .getElementById("orp_draftPieces")
-              .classList.toggle("orp_draftPieces-hidden");
-
-            const buttonIcon = document.getElementById(
-              "orp_boardButton-hide-icon"
-            );
-            buttonIcon.classList.toggle("fa-eye");
-            buttonIcon.classList.toggle("fa-eye-slash");
-          },
-          {
-            id: "orp_boardButton-hide",
-            title: _("Show/hide pieces"),
-            color: "secondary",
-            classes: ["orp_boardButton", "orp_boardButton-hide"],
-            destination: document.getElementById("orp_boardButtons"),
-          }
-        );
       }
+
+      this.statusBar.addActionButton(
+        `<i id="orp_boardButton-simplify-icon" class="fa fa-minus-square-o" aria-hidden="true"></i>`,
+        () => {
+          document.querySelectorAll(".orp_piece").forEach((buttonElement) => {
+            buttonElement.classList.toggle("orp_piece-hiddenControls");
+          });
+
+          const buttonIcon = document.getElementById(
+            "orp_boardButton-simplify-icon"
+          );
+          buttonIcon.classList.toggle("fa-plus-square-o");
+          buttonIcon.classList.toggle("fa-minus-square-o");
+        },
+        {
+          id: "orp_boardButton-simplify",
+          title: _("Show/hide piece controls"),
+          color: "secondary",
+          classes: ["orp_boardButton", "orp_boardButton-simplify"],
+          destination: document.getElementById("orp_boardButtons"),
+        }
+      );
+
+      this.statusBar.addActionButton(
+        `<i id="orp_boardButton-hide-icon" class="fa fa-eye-slash" aria-hidden="true"></i>`,
+        () => {
+          document.querySelectorAll(".orp_piece").forEach((pieceElement) => {
+            pieceElement.classList.toggle("orp_piece-hidden");
+          });
+          document
+            .getElementById("orp_draftPieces")
+            .classList.toggle("orp_draftPieces-hidden");
+
+          const buttonIcon = document.getElementById(
+            "orp_boardButton-hide-icon"
+          );
+          buttonIcon.classList.toggle("fa-eye");
+          buttonIcon.classList.toggle("fa-eye-slash");
+        },
+        {
+          id: "orp_boardButton-hide",
+          title: _("Show/hide pieces"),
+          color: "secondary",
+          classes: ["orp_boardButton", "orp_boardButton-hide"],
+          destination: document.getElementById("orp_boardButtons"),
+        }
+      );
 
       if (gamedatas.boardRevealed) {
         this.revealBoard({
@@ -276,7 +278,7 @@ define([
     onEnteringState: function (stateName, args) {
       console.log("Entering state: " + stateName, args);
 
-      if (!this.isSpectator) {
+      if (!this.isSpectator || stateName === "client_placePiece") {
         if (stateName.includes("client_")) {
           this.statusBar.addActionButton(
             _("Cancel"),
@@ -316,6 +318,10 @@ define([
 
               cellElement.insertAdjacentElement("afterbegin", pieceElement);
               this.attachControls(pieceElement);
+
+              if (pieceElement.dataset.piece == 6) {
+                pieceElement.textContent = "X"
+              }
 
               document
                 .querySelectorAll("[data-piece]")
@@ -710,21 +716,23 @@ define([
           `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
         );
 
-        this.statusBar.addActionButton(
-          `<i class="fa fa-arrows" aria-hidden="true"></i>`,
-          undefined,
-          {
-            title: _("Move gemstone"),
-            color: "secondary",
-            classes: [
-              "orp_gemstoneButton-move",
-              "orp_gemstoneButton",
-              "action-button",
-              "bgabutton",
-            ],
-            destination: gemstoneElement,
-          }
-        );
+        if (this.getGameUserPreference(102) == 1) {
+          this.statusBar.addActionButton(
+            `<i class="fa fa-arrows" aria-hidden="true"></i>`,
+            undefined,
+            {
+              title: _("Move gemstone"),
+              color: "secondary",
+              classes: [
+                "orp_gemstoneButton-move",
+                "orp_gemstoneButton",
+                "action-button",
+                "bgabutton",
+              ],
+              destination: gemstoneElement,
+            }
+          );
+        }
 
         if (gemstone_id != 1) {
           this.statusBar.addActionButton(

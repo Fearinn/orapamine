@@ -101,7 +101,7 @@ function dropItemOntoXY(pieceElement, x, y) {
   const pointsTo = document.elementFromPoint(x, y);
 
   gameAreaElement.classList.remove("orp_dragContainer");
-  document.querySelector("orp_piece-drag")?.classList.remove("orp_piece-drag");
+  document.querySelector(".orp_piece-drag")?.classList.remove("orp_piece-drag");
 
   if (!pointsTo) {
     return;

@@ -315,10 +315,9 @@ class Game extends \Table
             throw new \BgaUserException("This table is finished");
         }
 
-        $players = $this->loadPlayersBasicInfos();
         $player_id = (int) $this->getCurrentPlayerId();
 
-        if (!array_key_exists($player_id, $players)) {
+        if ($this->isSpectator()) {
             throw new \BgaVisibleSystemException("Only players may perform this action");
         }
 
@@ -342,10 +341,9 @@ class Game extends \Table
             throw new \BgaUserException("This table is finished");
         }
 
-        $players = $this->loadPlayersBasicInfos();
         $player_id = (int) $this->getCurrentPlayerId();
 
-        if (!array_key_exists($player_id, $players)) {
+        if ($this->isSpectator()) {
             throw new \BgaVisibleSystemException("Only players may perform this action");
         }
 

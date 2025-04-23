@@ -446,7 +446,12 @@ define([
     },
 
     setupBoard: function () {
-      document.querySelectorAll("[data-cell]").forEach((cellElement) => {
+      const boardElement = document.getElementById("orp_board");
+
+      document.getElementById("orp_boardTitle").textContent =
+        _("Solution Sheet");
+
+      boardElement.querySelectorAll("[data-cell]").forEach((cellElement) => {
         const x = cellElement.dataset.cell.split("-")[0];
         const y = cellElement.dataset.cell.split("-")[1];
         cellElement.style.gridArea = `${y}/${x}`;
@@ -483,6 +488,8 @@ define([
         .forEach((pieceElement) => {
           pieceElement.classList.add("orp_piece-hiddenControls");
         });
+
+      document.getElementById("orp_boardTitle").textContent = "Final Solution";
     },
 
     setSelectableLocations: function (selectableLocations, unset = false) {
@@ -1080,13 +1087,13 @@ define([
               });
 
         const classes = gameEnd
-          ? "orp_previousAnswersContainer"
-          : "orp_previousAnswersContainer-hidden orp_previousAnswersContainer";
+          ? "orp_previousAnswersContainer whiteblock"
+          : "orp_previousAnswersContainer-hidden orp_previousAnswersContainer whiteblock";
 
         document.getElementById("orp_gameArea").insertAdjacentHTML(
           "beforeend",
           `<div id="orp_previousAnswersContainer-${player_id}" class="${classes}">
-            <h3 class="orp_previousAnswersTitle">${_(title)}</h3>
+            <h3 class="orp_previousAnswersTitle orp_title">${_(title)}</h3>
             <div id="orp_previousAnswers-${player_id}" class="orp_previousAnswers"></div>
           </div>`
         );
@@ -1111,6 +1118,10 @@ define([
         cellElement.childNodes.forEach((childElement) => {
           childElement.remove();
         });
+      });
+
+      alternateBoard.querySelectorAll(".orp_boardTitle").forEach((titleElement) => {
+        titleElement.remove();
       });
 
       document

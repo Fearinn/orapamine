@@ -1,11 +1,29 @@
 .orp_boardContainer {
+  font-family: "Cookie Run", sans-serif;
+
   position: relative;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  order: 1;
+  padding: 0;
+  width: fit-content;
+}
+
+.orp_boardContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1.25;
-  width: var(--boardContainerWidth);
+  width: var(--boardContentWidth);
   user-select: none;
+}
+
+.orp_boardTitle {
+  font-size: 32px;
+  font-weight: bold;
 }
 
 .orp_boardButtons {
@@ -74,7 +92,6 @@
 }
 
 .orp_origin {
-  font-family: "Cookie Run", sans-serif;
   color: white;
   font-weight: bold;
   font-size: 24px;

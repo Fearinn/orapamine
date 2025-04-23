@@ -1,9 +1,10 @@
 :root.orp_pref-thematicBackground-blue,
-.orp_pref-thematicBackground-red {
+:root.orp_pref-thematicBackground-red {
   background-image: url("img/background.png");
   background-size: cover;
 
-  .orp_questionLogContainer {
+  .orp_questionLogContainer,
+  .orp_title {
     color: white;
     -webkit-text-stroke: 1.5px var(--theme-color);
   }

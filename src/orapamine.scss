@@ -37,7 +37,7 @@
 :root {
   --boardHeight: 640px;
   --boardWidth: calc(1.25 * var(--boardHeight));
-  --boardContainerWidth: calc(var(--boardWidth) + 120px);
+  --boardContentWidth: calc(var(--boardWidth) + 120px);
   --boardColor: rgba(200, 200, 200, 0.8);
   --cellWidth: calc(var(--boardWidth) / 10);
   --theme-color: navy;

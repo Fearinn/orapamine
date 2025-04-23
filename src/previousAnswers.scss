@@ -1,15 +1,15 @@
 .orp_previousAnswersContainer {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 4px;
-  order: 1;
-  background-color: black;
+  order: 0;
   border-radius: 6px;
   margin: 0;
   padding: 8px 0;
   overflow-x: auto;
-  max-width: var(--boardContainerWidth);
+  min-height: var(--boardHeight);
+  max-width: var(--boardContentWidth);
 
   &-hidden {
     display: none;
@@ -22,8 +22,7 @@
 
 .orp_previousAnswersTitle {
   font-family: "Cookie Run", serif;
-  color: white;
-  font-size: 28px;
+  font-size: 32px;
   margin: 0 auto;
 }
 

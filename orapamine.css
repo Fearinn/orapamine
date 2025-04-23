@@ -220,16 +220,16 @@
 
 .orp_previousAnswersContainer {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 4px;
-  order: 1;
-  background-color: black;
+  order: 0;
   border-radius: 6px;
   margin: 0;
   padding: 8px 0;
   overflow-x: auto;
-  max-width: var(--boardContainerWidth);
+  min-height: var(--boardHeight);
+  max-width: var(--boardContentWidth);
 }
 .orp_previousAnswersContainer-hidden {
   display: none;
@@ -240,8 +240,7 @@
 
 .orp_previousAnswersTitle {
   font-family: "Cookie Run", serif;
-  color: white;
-  font-size: 28px;
+  font-size: 32px;
   margin: 0 auto;
 }
 
@@ -262,13 +261,30 @@
 }
 
 .orp_boardContainer {
+  font-family: "Cookie Run", sans-serif;
   position: relative;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  order: 1;
+  padding: 0;
+  width: fit-content;
+}
+
+.orp_boardContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1.25;
-  width: var(--boardContainerWidth);
+  width: var(--boardContentWidth);
   user-select: none;
+}
+
+.orp_boardTitle {
+  font-size: 32px;
+  font-weight: bold;
 }
 
 .orp_boardButtons {
@@ -326,7 +342,6 @@
 }
 
 .orp_origin {
-  font-family: "Cookie Run", sans-serif;
   color: white;
   font-weight: bold;
   font-size: 24px;
@@ -509,12 +524,14 @@
 }
 
 :root.orp_pref-thematicBackground-blue,
-.orp_pref-thematicBackground-red {
+:root.orp_pref-thematicBackground-red {
   background-image: url("img/background.png");
   background-size: cover;
 }
 :root.orp_pref-thematicBackground-blue .orp_questionLogContainer,
-.orp_pref-thematicBackground-red .orp_questionLogContainer {
+:root.orp_pref-thematicBackground-blue .orp_title,
+:root.orp_pref-thematicBackground-red .orp_questionLogContainer,
+:root.orp_pref-thematicBackground-red .orp_title {
   color: white;
   -webkit-text-stroke: 1.5px var(--theme-color);
 }
@@ -559,7 +576,7 @@
 :root {
   --boardHeight: 640px;
   --boardWidth: calc(1.25 * var(--boardHeight));
-  --boardContainerWidth: calc(var(--boardWidth) + 120px);
+  --boardContentWidth: calc(var(--boardWidth) + 120px);
   --boardColor: rgba(200, 200, 200, 0.8);
   --cellWidth: calc(var(--boardWidth) / 10);
   --theme-color: navy;

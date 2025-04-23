@@ -1,158 +1,157 @@
 .orp_piece:not(.orp_piece-hidden) ~ .orp_locationFeedback {
+  display: none;
+}
+
+.orp_draftPieces {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 64px;
+  order: 2;
+  margin: 0 auto;
+  padding: 8px;
+  max-width: var(--boardWidth);
+
+  &-hidden {
     display: none;
   }
-  
-  .orp_draftPieces {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    gap: 64px;
-    order: 2;
-    margin: 0 auto;
-    padding: 8px;
-    max-width: var(--boardWidth);
+}
 
-  
-    &-hidden {
-      display: none;
-    }
+.orp_gemstone {
+  position: relative;
+  display: grid;
+  touch-action: none;
+}
+
+.orp_gemstoneButton {
+  font-size: 20px;
+  position: absolute;
+  z-index: 1;
+
+  i {
+    pointer-events: none;
   }
-  
-  .orp_gemstone {
-    position: relative;
-    display: grid;
-    touch-action: none;
+
+  &-rotate {
+    top: -16px;
+    right: -16px;
   }
-  
-  .orp_gemstoneButton {
-    font-size: 20px;
-    position: absolute;
-    z-index: 1;
-  
-    i {
-      pointer-events: none;
-    }
-  
-    &-rotate {
-      top: -16px;
-      right: -16px;
-    }
-  
-    &-move {
-      cursor: grab;
-      top: -8px;
-      left: -16px;
-    }
+
+  &-move {
+    cursor: grab;
+    top: -8px;
+    left: -16px;
   }
-  
-  .orp_blankSpace {
-    text-align: center;
-    font-size: 64px;
-    user-select: none;
-    background: none;
+}
+
+.orp_blankSpace {
+  text-align: center;
+  font-size: 64px;
+  user-select: none;
+  background: none;
+}
+
+.orp_piece {
+  position: relative;
+  aspect-ratio: 1;
+  background-color: var(--pieceColor);
+  border: 0 solid var(--pieceColorDarker);
+  cursor: pointer;
+  touch-action: none;
+  width: var(--cellWidth);
+
+  &-empty {
+    cursor: initial;
   }
-  
-  .orp_piece {
-    position: relative;
-    aspect-ratio: 1;
-    background-color: var(--pieceColor);
-    border: 0 solid var(--pieceColorDarker);
-    cursor: pointer;
-    touch-action: none;
-    width: var(--cellWidth);
-  
-    &-empty {
-      cursor: initial;
-    }
-  
-    &-drag {
-      cursor: grabbing;
-    }
-  
-    &-hiddenControls {
-      .orp_pieceButton {
-        visibility: hidden;
-      }
-    }
-  
-    &-hidden {
-      display: none;
-    }
-  
-    &-unselectable {
-      cursor: not-allowed;
-    }
-  
-    &-selected {
-      cursor: pointer;
-      transform: scale(1.1);
-      outline: 3px dashed limegreen;
-      z-index: 1;
-    }
-  
-    &-half {
-      background: none;
-  
-      &[data-piece="1"] {
-        background: linear-gradient(
-          to bottom right,
-          #ffffff00 50%,
-          var(--pieceColor) 50%
-        );
-        // border-bottom: 2px solid var(--pieceColorDarker);
-        // border-right: 2px solid var(--pieceColorDarker);
-      }
-  
-      &[data-piece="2"] {
-        background: linear-gradient(
-          to bottom left,
-          #ffffff00 50%,
-          var(--pieceColor) 50%
-        );
-        // border-bottom: 2px solid var(--pieceColorDarker);
-        // border-left: 2px solid var(--pieceColorDarker);
-      }
-  
-      &[data-piece="3"] {
-        background: linear-gradient(
-          to top right,
-          #ffffff00 50%,
-          var(--pieceColor) 50%
-        );
-        // border-top: 2px solid var(--pieceColorDarker);
-        // border-right: 2px solid var(--pieceColorDarker);
-      }
-  
-      &[data-piece="4"] {
-        background: linear-gradient(
-          to top left,
-          #ffffff00 50%,
-          var(--pieceColor) 50%
-        );
-        // border-top: 2px solid var(--pieceColorDarker);
-        // border-left: 2px solid var(--pieceColorDarker);
-      }
-    }
+
+  &-drag {
+    cursor: grabbing;
   }
-  
-  .orp_pieceButton {
-    font-size: 16px;
-    position: absolute;
-    top: 1%;
-    margin: 0;
-    padding: 4px;
-  
-    &-delete {
-      left: 1%;
-    }
-  
-    &-rotate {
-      right: 1%;
-    }
-  
-    &-hidden {
+
+  &-hiddenControls {
+    .orp_pieceButton {
       visibility: hidden;
     }
   }
+
+  &-hidden {
+    display: none;
+  }
+
+  &-unselectable {
+    cursor: not-allowed;
+  }
+
+  &-selected {
+    cursor: pointer;
+    transform: scale(1.1);
+    outline: 3px dashed limegreen;
+    z-index: 1;
+  }
+
+  &-half {
+    background: none;
+
+    &[data-piece="1"] {
+      background: linear-gradient(
+        to bottom right,
+        #ffffff00 50%,
+        var(--pieceColor) 50%
+      );
+      // border-bottom: 2px solid var(--pieceColorDarker);
+      // border-right: 2px solid var(--pieceColorDarker);
+    }
+
+    &[data-piece="2"] {
+      background: linear-gradient(
+        to bottom left,
+        #ffffff00 50%,
+        var(--pieceColor) 50%
+      );
+      // border-bottom: 2px solid var(--pieceColorDarker);
+      // border-left: 2px solid var(--pieceColorDarker);
+    }
+
+    &[data-piece="3"] {
+      background: linear-gradient(
+        to top right,
+        #ffffff00 50%,
+        var(--pieceColor) 50%
+      );
+      // border-top: 2px solid var(--pieceColorDarker);
+      // border-right: 2px solid var(--pieceColorDarker);
+    }
+
+    &[data-piece="4"] {
+      background: linear-gradient(
+        to top left,
+        #ffffff00 50%,
+        var(--pieceColor) 50%
+      );
+      // border-top: 2px solid var(--pieceColorDarker);
+      // border-left: 2px solid var(--pieceColorDarker);
+    }
+  }
+}
+
+.orp_pieceButton {
+  font-size: 16px;
+  position: absolute;
+  top: 1%;
+  margin: 0;
+  padding: 4px;
+
+  &-delete {
+    left: 1%;
+  }
+
+  &-rotate {
+    right: 1%;
+  }
+
+  &-hidden {
+    visibility: hidden;
+  }
+}

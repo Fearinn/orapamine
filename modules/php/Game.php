@@ -408,6 +408,15 @@ class Game extends \Table
         $previousAnswers[$player_id][] = $solutionSheet;
         $this->globals->set(PREVIOUS_ANSWERS, $previousAnswers);
 
+        $this->notify->player(
+            $player_id,
+            "submitSolution",
+            "",
+            [
+                "answer" => $solutionSheet,
+            ]
+        );
+
         $isCorrect = true;
 
         foreach ($solutionSheet as $cell) {

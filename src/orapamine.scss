@@ -47,7 +47,7 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, 950px);
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   gap: 32px;
   padding: 0 8px;

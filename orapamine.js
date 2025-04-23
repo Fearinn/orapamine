@@ -162,6 +162,7 @@ define([
         });
       }
 
+      this.setupPreviousAnswers();
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
@@ -259,67 +260,6 @@ define([
           destination: document.getElementById("orp_boardButtons"),
         }
       );
-
-      document.getElementById("orp_previousAnswersTitle").textContent = _(
-        "Your previous answers"
-      );
-
-      this.statusBar.addActionButton(
-        `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
-        () => {
-          document
-            .getElementById("orp_previousAnswersContainer")
-            .classList.toggle("orp_previousAnswersContainer-hidden");
-        },
-        {
-          id: "orp_previousAnswersButton",
-          title: _("Show/hide previous answers"),
-          color: "secondary",
-          classes: ["orp_previousAnswersButton"],
-          destination: document.getElementById("orp_gameArea"),
-        }
-      );
-
-      gamedatas.previousAnswers.forEach((answer, index) => {
-        const alternateBoard = document
-          .getElementById("orp_boardContainer")
-          .cloneNode(true);
-
-        alternateBoard.id = `orp_previousAnswer-${index}`;
-
-        alternateBoard
-          .querySelectorAll("[data-cell]")
-          .forEach((cellElement) => {
-            cellElement.childNodes.forEach((childElement) => {
-              childElement.remove();
-            });
-          });
-
-        document
-          .getElementById("orp_previousAnswers")
-          .insertAdjacentElement("beforeend", alternateBoard);
-
-        answer.forEach((placedPiece) => {
-          this.insertPieceElement(placedPiece, alternateBoard);
-        });
-
-        alternateBoard
-          .querySelectorAll(".action-button")
-          .forEach((childElement) => {
-            childElement.remove();
-          });
-
-        alternateBoard.querySelectorAll("[id]").forEach((childElement) => {
-          childElement.onclick = undefined;
-          childElement.removeAttribute("id");
-        });
-
-        alternateBoard
-          .querySelectorAll("[data-cell]")
-          .forEach((cellElement) => {
-            cellElement.removeAttribute("data-cell");
-          });
-      });
 
       if (gamedatas.isBoardRevealed) {
         this.revealBoard({
@@ -1061,7 +1001,7 @@ define([
           title: _("Show/hide question log"),
           color: "secondary",
           classes: ["orp_questionLogButton"],
-          destination: document.getElementById("orp_gameArea"),
+          destination: document.getElementById("bga-help_buttons"),
         }
       );
     },
@@ -1102,6 +1042,78 @@ define([
       }
 
       questionLogElement.insertAdjacentHTML("afterbegin", logLineHTML);
+    },
+
+    setupPreviousAnswers: function () {
+      document.getElementById("orp_previousAnswersTitle").textContent = _(
+        "Your previous answers"
+      );
+
+      this.statusBar.addActionButton(
+        `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
+        () => {
+          document
+            .getElementById("orp_previousAnswersContainer")
+            .classList.toggle("orp_previousAnswersContainer-hidden");
+        },
+        {
+          id: "orp_previousAnswersButton",
+          title: _("Show/hide previous answers"),
+          color: "secondary",
+          classes: ["orp_previousAnswersButton"],
+          destination: document.getElementById("bga-help_buttons"),
+        }
+      );
+
+      this.gamedatas.previousAnswers.forEach((answer) => {
+        this.insertPreviousAnswer(answer);
+      });
+    },
+
+    insertPreviousAnswer: function (answer) {
+      const uid = this.getUniqueId();
+
+      const alternateBoard = document
+        .getElementById("orp_boardContainer")
+        .cloneNode(true);
+
+      alternateBoard.id = `orp_previousAnswer-${uid}`;
+      alternateBoard.classList.remove("whiteblock");
+
+      alternateBoard.querySelectorAll("[data-cell]").forEach((cellElement) => {
+        cellElement.childNodes.forEach((childElement) => {
+          childElement.remove();
+        });
+      });
+
+      document
+        .getElementById("orp_previousAnswers")
+        .insertAdjacentElement("afterbegin", alternateBoard);
+
+      answer.forEach((placedPiece) => {
+        this.insertPieceElement(placedPiece, alternateBoard);
+      });
+
+      alternateBoard
+        .querySelectorAll(".action-button")
+        .forEach((childElement) => {
+          childElement.remove();
+        });
+
+      alternateBoard.querySelectorAll("[id]").forEach((childElement) => {
+        childElement.onclick = undefined;
+        childElement.removeAttribute("id");
+      });
+
+      alternateBoard.querySelectorAll("[data-cell]").forEach((cellElement) => {
+        cellElement.removeAttribute("data-cell");
+      });
+
+      alternateBoard
+        .querySelectorAll("[data-origin]")
+        .forEach((originElement) => {
+          originElement.removeAttribute("data-origin");
+        });
     },
 
     ///////////////////////////////////////////////////
@@ -1216,6 +1228,11 @@ define([
       ]);
 
       this.insertQuestionLogLine(logLine);
+    },
+
+    notif_submitSolution: function (args) {
+      const { answer } = args;
+      this.insertPreviousAnswer(answer);
     },
 
     notif_incorrectSolution: function (args) {

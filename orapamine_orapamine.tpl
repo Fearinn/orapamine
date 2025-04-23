@@ -21,19 +21,21 @@
   preload="none"
   autobuffer
 ></audio>
+<div
+  id="orp_questionLogContainer"
+  class="orp_questionLogContainer-hidden orp_questionLogContainer"
+>
+  <h3 id="orp_questionLogTitle" class="orp_questionLogTitle">Question Log</h3>
+  <div id="orp_questionLog" class="orp_questionLog"></div>
+</div>
 <div id="orp_gameArea" class="orp_gameArea">
-  <div
-    id="orp_questionLogContainer"
-    class="orp_questionLogContainer-hidden orp_questionLogContainer"
-  >
-    <h3 id="orp_questionLogTitle" class="orp_questionLogTitle">Question Log</h3>
-    <div id="orp_questionLog" class="orp_questionLog"></div>
-  </div>
   <div
     id="orp_previousAnswersContainer"
     class="orp_previousAnswersContainer-hidden orp_previousAnswersContainer"
   >
-    <h3 id="orp_previousAnswersTitle" class="orp_previousAnswersTitle">Your previous answers</h3>
+    <h3 id="orp_previousAnswersTitle" class="orp_previousAnswersTitle">
+      Your previous answers
+    </h3>
     <div id="orp_previousAnswers" class="orp_previousAnswers"></div>
   </div>
   <div id="orp_boardContainer" class="orp_boardContainer whiteblock">

@@ -162,7 +162,7 @@ define([
         });
       }
 
-      this.setupPreviousAnswers();
+      this.setupPreviousAnswers(gamedatas.isBoardRevealed);
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
@@ -1044,40 +1044,67 @@ define([
       questionLogElement.insertAdjacentHTML("afterbegin", logLineHTML);
     },
 
-    setupPreviousAnswers: function () {
-      document.getElementById("orp_previousAnswersTitle").textContent = _(
-        "Your previous answers"
-      );
+    setupPreviousAnswers: function (gameEnd = false) {
+      if (!this.isSpectator) {
+        this.statusBar.addActionButton(
+          `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
+          () => {
+            document
+              .querySelectorAll(".orp_previousAnswersContainer")
+              .forEach((element) => {
+                element.classList.toggle("orp_previousAnswersContainer-hidden");
+              });
+          },
+          {
+            id: "orp_previousAnswersButton",
+            title: _("Show/hide previous answers"),
+            color: "secondary",
+            classes: ["orp_previousAnswersButton"],
+            destination: document.getElementById("bga-help_buttons"),
+          }
+        );
+      }
 
-      this.statusBar.addActionButton(
-        `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
-        () => {
-          document
-            .getElementById("orp_previousAnswersContainer")
-            .classList.toggle("orp_previousAnswersContainer-hidden");
-        },
-        {
-          id: "orp_previousAnswersButton",
-          title: _("Show/hide previous answers"),
-          color: "secondary",
-          classes: ["orp_previousAnswersButton"],
-          destination: document.getElementById("bga-help_buttons"),
+      for (const player_id in this.gamedatas.previousAnswers) {
+        const previousAnswers = this.gamedatas.previousAnswers[player_id];
+
+        if (gameEnd && player_id == this.player_id) {
+          continue;
         }
-      );
 
-      this.gamedatas.previousAnswers.forEach((answer) => {
-        this.insertPreviousAnswer(answer);
-      });
+        const title =
+          player_id == this.player_id
+            ? _("Your answers")
+            : this.format_string_recursive("${player_name}'s answers", {
+                player_name: this.gamedatas.players[player_id].name,
+              });
+
+        const classes = gameEnd
+          ? "orp_previousAnswersContainer"
+          : "orp_previousAnswersContainer-hidden orp_previousAnswersContainer";
+
+        document.getElementById("orp_gameArea").insertAdjacentHTML(
+          "beforeend",
+          `<div id="orp_previousAnswersContainer-${player_id}" class="${classes}">
+            <h3 class="orp_previousAnswersTitle">${_(title)}</h3>
+            <div id="orp_previousAnswers-${player_id}" class="orp_previousAnswers"></div>
+          </div>`
+        );
+
+        previousAnswers.forEach((answer) => {
+          this.insertPreviousAnswer(answer, player_id);
+        });
+      }
     },
 
-    insertPreviousAnswer: function (answer) {
+    insertPreviousAnswer: function (answer, player_id) {
       const uid = this.getUniqueId();
 
       const alternateBoard = document
         .getElementById("orp_boardContainer")
         .cloneNode(true);
 
-      alternateBoard.id = `orp_previousAnswer-${uid}`;
+      alternateBoard.id = `orp_alternateBoard-${uid}`;
       alternateBoard.classList.remove("whiteblock");
 
       alternateBoard.querySelectorAll("[data-cell]").forEach((cellElement) => {
@@ -1087,7 +1114,7 @@ define([
       });
 
       document
-        .getElementById("orp_previousAnswers")
+        .getElementById(`orp_previousAnswers-${player_id}`)
         .insertAdjacentElement("afterbegin", alternateBoard);
 
       answer.forEach((placedPiece) => {
@@ -1231,8 +1258,9 @@ define([
     },
 
     notif_submitSolution: function (args) {
-      const { answer } = args;
-      this.insertPreviousAnswer(answer);
+      const { answer, player_id } = args;
+
+      this.insertPreviousAnswer(answer, player_id);
     },
 
     notif_incorrectSolution: function (args) {
@@ -1249,11 +1277,21 @@ define([
     },
 
     notif_revealBoard: function (args) {
-      const { board, coloredBoard } = args;
+      const { board, coloredBoard, previousAnswers } = args;
+
       this.revealBoard({
         board,
         coloredBoard,
       });
+
+      this.gamedatas.previousAnswers = previousAnswers;
+      this.setupPreviousAnswers(true);
+
+      document
+        .querySelectorAll(".orp_previousAnswersContainer-hidden")
+        .forEach((element) => {
+          element.classList.remove("orp_previousAnswersContainer-hidden");
+        });
     },
 
     format_string_recursive(log, args) {

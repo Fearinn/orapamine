@@ -136,17 +136,7 @@ class Game extends \Table
 
         if ($playerChances === 0) {
             if ($isLastPlayer) {
-                $this->notify->all(
-                    "revealBoard",
-                    "",
-                    [
-                        "board" => $this->globals->get(BOARD),
-                        "coloredBoard" => $this->globals->get(COLORED_BOARD),
-                    ]
-                );
-
-                $this->globals->set(BOARD_REVEALED, true);
-
+                $this->revealBoard();
                 $this->gamestate->nextState("gameEnd");
                 return;
             }
@@ -413,6 +403,7 @@ class Game extends \Table
             "submitSolution",
             "",
             [
+                "player_id" => $player_id,
                 "answer" => $solutionSheet,
             ]
         );
@@ -432,18 +423,7 @@ class Game extends \Table
         }
 
         if ($isCorrect) {
-            $this->notify->all(
-                "revealBoard",
-                clienttranslate('${player_name} finds the correct answer!'),
-                [
-                    "player_id" => $player_id,
-                    "player_name" => $this->getPlayerNameById($player_id),
-                    "board" => $this->globals->get(BOARD),
-                    "coloredBoard" => $this->globals->get(COLORED_BOARD),
-                ]
-            );
-
-            $this->globals->set(BOARD_REVEALED, true);
+            $this->revealBoard();
 
             $this->setStat(100, "win%", $player_id);
             $this->DbQuery("UPDATE player SET player_score=1 WHERE player_id=$player_id");
@@ -1086,6 +1066,22 @@ class Game extends \Table
         return true;
     }
 
+    public function revealBoard(): void
+    {
+        $this->notify->all(
+            "revealBoard",
+            "",
+            [
+                "board" => $this->globals->get(BOARD),
+                "coloredBoard" => $this->globals->get(COLORED_BOARD),
+                "previousAnswers" => $this->globals->get(PREVIOUS_ANSWERS),
+            ]
+        );
+
+        $this->globals->set(BOARD_REVEALED, true);
+    }
+
+
     /**
      * Migrate database.
      *
@@ -1142,13 +1138,26 @@ class Game extends \Table
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         $result["questionLog"] = $this->globals->get(QUESTION_LOG, []);
+        $result["isBoardRevealed"] = $isBoardRevealed;
         $result["board"] = $isBoardRevealed ? $this->globals->get(BOARD) : [];
         $result["coloredBoard"] = $isBoardRevealed ? $this->globals->get(COLORED_BOARD) : [];
-        $result["isBoardRevealed"] = $isBoardRevealed;
+
+        $previousAnswers = $this->globals->get(PREVIOUS_ANSWERS);
+
+        if (!$isBoardRevealed) {
+            $previousAnswers = array_filter(
+                $previousAnswers,
+                function ($player_id) use ($current_player_id) {
+                    return $player_id === $current_player_id;
+                },
+                ARRAY_FILTER_USE_KEY
+            );
+        }
+
+        $result["previousAnswers"] = $previousAnswers;
 
         if (!$this->isSpectator()) {
             $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
-            $result["previousAnswers"] = $this->globals->get(PREVIOUS_ANSWERS)[$current_player_id];
         }
 
         return $result;
@@ -1272,15 +1281,6 @@ class Game extends \Table
 
     public function debug_revealBoard(): void
     {
-        $this->notify->all(
-            "revealBoard",
-            "",
-            [
-                "board" => $this->globals->get(BOARD),
-                "coloredBoard" => $this->globals->get(COLORED_BOARD),
-            ]
-        );
-
-        $this->globals->set(BOARD_REVEALED, true);
+        $this->revealBoard();
     }
 }

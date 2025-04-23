@@ -29,15 +29,6 @@
   <div id="orp_questionLog" class="orp_questionLog"></div>
 </div>
 <div id="orp_gameArea" class="orp_gameArea">
-  <div
-    id="orp_previousAnswersContainer"
-    class="orp_previousAnswersContainer-hidden orp_previousAnswersContainer"
-  >
-    <h3 id="orp_previousAnswersTitle" class="orp_previousAnswersTitle">
-      Your previous answers
-    </h3>
-    <div id="orp_previousAnswers" class="orp_previousAnswers"></div>
-  </div>
   <div id="orp_boardContainer" class="orp_boardContainer whiteblock">
     <div id="orp_boardButtons" class="orp_boardButtons"></div>
     <div id="orp_letterAxis-y" class="orp_axis orp_axis-y" data-position="left">

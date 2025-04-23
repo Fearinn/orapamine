@@ -7,6 +7,34 @@ let element = null;
 let scale = 1;
 let game = null;
 let isGemstoneMove = false;
+let autoScrollRaf = null;
+let lastMouseY = 0;
+
+function startAutoScroll() {
+  function step() {
+    const edgeThreshold = 100; // px from top/bottom to start scrolling
+    const scrollSpeed = 10; // px per frame
+
+    if (lastMouseY < edgeThreshold) {
+      window.scrollBy(0, -scrollSpeed);
+    } else if (lastMouseY > window.innerHeight - edgeThreshold) {
+      window.scrollBy(0, scrollSpeed);
+    }
+
+    autoScrollRaf = requestAnimationFrame(step);
+  }
+
+  if (!autoScrollRaf) {
+    autoScrollRaf = requestAnimationFrame(step);
+  }
+}
+
+function stopAutoScroll() {
+  if (autoScrollRaf) {
+    cancelAnimationFrame(autoScrollRaf);
+    autoScrollRaf = null;
+  }
+}
 
 function userPressed(event) {
   element = event.target;
@@ -21,13 +49,14 @@ function userPressed(event) {
     element = element.parentNode;
   }
 
-  startX = event.clientX;
-  startY = event.clientY;
+  startX = event.pageX;
+  startY = event.pageY;
+  lastMouseY = event.clientY;
 
   const gameAreaElement = document.getElementById("orp_gameArea");
 
   gameAreaElement.addEventListener("pointermove", userMoved, {
-    passive: true,
+    passive: false,
   });
   gameAreaElement.addEventListener("pointerup", userReleased, {
     passive: true,
@@ -35,13 +64,17 @@ function userPressed(event) {
   gameAreaElement.addEventListener("pointercancel", userReleased, {
     passive: true,
   });
+  startAutoScroll();
 
   element.classList.add("orp_piece-drag");
 }
 
 function userMoved(event) {
-  deltaX = event.clientX - startX;
-  deltaY = event.clientY - startY;
+  event.preventDefault();
+  lastMouseY = event.clientY;
+
+  deltaX = event.pageX - startX;
+  deltaY = event.pageY - startY;
 
   const gameAreaElement = document.getElementById("orp_gameArea");
   const style = window.getComputedStyle(gameAreaElement);
@@ -87,9 +120,17 @@ function userReleased(event) {
       dropItemOntoXY(pieceElement, targetX, targetY);
     });
   } else {
-    dropItemOntoXY(element, startX + deltaX * scale, startY + deltaY * scale);
+    const rect = element.getBoundingClientRect();
+
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const targetX = centerX + deltaX * scale;
+    const targetY = centerY + deltaY * scale;
+    dropItemOntoXY(element, targetX, targetY);
   }
 
+  stopAutoScroll();
   deltaX = null;
   deltaY = null;
 }
@@ -99,6 +140,7 @@ function dropItemOntoXY(pieceElement, x, y) {
   gameAreaElement.classList.add("orp_dragContainer");
 
   const pointsTo = document.elementFromPoint(x, y);
+  console.log(pointsTo, "POINTS TO", x, y);
 
   gameAreaElement.classList.remove("orp_dragContainer");
   document.querySelector(".orp_piece-drag")?.classList.remove("orp_piece-drag");

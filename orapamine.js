@@ -265,6 +265,7 @@ define([
         this.revealBoard({
           board: gamedatas.board,
           coloredBoard: gamedatas.coloredBoard,
+          previousAnswers: gamedatas.previousAnswers,
         });
       }
 
@@ -458,7 +459,7 @@ define([
       });
     },
 
-    revealBoard: function ({ board, coloredBoard }) {
+    revealBoard: function ({ board, coloredBoard, previousAnswers }) {
       Object.keys(board).forEach((x) => {
         const row = board[x];
         Object.keys(row).forEach((y) => {
@@ -478,8 +479,7 @@ define([
       });
 
       document.querySelectorAll(".orp_boardButton").forEach((buttonElement) => {
-        buttonElement.classList.add("disabled");
-        buttonElement.disabled = true;
+        buttonElement.remove();
       });
 
       document
@@ -490,6 +490,21 @@ define([
         });
 
       document.getElementById("orp_boardTitle").textContent = "Final Solution";
+
+      document
+        .querySelectorAll(".orp_previousAnswersContainer")
+        .forEach((container) => {
+          container.remove();
+        });
+
+      this.gamedatas.previousAnswers = previousAnswers;
+      this.setupPreviousAnswers();
+
+      document
+        .querySelectorAll(".orp_previousAnswersContainer-hidden")
+        .forEach((element) => {
+          element.classList.remove("orp_previousAnswersContainer-hidden");
+        });
     },
 
     setSelectableLocations: function (selectableLocations, unset = false) {
@@ -1051,8 +1066,11 @@ define([
       questionLogElement.insertAdjacentHTML("afterbegin", logLineHTML);
     },
 
-    setupPreviousAnswers: function (gameEnd = false) {
-      if (!this.isSpectator) {
+    setupPreviousAnswers: function () {
+      if (
+        !this.isSpectator &&
+        !document.getElementById("orp_previousAnswersButton")
+      ) {
         this.statusBar.addActionButton(
           `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
           () => {
@@ -1075,10 +1093,6 @@ define([
       for (const player_id in this.gamedatas.previousAnswers) {
         const previousAnswers = this.gamedatas.previousAnswers[player_id];
 
-        if (gameEnd && player_id == this.player_id) {
-          continue;
-        }
-
         const title =
           player_id == this.player_id
             ? _("Your answers")
@@ -1086,13 +1100,9 @@ define([
                 player_name: this.gamedatas.players[player_id].name,
               });
 
-        const classes = gameEnd
-          ? "orp_previousAnswersContainer whiteblock"
-          : "orp_previousAnswersContainer-hidden orp_previousAnswersContainer whiteblock";
-
         document.getElementById("orp_gameArea").insertAdjacentHTML(
           "beforeend",
-          `<div id="orp_previousAnswersContainer-${player_id}" class="${classes}">
+          `<div id="orp_previousAnswersContainer-${player_id}" class="orp_previousAnswersContainer-hidden orp_previousAnswersContainer whiteblock">
             <h3 class="orp_previousAnswersTitle orp_title">${_(title)}</h3>
             <div id="orp_previousAnswers-${player_id}" class="orp_previousAnswers"></div>
           </div>`
@@ -1120,9 +1130,11 @@ define([
         });
       });
 
-      alternateBoard.querySelectorAll(".orp_boardTitle").forEach((titleElement) => {
-        titleElement.remove();
-      });
+      alternateBoard
+        .querySelectorAll(".orp_boardTitle")
+        .forEach((titleElement) => {
+          titleElement.remove();
+        });
 
       document
         .getElementById(`orp_previousAnswers-${player_id}`)
@@ -1293,16 +1305,8 @@ define([
       this.revealBoard({
         board,
         coloredBoard,
+        previousAnswers,
       });
-
-      this.gamedatas.previousAnswers = previousAnswers;
-      this.setupPreviousAnswers(true);
-
-      document
-        .querySelectorAll(".orp_previousAnswersContainer-hidden")
-        .forEach((element) => {
-          element.classList.remove("orp_previousAnswersContainer-hidden");
-        });
     },
 
     format_string_recursive(log, args) {

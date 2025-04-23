@@ -178,100 +178,44 @@
   background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"><g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M23.8,102.1L35.7,102.1" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,102.1L47.5,102.1" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,102.1L35.7,90.3" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M51,118C55.2,113.8 57.3,108.7 57.3,102.8C57.3,96.8 55.2,91.8 51,87.6C46.8,83.4 41.7,81.3 35.8,81.3C29.9,81.3 24.8,83.4 20.6,87.6C16.4,91.8 14.3,96.8 14.3,102.8C14.3,108.7 16.4,113.8 20.6,118C24.8,122.2 29.9,124.3 35.8,124.3C41.7,124.3 46.8,122.2 51,118" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,113.9L35.7,102.1" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M65.3,132.3L51,118" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g></g></svg>');
 }
 
-:root.orp_pref-thematicBackground-blue,
-.orp_pref-thematicBackground-red {
-  background-image: url("img/background.png");
-  background-size: cover;
-}
-:root.orp_pref-thematicBackground-blue .orp_questionLogContainer,
-.orp_pref-thematicBackground-red .orp_questionLogContainer {
-  color: white;
-  -webkit-text-stroke: 1.5px var(--theme-color);
-}
-
-:root.orp_pref-thematicBackground-red {
-  --theme-color: darkred;
-  background-image: url("img/background-red.png");
-}
-
-.orp_pref-colorblind .orp_colorblindSupport {
-  display: block;
-}
-
-.orp_colorblindSupport {
-  font-size: 16px;
-  font-weight: bold;
-  display: none;
+.orp_questionLogContainer {
+  font-family: "Cookie Run", serif;
+  font-size: 24px;
   position: absolute;
-  bottom: 2%;
-  left: 2%;
-  background-color: whitesmoke;
-  padding: 0 2px;
+  top: 0;
+  left: 60px;
+  background-color: rgba(248, 248, 248, 0.6666666667);
+  border-radius: 6px;
+  margin: 0;
+  padding: 4px;
   z-index: 1;
 }
-
-.orp_pref-draggable .orp_piece:not(.orp_piece-drag) {
-  cursor: grab;
+.orp_questionLogContainer-hidden {
+  display: none;
+}
+.orp_questionLogContainer .orp_questionLogTitle {
+  font-size: 28px;
+  margin: 0;
 }
 
-@font-face {
-  font-family: "Cookie Run";
-  font-style: normal;
-  font-weight: normal;
-  src: url("img/cookie_run/cookierun-regular.otf") format("opentype");
-}
-@font-face {
-  font-family: "Cookie Run";
-  font-style: normal;
-  font-weight: bold;
-  src: url("img/cookie_run/cookierun-bold.otf") format("opentype");
-}
-:root {
-  --boardHeight: 640px;
-  --boardWidth: calc(1.25 * var(--boardHeight));
-  --boardContainerWidth: calc(var(--boardWidth) + 120px);
-  --boardColor: rgba(200, 200, 200, 0.8);
-  --cellWidth: calc(var(--boardWidth) / 10);
-  --theme-color: navy;
-}
-
-.orp_gameArea {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 900px);
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  padding: 0 8px;
-  width: 100%;
-}
-.orp_gameArea * {
-  box-sizing: border-box;
-}
-
-.orp_mixingAid {
-  font-family: "Cookie Run", sans-serif;
-  font-size: 20px;
+.orp_questionLog {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 8px;
-  padding: 8px;
+  overflow-y: auto;
+  max-height: var(--boardHeight);
+  margin-top: 16px;
+}
+.orp_questionLog:empty {
+  display: none;
 }
 
-.orp_logHighlight {
-  color: black;
-  font-weight: bold;
-  text-transform: capitalize;
-  -webkit-text-stroke: 0;
-  padding: 0 1px;
-}
-
-.orp_playerChances {
-  margin-left: 8px;
-}
-.orp_playerChances-icon {
-  color: var(--theme-color);
+.orp_questionLogButton {
+  font-size: 24px;
+  position: absolute;
+  top: 0;
+  left: 8px;
+  margin: 0;
 }
 
 .orp_boardContainer {
@@ -402,6 +346,10 @@
   width: 100%;
 }
 
+.orp_dragContainer {
+  transform: scale(1) !important;
+}
+
 .orp_piece:not(.orp_piece-hidden) ~ .orp_locationFeedback {
   display: none;
 }
@@ -515,48 +463,100 @@
   visibility: hidden;
 }
 
-.orp_dragContainer {
-  transform: scale(1) !important;
+:root.orp_pref-thematicBackground-blue,
+.orp_pref-thematicBackground-red {
+  background-image: url("img/background.png");
+  background-size: cover;
+}
+:root.orp_pref-thematicBackground-blue .orp_questionLogContainer,
+.orp_pref-thematicBackground-red .orp_questionLogContainer {
+  color: white;
+  -webkit-text-stroke: 1.5px var(--theme-color);
 }
 
-.orp_questionLogContainer {
-  font-family: "Cookie Run", serif;
-  font-size: 24px;
+:root.orp_pref-thematicBackground-red {
+  --theme-color: darkred;
+  background-image: url("img/background-red.png");
+}
+
+.orp_pref-colorblind .orp_colorblindSupport {
+  display: block;
+}
+
+.orp_colorblindSupport {
+  font-size: 16px;
+  font-weight: bold;
+  display: none;
   position: absolute;
-  top: 0;
-  left: 60px;
-  background-color: rgba(248, 248, 248, 0.6666666667);
-  border-radius: 6px;
-  margin: 0;
-  padding: 4px;
+  bottom: 2%;
+  left: 2%;
+  background-color: whitesmoke;
+  padding: 0 2px;
   z-index: 1;
 }
-.orp_questionLogContainer-hidden {
-  display: none;
-}
-.orp_questionLogContainer .orp_questionLogTitle {
-  font-size: 28px;
-  margin: 0;
+
+.orp_pref-draggable .orp_piece:not(.orp_piece-drag) {
+  cursor: grab;
 }
 
-.orp_questionLog {
+@font-face {
+  font-family: "Cookie Run";
+  font-style: normal;
+  font-weight: normal;
+  src: url("img/cookie_run/cookierun-regular.otf") format("opentype");
+}
+@font-face {
+  font-family: "Cookie Run";
+  font-style: normal;
+  font-weight: bold;
+  src: url("img/cookie_run/cookierun-bold.otf") format("opentype");
+}
+:root {
+  --boardHeight: 640px;
+  --boardWidth: calc(1.25 * var(--boardHeight));
+  --boardContainerWidth: calc(var(--boardWidth) + 120px);
+  --boardColor: rgba(200, 200, 200, 0.8);
+  --cellWidth: calc(var(--boardWidth) / 10);
+  --theme-color: navy;
+}
+
+.orp_gameArea {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 900px);
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 0 8px;
+  width: 100%;
+}
+.orp_gameArea * {
+  box-sizing: border-box;
+}
+
+.orp_mixingAid {
+  font-family: "Cookie Run", sans-serif;
+  font-size: 20px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 8px;
-  overflow-y: auto;
-  max-height: var(--boardHeight);
-  margin-top: 16px;
-}
-.orp_questionLog:empty {
-  display: none;
+  padding: 8px;
 }
 
-.orp_questionLogButton {
-  font-size: 24px;
-  position: absolute;
-  top: 0;
-  left: 8px;
-  margin: 0;
+.orp_logHighlight {
+  color: black;
+  font-weight: bold;
+  text-transform: capitalize;
+  -webkit-text-stroke: 0;
+  padding: 0 1px;
+}
+
+.orp_playerChances {
+  margin-left: 8px;
+}
+.orp_playerChances-icon {
+  color: var(--theme-color);
 }
 
 .orp_submitAnswerBtn {

@@ -1,0 +1,42 @@
+.orp_questionLogContainer {
+  font-family: "Cookie Run", serif;
+  font-size: 24px;
+  position: absolute;
+  top: 0;
+  left: 60px;
+  background-color: #f8f8f8aa;
+  border-radius: 6px;
+  margin: 0;
+  padding: 4px;
+  z-index: 1;
+
+  &-hidden {
+    display: none;
+  }
+
+  .orp_questionLogTitle {
+    font-size: 28px;
+    margin: 0;
+  }
+}
+
+.orp_questionLog {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: var(--boardHeight);
+  margin-top: 16px;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.orp_questionLogButton {
+  font-size: 24px;
+  position: absolute;
+  top: 0;
+  left: 8px;
+  margin: 0;
+}

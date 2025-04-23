@@ -1,0 +1,152 @@
+.orp_boardContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1.25;
+  width: var(--boardContainerWidth);
+}
+
+.orp_boardButtons {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  .orp_boardButton {
+    font-size: 24px;
+    position: absolute;
+    margin: 0;
+
+    &-clear {
+      top: 0.5%;
+      left: 1%;
+    }
+
+    &-save {
+      top: 0.5%;
+      right: 1%;
+    }
+
+    &-simplify {
+      bottom: 0.5%;
+      left: 1%;
+    }
+
+    &-hide {
+      bottom: 0.5%;
+      right: 1%;
+    }
+  }
+}
+
+.orp_axis {
+  position: absolute;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+
+  &.orp_axis-x {
+    grid-template-columns: repeat(10, var(--cellWidth));
+    left: 6.5%;
+
+    &[data-position="top"] {
+      top: 1%;
+    }
+
+    &[data-position="bottom"] {
+      bottom: 1%;
+    }
+  }
+
+  &.orp_axis-y {
+    grid-template-rows: repeat(8, calc(var(--boardHeight) / 8));
+    top: 6.5%;
+
+    &[data-position="left"] {
+      left: 2%;
+    }
+
+    &[data-position="right"] {
+      right: 2%;
+    }
+  }
+}
+
+.orp_origin {
+  font-family: "Cookie Run", sans-serif;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  -webkit-text-stroke: 1.5px var(--theme-color);
+  text-shadow: var(--theme-color) 1px 0 10px;
+
+  margin: auto auto;
+  padding: 0 4px;
+  width: fit-content;
+
+  &-selectable {
+    cursor: pointer;
+  }
+
+  &-unselectable {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &-selected {
+    -webkit-text-stroke-color: black;
+    text-shadow: black 1px 0 10px;
+    transform: scale(1.2);
+    transition-duration: 0.5s;
+  }
+}
+
+.orp_board {
+  display: grid;
+  grid-template-columns: repeat(10, var(--cellWidth));
+  grid-template-rows: repeat(8, calc(var(--boardHeight) / 8));
+  align-items: center;
+  justify-content: center;
+}
+
+.orp_cell {
+  position: relative;
+  background-color: var(--boardColor);
+  border: 1px solid whitesmoke;
+  aspect-ratio: 1;
+  width: 100%;
+
+  &:empty,
+  &:has(.orp_piece-hidden),
+  &:has(.orp_blankSpace) {
+    border-width: 1px !important;
+  }
+
+  &-selectable {
+    cursor: pointer;
+  }
+
+  &-selected {
+    border: 2px solid black;
+    box-shadow: 0 0 8px 0 black;
+    transform: scale(1.1);
+    transition-duration: 0.5s;
+    z-index: 1;
+  }
+
+  &-unselectable {
+    cursor: not-allowed;
+  }
+}
+
+.orp_locationFeedback {
+  aspect-ratio: 1;
+  background-color: var(--pieceColor);
+  border-radius: 100%;
+  width: 100%;
+}
+
+.orp_dragContainer {
+  transform: scale(1) !important;
+}

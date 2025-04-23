@@ -11,7 +11,8 @@
   min-height: var(--boardHeight);
   max-width: var(--boardContentWidth);
 
-  &-hidden {
+  &-hidden,
+  &:has(.orp_previousAnswers:empty) {
     display: none;
   }
 

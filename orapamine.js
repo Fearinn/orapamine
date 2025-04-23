@@ -1076,6 +1076,17 @@ define([
         this.statusBar.addActionButton(
           `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
           () => {
+            if (
+              !this.gamedatas.isBoardRevealed &&
+              this.gamedatas.previousAnswers[this.player_id].length == 0
+            ) {
+              this.showMessage(
+                _("You haven't submitted an answer yet"),
+                "error"
+              );
+              return;
+            }
+
             document
               .querySelectorAll(".orp_previousAnswersContainer")
               .forEach((element) => {
@@ -1285,6 +1296,7 @@ define([
     notif_submitSolution: function (args) {
       const { answer, player_id } = args;
 
+      this.gamedatas.previousAnswers[player_id].push(answer);
       this.insertPreviousAnswer(answer, player_id);
     },
 

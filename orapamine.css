@@ -231,7 +231,7 @@
   min-height: var(--boardHeight);
   max-width: var(--boardContentWidth);
 }
-.orp_previousAnswersContainer-hidden {
+.orp_previousAnswersContainer-hidden, .orp_previousAnswersContainer:has(.orp_previousAnswers:empty) {
   display: none;
 }
 .orp_previousAnswersContainer .orp_boardContainer {

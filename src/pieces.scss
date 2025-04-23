@@ -9,9 +9,11 @@
     justify-content: space-evenly;
     flex-wrap: wrap;
     gap: 64px;
+    order: 2;
     margin: 0 auto;
     padding: 8px;
     max-width: var(--boardWidth);
+
   
     &-hidden {
       display: none;

@@ -29,7 +29,7 @@ require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 
 const BOARD = "board";
 const COLORED_BOARD = "coloredBoard";
-const BOARD_REVEALED = "boardRevealed";
+const BOARD_REVEALED = "isBoardRevealed";
 const PREVIOUS_ANSWERS = "previousAnswers";
 const SELECTABLE_LOCATIONS = "selectableLocations";
 const SELECTABLE_ORIGINS = "selectableOrigins";
@@ -482,7 +482,8 @@ class Game extends \Table
         return !!$this->getUniqueValueFromDB("SELECT player_eliminated FROM player WHERE player_id={$player_id}");
     }
 
-    public function nz_getPlayersNumber(): int {
+    public function nz_getPlayersNumber(): int
+    {
         return (int) $this->getUniqueValueFromDB("SELECT COUNT(player_id) FROM player WHERE player_zombie=0");
     }
 
@@ -1121,7 +1122,7 @@ class Game extends \Table
         // WARNING: We must only return information visible by the current player.
         $current_player_id = (int) $this->getCurrentPlayerId();
 
-        $boardRevealed = $this->globals->get(BOARD_REVEALED);
+        $isBoardRevealed = $this->globals->get(BOARD_REVEALED);
 
         $result["players"] = $this->getCollectionFromDb(
             "SELECT `player_id` `id`, `player_score` `score`, `player_chances` `chances` FROM `player`"
@@ -1132,12 +1133,13 @@ class Game extends \Table
         $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
         $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
         $result["questionLog"] = $this->globals->get(QUESTION_LOG, []);
-        $result["board"] = $boardRevealed ? $this->globals->get(BOARD) : [];
-        $result["coloredBoard"] = $boardRevealed ? $this->globals->get(COLORED_BOARD) : [];
-        $result["boardRevealed"] = $boardRevealed;
+        $result["board"] = $isBoardRevealed ? $this->globals->get(BOARD) : [];
+        $result["coloredBoard"] = $isBoardRevealed ? $this->globals->get(COLORED_BOARD) : [];
+        $result["isBoardRevealed"] = $isBoardRevealed;
 
         if (!$this->isSpectator()) {
             $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
+            $result["previousAnswers"] = $this->globals->get(PREVIOUS_ANSWERS)[$current_player_id];
         }
 
         return $result;

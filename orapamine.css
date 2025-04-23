@@ -218,6 +218,50 @@
   margin: 0;
 }
 
+.orp_previousAnswersContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  order: 1;
+  background-color: black;
+  border-radius: 6px;
+  margin: 0;
+  padding: 8px;
+}
+.orp_previousAnswersContainer-hidden {
+  display: none;
+}
+.orp_previousAnswersContainer .orp_boardContainer {
+  margin: 0;
+}
+
+.orp_previousAnswersTitle {
+  font-family: "Cookie Run", serif;
+  color: white;
+  font-size: 28px;
+  margin: 0;
+}
+
+.orp_previousAnswers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+.orp_previousAnswers:empty {
+  display: none;
+}
+
+.orp_previousAnswersButton {
+  font-size: 24px;
+  position: absolute;
+  top: 0;
+  left: 64px;
+  margin: 0;
+}
+
 .orp_boardContainer {
   position: relative;
   display: flex;
@@ -361,6 +405,7 @@
   justify-content: space-evenly;
   flex-wrap: wrap;
   gap: 64px;
+  order: 2;
   margin: 0 auto;
   padding: 8px;
   max-width: var(--boardWidth);
@@ -523,8 +568,8 @@
 .orp_gameArea {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 900px);
-  align-items: center;
+  grid-template-columns: repeat(auto-fit, 950px);
+  align-items: start;
   justify-content: center;
   gap: 32px;
   padding: 0 8px;

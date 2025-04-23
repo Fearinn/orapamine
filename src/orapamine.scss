@@ -15,6 +15,7 @@
 @use "bga-help";
 @use "bga-zoom";
 @use "questionLog";
+@use "previousAnswers";
 @use "board";
 @use "pieces";
 @use "preferences";
@@ -45,8 +46,8 @@
 .orp_gameArea {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 900px);
-  align-items: center;
+  grid-template-columns: repeat(auto-fit, 950px);
+  align-items: start;
   justify-content: center;
   gap: 32px;
   padding: 0 8px;

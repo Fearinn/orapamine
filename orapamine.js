@@ -260,7 +260,68 @@ define([
         }
       );
 
-      if (gamedatas.boardRevealed) {
+      document.getElementById("orp_previousAnswersTitle").textContent = _(
+        "Your previous answers"
+      );
+
+      this.statusBar.addActionButton(
+        `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
+        () => {
+          document
+            .getElementById("orp_previousAnswersContainer")
+            .classList.toggle("orp_previousAnswersContainer-hidden");
+        },
+        {
+          id: "orp_previousAnswersButton",
+          title: _("Show/hide previous answers"),
+          color: "secondary",
+          classes: ["orp_previousAnswersButton"],
+          destination: document.getElementById("orp_gameArea"),
+        }
+      );
+
+      gamedatas.previousAnswers.forEach((answer, index) => {
+        const alternateBoard = document
+          .getElementById("orp_boardContainer")
+          .cloneNode(true);
+
+        alternateBoard.id = `orp_previousAnswer-${index}`;
+
+        alternateBoard
+          .querySelectorAll("[data-cell]")
+          .forEach((cellElement) => {
+            cellElement.childNodes.forEach((childElement) => {
+              childElement.remove();
+            });
+          });
+
+        document
+          .getElementById("orp_previousAnswers")
+          .insertAdjacentElement("beforeend", alternateBoard);
+
+        answer.forEach((placedPiece) => {
+          this.insertPieceElement(placedPiece, alternateBoard);
+        });
+
+        alternateBoard
+          .querySelectorAll(".action-button")
+          .forEach((childElement) => {
+            childElement.remove();
+          });
+
+        alternateBoard.querySelectorAll("[id]").forEach((childElement) => {
+          childElement.onclick = undefined;
+          childElement.removeAttribute("id");
+        });
+
+        alternateBoard
+          .querySelectorAll("[data-cell]")
+          .forEach((cellElement) => {
+            cellElement.removeAttribute("data-cell");
+          });
+      });
+
+      if (gamedatas.isBoardRevealed) {
         this.revealBoard({
           board: gamedatas.board,
           coloredBoard: gamedatas.coloredBoard,
@@ -320,7 +381,7 @@ define([
               this.attachControls(pieceElement);
 
               if (pieceElement.dataset.piece == 6) {
-                pieceElement.textContent = "X"
+                pieceElement.textContent = "X";
               }
 
               document
@@ -653,7 +714,10 @@ define([
       });
     },
 
-    insertPieceElement: function ({ piece, color_id, x, y }) {
+    insertPieceElement: function (
+      { piece, color_id, x, y },
+      board = document.getElementById("orp_board")
+    ) {
       if (piece <= 0) {
         return;
       }
@@ -662,7 +726,7 @@ define([
 
       if (piece == 6) {
         const blankSpaceHTML = `<div id="orp_piece-${uid}" class="orp_piece orp_blankSpace" data-piece="6" data-color="0">X</div>`;
-        const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
+        const cellElement = board.querySelector(`[data-cell="${x}-${y}"]`);
         cellElement.insertAdjacentHTML("afterbegin", blankSpaceHTML);
 
         const blankSpaceElement = document.getElementById(`orp_piece-${uid}`);
@@ -682,7 +746,8 @@ define([
       pieceElement.style.setProperty("--pieceColor", color.code);
       pieceElement.style.setProperty("--pieceColorDarker", color.darkerCode);
 
-      const cellElement = document.querySelector(`[data-cell="${x}-${y}"]`);
+      const cellElement = board.querySelector(`[data-cell="${x}-${y}"]`);
+
       cellElement.insertAdjacentElement("afterbegin", pieceElement);
 
       this.attachControls(pieceElement);
@@ -985,17 +1050,11 @@ define([
         _("Question Log");
 
       this.statusBar.addActionButton(
-        `<i id="orp_questionLogButton-icon" class="fa fa-eye" aria-hidden="true"></i>`,
+        `<i id="orp_questionLogButton-icon" class="fa fa-list-alt" aria-hidden="true"></i>`,
         () => {
           document
             .getElementById("orp_questionLogContainer")
             .classList.toggle("orp_questionLogContainer-hidden");
-
-          const buttonIcon = document.getElementById(
-            "orp_questionLogButton-icon"
-          );
-          buttonIcon.classList.toggle("fa-eye");
-          buttonIcon.classList.toggle("fa-eye-slash");
         },
         {
           id: "orp_questionLogButton",

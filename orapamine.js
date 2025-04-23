@@ -491,6 +491,8 @@ define([
 
       document.getElementById("orp_boardTitle").textContent = "Final Solution";
 
+      document.getElementById("orp_draftPieces").remove();
+
       document
         .querySelectorAll(".orp_previousAnswersContainer")
         .forEach((container) => {

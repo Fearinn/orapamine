@@ -1,7 +1,7 @@
 {
   "100": {
     "name": "Thematic background",
-    "needReload": true,
+    "needReload": false,
     "values": {
       "0": {
         "name": "Disabled"

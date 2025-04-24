@@ -830,7 +830,7 @@ define([
 
           if (piece != 6) {
             let color_label = color.id == 16 ? _("blackbody") : color.label;
-            this.addTooltip(pieceElement_id, color_label, "");
+            this.addTooltip(pieceElement_id, _(color_label), "");
           }
 
           if (piece < 5) {

@@ -489,7 +489,8 @@ define([
           pieceElement.classList.add("orp_piece-hiddenControls");
         });
 
-      document.getElementById("orp_boardTitle").textContent = "Final Solution";
+      document.getElementById("orp_boardTitle").textContent =
+        _("Final Solution");
 
       document.getElementById("orp_draftPieces").remove();
 
@@ -1109,7 +1110,7 @@ define([
         const title =
           player_id == this.player_id
             ? _("Your answers")
-            : this.format_string_recursive("${player_name}'s answers", {
+            : this.format_string_recursive(_("${player_name}'s answers"), {
                 player_name: this.gamedatas.players[player_id].name,
               });
 
@@ -1176,6 +1177,13 @@ define([
         .querySelectorAll("[data-origin]")
         .forEach((originElement) => {
           originElement.removeAttribute("data-origin");
+          originElement.removeAttribute("style");
+        });
+
+      alternateBoard
+        .querySelectorAll(".orp_locationFeedback")
+        .forEach((feedbackElement) => {
+          feedbackElement.remove();
         });
     },
 

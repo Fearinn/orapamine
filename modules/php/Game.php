@@ -368,16 +368,26 @@ class Game extends \Table
             foreach ($answer as $answer_cell) {
                 $x = (int) $answer_cell["x"];
                 $y = (int) $answer_cell["y"];
+                $piece = (int) $answer_cell["piece"];
+                $color_id = (int) $answer_cell["color_id"];
 
                 $hasMatch = false;
-                foreach ($solutionSheet as $solution_cell) {
-                    $diff_1 = array_diff($solution_cell, $answer_cell);
-                    $diff_2 = array_diff($answer_cell, $solution_cell);
-
-                    if (!$diff_1 && !$diff_2) {
+                foreach ($solutionSheet as $cell) {
+                    if (
+                        (int) $cell["x"] === $x &&
+                        (int) $cell["y"] === $y
+                    ) {
                         $hasMatch = true;
+
+                        if (
+                            (int) $cell["piece"] !== $piece &&
+                            (int) $cell["color_id"] !== $color_id
+                        ) {
+                            $hasMatch = false;
+                        }
+
                         break;
-                    };
+                    }
                 }
 
                 if (!$hasMatch) {

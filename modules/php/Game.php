@@ -111,7 +111,7 @@ class Game extends \Table
 
     public function st_playerTurn(): void
     {
-        $player_id = $this->getActivePlayerId();
+        $player_id = (int) $this->getActivePlayerId();
 
         if ($this->isPlayerEliminated($player_id)) {
             $this->gamestate->nextState("nextPlayer");

@@ -495,7 +495,7 @@ class Game extends \Table
         shuffle($gemstones);
 
         if (!$this->placeGemstones($board, $gemstoneBoard, $gemstones)) {
-            throw new \BgaUserException(clienttranslate("Failed to set-up board. Please try again"));
+           $this->setupBoard();
         };
 
         $coloredBoard = [];
@@ -1214,7 +1214,7 @@ class Game extends \Table
         $this->reattributeColorsBasedOnPreferences($players, $gameinfos["player_colors"]);
         $this->reloadPlayersBasicInfos();
 
-        $this->setupBoard();
+        $this->setupBoard(true);
         $this->updateSelectableLocations("", true);
         $this->updateSelectableOrigins("", "", true);
 

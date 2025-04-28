@@ -1226,16 +1226,27 @@ define([
         .forEach((cellElement) => {
           const pieceElement = cellElement.querySelector("[data-piece]");
           if (pieceElement) {
-            const [x, y] = cellElement.dataset.cell.split("-");
-            const piece = pieceElement.dataset.piece;
-            const color_id = pieceElement.dataset.color;
+            const x = Number(cellElement.dataset.cell.split("-")[0]);
+            const y = Number(cellElement.dataset.cell.split("-")[1]);
+            const piece = Number(pieceElement.dataset.piece);
+            const color_id = Number(pieceElement.dataset.color);
 
-            solutionSheet.push({ piece, color_id, x, y });
+            solutionSheet.push({ x, y, piece, color_id });
           }
         });
 
       if (solutionSheet.length === 0) {
         this.showMessage(_("You can't save an empty sheet"), "error");
+        return;
+      }
+
+      if (solutionSheet.length > 75) {
+        this.showMessage(
+          _(
+            "Limit of occupied cells in the sheet reached. Please clear a few cells"
+          ),
+          "error"
+        );
         return;
       }
 
@@ -1269,6 +1280,16 @@ define([
             solutionSheet.push({ piece, color_id, x, y });
           }
         });
+
+      if (solutionSheet.length > 75) {
+        this.showMessage(
+          _(
+            "Limit of occupied cells in the sheet reached. Please clear a few cells"
+          ),
+          "error"
+        );
+        return;
+      }
 
       this.performAction("actSubmitSolution", {
         solutionSheet: JSON.stringify(solutionSheet),

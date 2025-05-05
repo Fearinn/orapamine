@@ -380,7 +380,7 @@ class Game extends \Table
                         $hasMatch = true;
 
                         if (
-                            (int) $cell["piece"] !== $piece &&
+                            (int) $cell["piece"] !== $piece ||
                             (int) $cell["color_id"] !== $color_id
                         ) {
                             $hasMatch = false;

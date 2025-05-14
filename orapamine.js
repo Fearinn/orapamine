@@ -764,14 +764,17 @@ define([
           );
         }
 
+        const rotateButtonTitle =
+          gemstone_id == 2 ? _("Rotate/flip gemstone") : _("Rotate gemstone");
+
         if (gemstone_id != 1) {
           this.statusBar.addActionButton(
-            `<i class="fa fa-undo"></i>`,
+            `<i class="fa fa-undo fa-flip-horizontal"></i>`,
             () => {
               this.rotateGemstone(gemstoneElement);
             },
             {
-              title: _("Rotate gemstone"),
+              title: _(rotateButtonTitle),
               color: "secondary",
               classes: [
                 "orp_gemstoneButton-rotate",

@@ -433,6 +433,15 @@ class Game extends \Table
         }
 
         if ($isCorrect) {
+            $this->notify->all(
+                "message",
+                clienttranslate('${player_name} gives the correct answer'),
+                [
+                    "player_id" => $player_id,
+                    "player_name" => $this->getPlayerNameById($player_id),
+                ]
+            );
+
             $this->revealBoard();
 
             $this->setStat(100, "win%", $player_id);
@@ -495,7 +504,7 @@ class Game extends \Table
         shuffle($gemstones);
 
         if (!$this->placeGemstones($board, $gemstoneBoard, $gemstones)) {
-           $this->setupBoard();
+            $this->setupBoard();
         };
 
         $coloredBoard = [];

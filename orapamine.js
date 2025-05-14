@@ -283,7 +283,7 @@ define([
       if (!this.isSpectator || stateName === "client_placePiece") {
         if (stateName.includes("client_")) {
           this.statusBar.addActionButton(
-            _("Cancel"),
+            _("cancel"),
             () => {
               this.restoreServerGameState();
             },

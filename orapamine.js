@@ -769,7 +769,7 @@ define([
 
         if (gemstone_id != 1) {
           this.statusBar.addActionButton(
-            `<i class="fa fa-undo fa-flip-horizontal"></i>`,
+            `<i class="fa fa-undo fa-flip-horizontal" aria-hidden="true"></i>`,
             () => {
               this.rotateGemstone(gemstoneElement);
             },
@@ -926,11 +926,24 @@ define([
         pieceElement.classList.add("orp_piece-half");
 
         this.statusBar.addActionButton(
-          `<i class="fa fa-undo" aria-hidden="true"></i>`,
+          `<i class="fa fa-undo fa-flip-horizontal" aria-hidden="true"></i>`,
           () => {
-            piece++;
-            if (piece > 4) {
-              piece = 1;
+            switch (piece) {
+              case 1:
+                piece = 2;
+                break;
+              case 2:
+                piece = 4;
+                break;
+              case 3:
+                piece = 1;
+                break;
+              case 4:
+                piece = 3;
+                break;
+
+              default:
+                piece = 1;
             }
 
             pieceElement.dataset.piece = piece;

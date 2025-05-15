@@ -37,6 +37,7 @@ define([
         info: {
           colors: gamedatas.COLORS,
           gemstones: gamedatas.GEMSTONES,
+          axisLetters: gamedatas.AXIS_LETTERS,
           colorToColorblind: {
             0: "X",
             1: "A",
@@ -542,8 +543,15 @@ define([
               });
             cellElement.classList.add(selectedClass);
 
+            let locationLabel = location.split("-");
+            locationLabel = `${locationLabel[0]}${
+              this.orp.info.axisLetters["y"][locationLabel[1]]
+            }`;
+
             this.statusBar.addActionButton(
-              _("confirm selection"),
+              this.format_string_recursive(_("confirm ${location}"), {
+                location: locationLabel,
+              }),
               () => {
                 this.actAskLocation(location);
               },
@@ -597,7 +605,7 @@ define([
             originElement.classList.toggle(selectedClass);
 
             this.statusBar.addActionButton(
-              _("confirm selection"),
+              this.format_string_recursive(_("confirm ${origin}"), { origin }),
               () => {
                 this.actSendWave(origin);
               },

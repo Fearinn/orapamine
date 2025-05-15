@@ -1041,7 +1041,7 @@ define([
           id: "orp_questionLogButton",
           title: _("Show/hide question log"),
           color: "secondary",
-          classes: ["orp_questionLogButton"],
+          classes: ["orp_extraButton"],
           destination: document.getElementById("bga-help_buttons"),
         }
       );
@@ -1114,7 +1114,7 @@ define([
             id: "orp_previousAnswersButton",
             title: _("Show/hide previous answers"),
             color: "secondary",
-            classes: ["orp_previousAnswersButton"],
+            classes: ["orp_extraButton"],
             destination: document.getElementById("bga-help_buttons"),
           }
         );

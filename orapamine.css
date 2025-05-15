@@ -211,13 +211,6 @@
   display: none;
 }
 
-.orp_questionLogButton {
-  position: relative;
-  bottom: 4px;
-  font-size: 24px;
-  margin: 0;
-}
-
 .orp_previousAnswersContainer {
   display: flex;
   flex-direction: column;
@@ -251,13 +244,6 @@
 }
 .orp_previousAnswers:empty {
   display: none;
-}
-
-.orp_previousAnswersButton {
-  position: relative;
-  bottom: 4px;
-  font-size: 24px;
-  margin: 0;
 }
 
 .orp_boardContainer {
@@ -641,4 +627,11 @@
 }
 .orp_submitAnswerBtn:hover {
   background: var(--theme-color) !important;
+}
+
+.orp_extraButton {
+  position: relative;
+  bottom: 4px;
+  font-size: 24px;
+  margin: 0;
 }

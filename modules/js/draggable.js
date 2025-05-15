@@ -114,9 +114,12 @@ function userReleased(event) {
   if (isGemstoneMove) {
     element.querySelectorAll("[data-piece]").forEach((pieceElement) => {
       const rect = pieceElement.getBoundingClientRect();
-      const targetX = rect.left + deltaX * scale;
-      const targetY = rect.top + deltaY * scale;
 
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const targetX = centerX + deltaX * scale;
+      const targetY = centerY + deltaY * scale;
       dropItemOntoXY(pieceElement, targetX, targetY);
     });
   } else {

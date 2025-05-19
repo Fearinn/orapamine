@@ -92,9 +92,11 @@ class Game extends \Table
             $progression = 50;
         }
 
-        $progression = round($progression);
+        if ($questionCount > 10) {
+             $progression += ($questionCount - 10) / 106 * 49;
+        }
 
-        return $progression;
+        return round($progression);
     }
 
     /** Game state arguments and actions*/

@@ -267,6 +267,7 @@ define([
           board: gamedatas.board,
           coloredBoard: gamedatas.coloredBoard,
           previousAnswers: gamedatas.previousAnswers,
+          lastSheets: gamedatas.lastSheets,
         });
       }
 
@@ -460,7 +461,12 @@ define([
       });
     },
 
-    revealBoard: function ({ board, coloredBoard, previousAnswers }) {
+    revealBoard: function ({
+      board,
+      coloredBoard,
+      previousAnswers,
+      lastSheets,
+    }) {
       Object.keys(board).forEach((x) => {
         const row = board[x];
         Object.keys(row).forEach((y) => {
@@ -502,7 +508,8 @@ define([
         });
 
       this.gamedatas.previousAnswers = previousAnswers;
-      this.setupPreviousAnswers();
+      this.gamedatas.lastSheets = lastSheets;
+      this.setupPreviousAnswers(true);
 
       document
         .querySelectorAll(".orp_previousAnswersContainer-hidden")
@@ -1093,7 +1100,7 @@ define([
       questionLogElement.insertAdjacentHTML("afterbegin", logLineHTML);
     },
 
-    setupPreviousAnswers: function () {
+    setupPreviousAnswers: function (isBoardRevealed = false) {
       if (
         !this.isSpectator &&
         !document.getElementById("orp_previousAnswersButton")
@@ -1102,7 +1109,7 @@ define([
           `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
           () => {
             if (
-              !this.gamedatas.isBoardRevealed &&
+              !isBoardRevealed &&
               this.gamedatas.previousAnswers[this.player_id].length == 0
             ) {
               this.showMessage(
@@ -1149,10 +1156,16 @@ define([
         previousAnswers.forEach((answer) => {
           this.insertPreviousAnswer(answer, player_id);
         });
+
+        const lastSheet = this.gamedatas.lastSheets[player_id];
+
+        if (isBoardRevealed) {
+          this.insertPreviousAnswer(lastSheet, player_id, true);
+        }
       }
     },
 
-    insertPreviousAnswer: function (answer, player_id) {
+    insertPreviousAnswer: function (answer, player_id, isSheet = false) {
       const uid = this.getUniqueId();
 
       const alternateBoard = document
@@ -1209,6 +1222,13 @@ define([
         .forEach((feedbackElement) => {
           feedbackElement.remove();
         });
+
+      if (isSheet) {
+        alternateBoard.insertAdjacentHTML(
+          "afterbegin",
+          `<h4 class="orp_lastSheetTitle">${_("last saved sheet")}</h4>`
+        );
+      }
     },
 
     ///////////////////////////////////////////////////
@@ -1367,12 +1387,13 @@ define([
     },
 
     notif_revealBoard: function (args) {
-      const { board, coloredBoard, previousAnswers } = args;
+      const { board, coloredBoard, previousAnswers, lastSheets } = args;
 
       this.revealBoard({
         board,
         coloredBoard,
         previousAnswers,
+        lastSheets,
       });
     },
 

@@ -93,7 +93,7 @@ class Game extends \Table
         }
 
         if ($questionCount > 10) {
-             $progression += ($questionCount - 10) / 106 * 49;
+            $progression += ($questionCount - 10) / 106 * 49;
         }
 
         return round($progression);
@@ -1096,6 +1096,7 @@ class Game extends \Table
                 "board" => $this->globals->get(BOARD),
                 "coloredBoard" => $this->globals->get(COLORED_BOARD),
                 "previousAnswers" => $this->globals->get(PREVIOUS_ANSWERS),
+                "lastSheets" => $this->globals->get(SOLUTION_SHEETS),
             ]
         );
 
@@ -1143,27 +1144,27 @@ class Game extends \Table
      */
     protected function getAllDatas(): array
     {
-        $result = [];
+        $gamedatas = [];
 
         // WARNING: We must only return information visible by the current player.
         $current_player_id = (int) $this->getCurrentPlayerId();
 
         $isBoardRevealed = $this->globals->get(BOARD_REVEALED);
 
-        $result["players"] = $this->getCollectionFromDb(
+        $gamedatas["players"] = $this->getCollectionFromDb(
             "SELECT `player_id` `id`, `player_score` `score`, `player_chances` `chances` FROM `player`"
         );
-        $result["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
-        $result["COLORS"] = $this->COLORS;
-        $result["GEMSTONES"] = $this->GEMSTONES();
-        $result["AXIS_LETTERS"] = $this->AXIS_LETTERS;
-        $result["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
-        $result["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
-        $result["questionLog"] = $this->globals->get(QUESTION_LOG, []);
-        $result["isBoardRevealed"] = $isBoardRevealed;
-        $result["board"] = $isBoardRevealed ? $this->globals->get(BOARD) : [];
-        $result["coloredBoard"] = $isBoardRevealed ? $this->globals->get(COLORED_BOARD) : [];
-
+        $gamedatas["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
+        $gamedatas["COLORS"] = $this->COLORS;
+        $gamedatas["GEMSTONES"] = $this->GEMSTONES();
+        $gamedatas["AXIS_LETTERS"] = $this->AXIS_LETTERS;
+        $gamedatas["revealedLocations"] = $this->globals->get(REVEALED_LOCATIONS, []);
+        $gamedatas["revealedOrigins"] = $this->globals->get(REVEALED_ORIGINS, []);
+        $gamedatas["questionLog"] = $this->globals->get(QUESTION_LOG, []);
+        $gamedatas["isBoardRevealed"] = $isBoardRevealed;
+        $gamedatas["board"] = $isBoardRevealed ? $this->globals->get(BOARD) : [];
+        $gamedatas["coloredBoard"] = $isBoardRevealed ? $this->globals->get(COLORED_BOARD) : [];
+        $gamedatas["lastSheets"] = $isBoardRevealed ? $this->globals->get(SOLUTION_SHEETS) : [];
         $previousAnswers = $this->globals->get(PREVIOUS_ANSWERS);
 
         if (!$isBoardRevealed) {
@@ -1176,13 +1177,15 @@ class Game extends \Table
             );
         }
 
-        $result["previousAnswers"] = $previousAnswers;
+        $gamedatas["previousAnswers"] = $previousAnswers;
 
         if (!$this->isSpectator()) {
-            $result["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
+            $gamedatas["solutionSheet"] = $this->globals->get(SOLUTION_SHEETS)[$current_player_id];
         }
 
-        return $result;
+
+
+        return $gamedatas;
     }
 
     /**

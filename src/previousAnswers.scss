@@ -29,10 +29,19 @@
 
 .orp_previousAnswers {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
 
   &:empty {
     display: none;
   }
+}
+
+.orp_lastSheetTitle {
+  font-family: "Cookie Run", serif;
+  font-size: 28px;
+  text-transform: capitalize;
+  color: var(--themeColor);
+  margin: 0;
+  -webkit-text-stroke: 0.5px white;
 }

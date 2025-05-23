@@ -6,12 +6,12 @@
   .orp_questionLogContainer,
   .orp_title {
     color: white;
-    -webkit-text-stroke: 1.5px var(--theme-color);
+    -webkit-text-stroke: 1.5px var(--themeColor);
   }
 }
 
 :root.orp_pref-thematicBackground-red {
-  --theme-color: darkred;
+  --themeColor: darkred;
 
   background-image: url("img/background-red.png");
 }

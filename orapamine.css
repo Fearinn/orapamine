@@ -239,11 +239,20 @@
 
 .orp_previousAnswers {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
 }
 .orp_previousAnswers:empty {
   display: none;
+}
+
+.orp_lastSheetTitle {
+  font-family: "Cookie Run", serif;
+  font-size: 28px;
+  text-transform: capitalize;
+  color: var(--themeColor);
+  margin: 0;
+  -webkit-text-stroke: 0.5px white;
 }
 
 .orp_boardContainer {
@@ -331,8 +340,8 @@
   font-weight: bold;
   font-size: 24px;
   text-align: center;
-  -webkit-text-stroke: 1.5px var(--theme-color);
-  text-shadow: var(--theme-color) 1px 0 10px;
+  -webkit-text-stroke: 1.5px var(--themeColor);
+  text-shadow: var(--themeColor) 1px 0 10px;
   margin: auto auto;
   padding: 0 4px;
   width: fit-content;
@@ -534,11 +543,11 @@
 :root.orp_pref-thematicBackground-red .orp_questionLogContainer,
 :root.orp_pref-thematicBackground-red .orp_title {
   color: white;
-  -webkit-text-stroke: 1.5px var(--theme-color);
+  -webkit-text-stroke: 1.5px var(--themeColor);
 }
 
 :root.orp_pref-thematicBackground-red {
-  --theme-color: darkred;
+  --themeColor: darkred;
   background-image: url("img/background-red.png");
 }
 
@@ -580,7 +589,7 @@
   --boardContentWidth: calc(var(--boardWidth) + 120px);
   --boardColor: rgba(200, 200, 200, 0.8);
   --cellWidth: calc(var(--boardWidth) / 10);
-  --theme-color: navy;
+  --themeColor: navy;
 }
 
 .orp_gameArea {
@@ -619,14 +628,14 @@
   margin-left: 8px;
 }
 .orp_playerChances-icon {
-  color: var(--theme-color);
+  color: var(--themeColor);
 }
 
 .orp_submitAnswerBtn {
-  background: var(--theme-color);
+  background: var(--themeColor);
 }
 .orp_submitAnswerBtn:hover {
-  background: var(--theme-color) !important;
+  background: var(--themeColor) !important;
 }
 
 .orp_extraButton {

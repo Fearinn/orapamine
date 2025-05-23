@@ -30,9 +30,9 @@
 </div>
 <div id="orp_gameArea" class="orp_gameArea">
   <div id="orp_boardContainer" class="orp_boardContainer whiteblock">
-    <div id="orp_boardTitle" class="orp_boardTitle orp_title">
+    <h3 id="orp_boardTitle" class="orp_boardTitle orp_title">
       Solution Sheet
-    </div>
+    </h3>
     <div class="orp_boardContent">
       <div id="orp_boardButtons" class="orp_boardButtons"></div>
       <div

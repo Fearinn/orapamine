@@ -40,7 +40,7 @@
   --boardContentWidth: calc(var(--boardWidth) + 120px);
   --boardColor: rgba(200, 200, 200, 0.8);
   --cellWidth: calc(var(--boardWidth) / 10);
-  --theme-color: navy;
+  --themeColor: navy;
 }
 
 .orp_gameArea {
@@ -80,15 +80,15 @@
   margin-left: 8px;
 
   &-icon {
-    color: var(--theme-color);
+    color: var(--themeColor);
   }
 }
 
 .orp_submitAnswerBtn {
-  background: var(--theme-color);
+  background: var(--themeColor);
 
   &:hover {
-    background: var(--theme-color) !important;
+    background: var(--themeColor) !important;
   }
 }
 

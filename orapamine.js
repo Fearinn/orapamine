@@ -1379,11 +1379,13 @@ define([
     },
 
     notif_clearSolution: function (args) {
-      this.showMessage(_("Solution cleared"), "info");
+      const notifType = this.bgaAnimationsActive() ? "info" : "only_to_log";
+      this.showMessage(_("Solution cleared"), notifType);
     },
 
     notif_saveSolution: function (args) {
-      this.showMessage(_("Solution saved"), "info");
+      const notifType = this.bgaAnimationsActive() ? "info" : "only_to_log";
+      this.showMessage(_("Solution saved"), notifType);
     },
 
     notif_revealBoard: function (args) {

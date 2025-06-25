@@ -718,8 +718,12 @@ class Game extends \Table
         }
 
         $selectableLocations = $this->globals->get(SELECTABLE_LOCATIONS);
-        unset($selectableLocations[$removedLocation]);
 
+        if (!in_array($removedLocation, $selectableLocations)) {
+            throw new \BgaVisibleSystemException("This location had already been checked");
+        }
+
+        unset($selectableLocations[$removedLocation]);
         $this->globals->set(SELECTABLE_LOCATIONS, $selectableLocations);
     }
 

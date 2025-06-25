@@ -593,6 +593,7 @@
 }
 
 .orp_gameArea {
+  direction: ltr !important;
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, 950px);

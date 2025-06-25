@@ -246,7 +246,7 @@ $this->COLORS = [
         "name" => "orange",
         "label" => clienttranslate("orange"),
         "components" => [2, 3],
-        "code" => "#FFA500",
+        "code" => "#F4A460",
         "contrast" => "light",
     ],
     8 => [

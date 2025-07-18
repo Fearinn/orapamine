@@ -691,6 +691,14 @@ define([
         originElement.style.backgroundColor = color.code;
         originElement.style.textShadow = "none";
         this.addTooltip(originElement.id, _(color.label), "");
+
+        if (color_id == 0) {
+          originElement.classList.add("orp_origin-transparent");
+        }
+
+        if (color_id == 16) {
+          originElement.classList.add("orp_origin-absorbed");
+        }
       });
     },
 
@@ -1404,7 +1412,7 @@ define([
         if (log && args && !args.processed) {
           args.processed = true;
 
-          if (args.color_label && args.color_id) {
+          if (args.color_label && args.color_id !== undefined) {
             const color = this.orp.info.colors[args.color_id];
 
             const textColor = color.contrast === "light" ? "black" : "white";

@@ -117,6 +117,14 @@
     -webkit-text-stroke-color: black;
     text-shadow: black 1px 0 10px;
   }
+
+  &-transparent {
+    background-image: radial-gradient(black, #f5f5dc, gray);
+  }
+
+  &-absorbed {
+    background-image: radial-gradient(white, #0c1533, gray);
+  }
 }
 
 @keyframes leap {

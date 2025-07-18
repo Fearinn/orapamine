@@ -360,6 +360,12 @@
   -webkit-text-stroke-color: black;
   text-shadow: black 1px 0 10px;
 }
+.orp_origin-transparent {
+  background-image: radial-gradient(black, #f5f5dc, gray);
+}
+.orp_origin-absorbed {
+  background-image: radial-gradient(white, #0c1533, gray);
+}
 
 @keyframes leap {
   0% {

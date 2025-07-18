@@ -346,6 +346,10 @@ class Game extends \Table
         $this->notify->player(
             $player_id,
             "saveSolution",
+            "",
+            [
+                "solutionSheet" => $solutionSheet,
+            ]
         );
     }
 

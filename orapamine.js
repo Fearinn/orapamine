@@ -1239,6 +1239,15 @@ define([
       }
     },
 
+    clearSheet: function () {
+      document
+        .getElementById("orp_board")
+        .querySelectorAll("[data-piece]")
+        .forEach((pieceElement) => {
+          pieceElement.remove();
+        });
+    },
+
     ///////////////////////////////////////////////////
     //// Player's actions
 
@@ -1260,12 +1269,7 @@ define([
     },
 
     actClearSolution: function () {
-      document
-        .getElementById("orp_board")
-        .querySelectorAll("[data-piece]")
-        .forEach((pieceElement) => {
-          pieceElement.remove();
-        });
+      this.clearSheet();
 
       this.performAction("actClearSolution", {}, { checkAction: false });
     },
@@ -1387,13 +1391,38 @@ define([
     },
 
     notif_clearSolution: function (args) {
-      const notifType = this.bgaAnimationsActive() ? "info" : "only_to_log";
-      this.showMessage(_("Solution cleared"), notifType);
+      const messageType =
+        this.bgaAnimationsActive() &&
+        typeof g_replayFrom === "undefined" &&
+        g_archive_mode === false
+          ? "info"
+          : "only_to_log";
+
+      this.showMessage(_("Solution cleared"), messageType);
+      this.clearSheet();
     },
 
     notif_saveSolution: function (args) {
-      const notifType = this.bgaAnimationsActive() ? "info" : "only_to_log";
-      this.showMessage(_("Solution saved"), notifType);
+      const messageType =
+        this.bgaAnimationsActive() &&
+        typeof g_replayFrom === "undefined" &&
+        g_archive_mode === false
+          ? "info"
+          : "only_to_log";
+
+      this.showMessage(_("Solution saved"), messageType);
+
+      const solutionSheet = args.solutionSheet;
+
+      if (!args.solutionSheet) {
+        return;
+      }
+
+      this.clearSheet();
+
+      solutionSheet.forEach((placedPiece) => {
+        this.insertPieceElement(placedPiece);
+      });
     },
 
     notif_revealBoard: function (args) {
@@ -1407,6 +1436,7 @@ define([
       });
     },
 
+    // Override
     format_string_recursive(log, args) {
       try {
         if (log && args && !args.processed) {

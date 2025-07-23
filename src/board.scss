@@ -105,6 +105,7 @@
   &-selectable {
     cursor: pointer;
     transform: scale(1);
+    border: 2px dashed var(--themeColor);
   }
 
   &-unselectable {
@@ -114,6 +115,7 @@
 
   &-selected {
     animation: infinite leap 1.5s linear;
+    border: none;
     -webkit-text-stroke-color: black;
     text-shadow: black 1px 0 10px;
   }

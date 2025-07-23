@@ -350,6 +350,7 @@
 .orp_origin-selectable {
   cursor: pointer;
   transform: scale(1);
+  border: 2px dashed var(--themeColor);
 }
 .orp_origin-unselectable {
   cursor: not-allowed;
@@ -357,6 +358,7 @@
 }
 .orp_origin-selected {
   animation: infinite leap 1.5s linear;
+  border: none;
   -webkit-text-stroke-color: black;
   text-shadow: black 1px 0 10px;
 }

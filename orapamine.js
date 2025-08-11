@@ -795,9 +795,6 @@ define([
           );
         }
 
-        const rotateButtonTitle =
-          gemstone_id == 2 ? _("Rotate/flip gemstone") : _("Rotate gemstone");
-
         if (gemstone_id != 1) {
           this.statusBar.addActionButton(
             `<i class="fa fa-undo fa-flip-horizontal" aria-hidden="true"></i>`,
@@ -805,10 +802,30 @@ define([
               this.rotateGemstone(gemstoneElement);
             },
             {
-              title: _(rotateButtonTitle),
+              title: _("Rotate gemstone"),
               color: "secondary",
               classes: [
                 "orp_gemstoneButton-rotate",
+                "orp_gemstoneButton",
+                "action-button",
+                "bgabutton",
+              ],
+              destination: gemstoneElement,
+            }
+          );
+        }
+
+        if (gemstone_id == 2) {
+          this.statusBar.addActionButton(
+            `<i class="fa fa-arrows-h" aria-hidden="true"></i>`,
+            () => {
+              this.flipGemstone(gemstoneElement);
+            },
+            {
+              title: _("Flip gemstone"),
+              color: "secondary",
+              classes: [
+                "orp_gemstoneButton-flip",
                 "orp_gemstoneButton",
                 "action-button",
                 "bgabutton",
@@ -891,11 +908,47 @@ define([
 
     rotateGemstone: function (gemstoneElement) {
       let rotation = Number(gemstoneElement.dataset.rotation);
+      const gemstone_id = Number(gemstoneElement.dataset.gemstone);
 
       rotation += 90;
 
-      if (rotation > 270) {
+      if (rotation === 360) {
         rotation = 0;
+      }
+
+      if (gemstone_id === 2) {
+        if (rotation === 180) {
+          rotation = 0;
+        }
+
+        if (rotation === 360) {
+          rotation === 180;
+        }
+      }
+
+      gemstoneElement.dataset.rotation = rotation;
+
+      gemstoneElement
+        .querySelectorAll("[data-gemstoneCell]")
+        .forEach((pieceElement) => {
+          pieceElement.remove();
+        });
+
+      this.insertGemstonePieces(gemstoneElement, rotation);
+    },
+
+    flipGemstone: function (gemstoneElement) {
+      let rotation = Number(gemstoneElement.dataset.rotation);
+      console.log(rotation, "TEST");
+
+      rotation += 180;
+
+      if (rotation === 360) {
+        rotation = 0;
+      }
+
+      if (rotation === 450) {
+        rotation = 90;
       }
 
       gemstoneElement.dataset.rotation = rotation;
@@ -1406,7 +1459,7 @@ define([
           ? "info"
           : "only_to_log";
 
-      this.showMessage(_("Solution cleared"), messageType);
+      this.showMessage(_("Solution sheet cleared"), messageType);
       this.clearSheet();
     },
 
@@ -1418,7 +1471,7 @@ define([
           ? "info"
           : "only_to_log";
 
-      this.showMessage(_("Solution saved"), messageType);
+      this.showMessage(_("Solution sheet saved"), messageType);
 
       const solutionSheet = args.solutionSheet;
 

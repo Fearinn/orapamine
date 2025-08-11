@@ -458,19 +458,24 @@
 .orp_gemstoneButton {
   font-size: 20px;
   position: absolute;
+  margin: 0;
   z-index: 1;
 }
 .orp_gemstoneButton i {
   pointer-events: none;
 }
 .orp_gemstoneButton-rotate {
-  top: -16px;
-  right: -16px;
+  top: -8px;
+  right: -8px;
 }
 .orp_gemstoneButton-move {
   cursor: grab;
   top: -8px;
-  left: -16px;
+  left: -8px;
+}
+.orp_gemstoneButton-flip {
+  bottom: -8px;
+  right: -8px;
 }
 
 .orp_blankSpace {

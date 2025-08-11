@@ -154,16 +154,18 @@
   align-items: center;
   justify-content: center;
 
+  &:not(.orp_board-hidden) {
+    .orp_piece ~ .orp_locationFeedback {
+      display: none;
+    }
+  }
+
   &-hidden {
     .orp_cell {
       border-width: 1px !important;
     }
-    
-    .orp_piece {
-      visibility: hidden;
-    }
 
-    .orp_piece ~ .orp_locationFeedback {
+    .orp_piece {
       display: none;
     }
   }

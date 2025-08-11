@@ -208,7 +208,6 @@ define([
           {
             id: "orp_boardButton-save",
             title: _("Save solution sheet"),
-            color: "secondary",
             classes: ["orp_boardButton", "orp_boardButton-save"],
             destination: document.getElementById("orp_boardButtons"),
           }
@@ -270,6 +269,16 @@ define([
           lastSheets: gamedatas.lastSheets,
         });
       }
+
+      this.showMessage(
+        _(`Tip: the floating buttons at the left bottom contain useful resources`),
+        "only_to_log"
+      );
+
+      this.showMessage(
+        _("Tip: use the buttons in your solution sheet to save and clear it"),
+        "only_to_log"
+      );
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();

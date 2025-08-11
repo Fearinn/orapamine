@@ -239,9 +239,8 @@ define([
       this.statusBar.addActionButton(
         `<i id="orp_boardButton-hide-icon" class="fa fa-eye-slash" aria-hidden="true"></i>`,
         () => {
-          document.querySelectorAll(".orp_piece").forEach((pieceElement) => {
-            pieceElement.classList.toggle("orp_piece-hidden");
-          });
+          document.getElementById("orp_board").classList.toggle("orp_board-hidden");
+
           document
             .getElementById("orp_draftPieces")
             .classList.toggle("orp_draftPieces-hidden");

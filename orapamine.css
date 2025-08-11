@@ -390,6 +390,15 @@
   align-items: center;
   justify-content: center;
 }
+.orp_board-hidden .orp_cell {
+  border-width: 1px !important;
+}
+.orp_board-hidden .orp_piece {
+  visibility: hidden;
+}
+.orp_board-hidden .orp_piece ~ .orp_locationFeedback {
+  display: none;
+}
 .orp_board-hiddenControls .orp_pieceButton {
   visibility: hidden;
 }
@@ -427,10 +436,6 @@
 
 .orp_dragContainer {
   transform: scale(1) !important;
-}
-
-.orp_piece:not(.orp_piece-hidden) ~ .orp_locationFeedback {
-  display: none;
 }
 
 .orp_draftPieces {

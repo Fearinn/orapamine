@@ -154,6 +154,20 @@
   align-items: center;
   justify-content: center;
 
+  &-hidden {
+    .orp_cell {
+      border-width: 1px !important;
+    }
+    
+    .orp_piece {
+      visibility: hidden;
+    }
+
+    .orp_piece ~ .orp_locationFeedback {
+      display: none;
+    }
+  }
+
   &-hiddenControls {
     .orp_pieceButton {
       visibility: hidden;

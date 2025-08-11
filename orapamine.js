@@ -217,9 +217,9 @@ define([
       this.statusBar.addActionButton(
         `<i id="orp_boardButton-simplify-icon" class="fa fa-minus-square-o" aria-hidden="true"></i>`,
         () => {
-          document.querySelectorAll(".orp_piece").forEach((buttonElement) => {
-            buttonElement.classList.toggle("orp_piece-hiddenControls");
-          });
+          document
+            .getElementById("orp_board")
+            .classList.toggle("orp_board-hiddenControls");
 
           const buttonIcon = document.getElementById(
             "orp_boardButton-simplify-icon"
@@ -271,7 +271,9 @@ define([
       }
 
       this.showMessage(
-        _(`Tip: the floating buttons at the left bottom contain useful resources`),
+        _(
+          `Tip: the floating buttons at the left bottom contain useful resources`
+        ),
         "only_to_log"
       );
 
@@ -500,10 +502,7 @@ define([
 
       document
         .getElementById("orp_board")
-        .querySelectorAll("[data-piece]")
-        .forEach((pieceElement) => {
-          pieceElement.classList.add("orp_piece-hiddenControls");
-        });
+        .classList.add("orp_board-hiddenControls");
 
       document.getElementById("orp_boardTitle").textContent =
         _("Final Solution");

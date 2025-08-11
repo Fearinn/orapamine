@@ -390,6 +390,9 @@
   align-items: center;
   justify-content: center;
 }
+.orp_board-hiddenControls .orp_pieceButton {
+  visibility: hidden;
+}
 
 .orp_cell {
   position: relative;
@@ -492,9 +495,6 @@
 }
 .orp_piece-drag {
   cursor: grabbing;
-}
-.orp_piece-hiddenControls .orp_pieceButton {
-  visibility: hidden;
 }
 .orp_piece-hidden {
   display: none;

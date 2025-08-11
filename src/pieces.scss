@@ -71,12 +71,6 @@
     cursor: grabbing;
   }
 
-  &-hiddenControls {
-    .orp_pieceButton {
-      visibility: hidden;
-    }
-  }
-
   &-hidden {
     display: none;
   }

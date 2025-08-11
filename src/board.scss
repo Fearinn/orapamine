@@ -153,6 +153,12 @@
   grid-template-rows: repeat(8, calc(var(--boardHeight) / 8));
   align-items: center;
   justify-content: center;
+
+  &-hiddenControls {
+    .orp_pieceButton {
+      visibility: hidden;
+    }
+  }
 }
 
 .orp_cell {

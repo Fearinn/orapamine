@@ -239,7 +239,9 @@ define([
       this.statusBar.addActionButton(
         `<i id="orp_boardButton-hide-icon" class="fa fa-eye-slash" aria-hidden="true"></i>`,
         () => {
-          document.getElementById("orp_board").classList.toggle("orp_board-hidden");
+          document
+            .getElementById("orp_board")
+            .classList.toggle("orp_board-hidden");
 
           document
             .getElementById("orp_draftPieces")
@@ -280,6 +282,16 @@ define([
         _("Tip: use the buttons in your solution sheet to save and clear it"),
         "only_to_log"
       );
+
+      if (this.gamedatas.isLastRound) {
+        this.insertLastRoundBanner();
+
+        for (const player_id in this.gamedatas.players) {
+          if (this.scoreCtrl[player_id].getValue() === 1) {
+            this.disablePlayerPanel(player_id);
+          }
+        }
+      }
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
@@ -1412,6 +1424,16 @@ define([
       });
     },
 
+    insertLastRoundBanner: function () {
+      const pageTitle = document.getElementById("page-title");
+      pageTitle.insertAdjacentHTML(
+        "beforeend",
+        `<span class="orp_lastRoundBanner">${_(
+          "This is the last round!"
+        )}<span>`
+      );
+    },
+
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications
 
@@ -1445,9 +1467,23 @@ define([
       this.insertPreviousAnswer(answer, player_id);
     },
 
+    notif_correctSolution: function (args) {
+      const { player_id } = args;
+      this.scoreCtrl[player_id].toValue(1);
+    },
+
     notif_incorrectSolution: function (args) {
       const player_id = args.player_id;
       this.orp.managers.counters[player_id].chances.incValue(-1);
+    },
+
+    notif_lastRound: function (args) {
+      this.insertLastRoundBanner();
+    },
+
+    notif_disablePanel: function (args) {
+      const { player_id } = args;
+      this.disablePlayerPanel(player_id);
     },
 
     notif_clearSolution: function (args) {

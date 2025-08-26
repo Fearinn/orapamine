@@ -1179,6 +1179,11 @@ class Game extends \Table
 
     public function incTurnsPlayed(int $player_id): void
     {
+        $showColumns = $this->getUniqueValueFromDB("SHOW COLUMNS FROM `player` LIKE 'player_turns'");
+        if (!$showColumns) {
+            return;
+        }
+
         $this->DbQuery("UPDATE player SET player_turns=player_turns+1 WHERE player_id={$player_id}");
     }
 

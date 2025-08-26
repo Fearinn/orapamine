@@ -286,7 +286,7 @@ define([
       const isLastRound = this.gamedatas.isLastRound;
 
       const active_player_id = this.getActivePlayerId();
-      const active_order = this.gamedatas.players[active_player_id].order;
+      const active_order = this.gamedatas.players[active_player_id]?.order;
 
       for (const player_id in this.gamedatas.players) {
         const { order, color } = this.gamedatas.players[player_id];

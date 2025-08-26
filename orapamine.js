@@ -283,14 +283,26 @@ define([
         "only_to_log"
       );
 
-      if (this.gamedatas.isLastRound) {
-        this.insertLastRoundBanner();
+      const isLastRound = this.gamedatas.isLastRound;
 
-        for (const player_id in this.gamedatas.players) {
-          if (this.scoreCtrl[player_id].getValue() === 1) {
-            this.disablePlayerPanel(player_id);
-          }
+      const active_player_id = this.getActivePlayerId();
+      const active_order = this.gamedatas.players[active_player_id].order;
+
+      for (const player_id in this.gamedatas.players) {
+        const { order, color } = this.gamedatas.players[player_id];
+
+        this.getPlayerPanelElement(player_id).insertAdjacentHTML(
+          "afterbegin",
+          `<span style="color: #${color}; font-weight: bold">${order}.</span>`
+        );
+
+        if (order < active_order && isLastRound) {
+          this.disablePlayerPanel(player_id);
         }
+      }
+
+      if (isLastRound) {
+        this.insertLastRoundBanner();
       }
 
       // Setup game notifications to handle (see "setupNotifications" method below)

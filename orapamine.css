@@ -644,9 +644,6 @@
   padding: 0 1px;
 }
 
-.orp_playerChances {
-  margin-left: 8px;
-}
 .orp_playerChances-icon {
   color: var(--themeColor);
 }
@@ -669,4 +666,10 @@
   display: block;
   background-color: #92d3e6;
   margin-top: 8px;
+}
+
+.player-board-game-specific-content {
+  display: flex;
+  gap: 8px;
+  padding: 0 4px;
 }

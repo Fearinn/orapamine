@@ -1235,7 +1235,7 @@ class Game extends \Table
         $isBoardRevealed = $this->globals->get(BOARD_REVEALED);
 
         $gamedatas["players"] = $this->getCollectionFromDb(
-            "SELECT `player_id` `id`, `player_score` `score`, `player_chances` `chances` FROM `player`"
+            "SELECT `player_id` `id`, `player_score` `score`, `player_chances` `chances`, `player_no` `order` FROM `player`"
         );
         $gamedatas["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $gamedatas["COLORS"] = $this->COLORS;

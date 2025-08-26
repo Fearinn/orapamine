@@ -363,28 +363,36 @@ define([
 
       if (this.isCurrentPlayerActive()) {
         if (stateName === "playerTurn") {
-          const selectableLocations = args.args.selectableLocations;
-          const selectableOrigins = args.args.selectableOrigins;
+          const { isLastRound, selectableLocations, selectableOrigins } =
+            args.args;
 
-          if (selectableOrigins.length > 0) {
-            this.statusBar.addActionButton(_("send ultrasound wave"), () => {
-              this.setClientState("client_sendWave", {
-                descriptionmyturn: _("${you} must pick the origin of the wave"),
-                client_args: { selectableOrigins: selectableOrigins },
+          if (!isLastRound) {
+            if (selectableOrigins.length > 0) {
+              this.statusBar.addActionButton(_("send ultrasound wave"), () => {
+                this.setClientState("client_sendWave", {
+                  descriptionmyturn: _(
+                    "${you} must pick the origin of the wave"
+                  ),
+                  client_args: { selectableOrigins: selectableOrigins },
+                });
               });
-            });
+            }
+
+            if (selectableLocations.length > 0) {
+              this.statusBar.addActionButton(
+                _("ask about specific position"),
+                () => {
+                  this.setClientState("client_askLocation", {
+                    descriptionmyturn: _("${you} must pick the position"),
+                    client_args: { selectableLocations: selectableLocations },
+                  });
+                }
+              );
+            }
           }
 
-          if (selectableLocations.length > 0) {
-            this.statusBar.addActionButton(
-              _("ask about specific position"),
-              () => {
-                this.setClientState("client_askLocation", {
-                  descriptionmyturn: _("${you} must pick the position"),
-                  client_args: { selectableLocations: selectableLocations },
-                });
-              }
-            );
+          if (isLastRound) {
+            this.statusBar.setTitle(_("${you} must submit an answer"));
           }
 
           this.statusBar.addActionButton(

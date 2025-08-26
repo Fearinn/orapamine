@@ -109,6 +109,7 @@ class Game extends \Table
         return [
             "selectableLocations" => array_values($selectableLocations),
             "selectableOrigins" => array_values($selectableOrigins),
+            "isLastRound" => $this->globals->get(LAST_ROUND),
         ];
     }
 
@@ -194,10 +195,17 @@ class Game extends \Table
         }
     }
 
-    public function actAskLocation(?int $CLIENT_VERSION, #[IntParam(min: 1, max: 10)] int $guess_x, #[IntParam(min: 1, max: 8)] int $guess_y): void
-    {
+    public function actAskLocation(
+        ?int $CLIENT_VERSION,
+        #[IntParam(min: 1, max: 10)] int $guess_x,
+        #[IntParam(min: 1, max: 8)] int $guess_y
+    ): void {
         $this->checkVersion($CLIENT_VERSION);
         $player_id = (int) $this->getActivePlayerId();
+
+        if ($this->globals->get(LAST_ROUND)) {
+            throw new \BgaVisibleSystemException("You can't ask a question in the last round");
+        }
 
         $coloredBoard = $this->globals->get(COLORED_BOARD);
         $this->updateSelectableLocations("{$guess_x}-{$guess_y}");
@@ -303,8 +311,11 @@ class Game extends \Table
     )] string $origin): void
     {
         $this->checkVersion($CLIENT_VERSION);
-
         $player_id = (int) $this->getActivePlayerId();
+
+        if ($this->globals->get(LAST_ROUND)) {
+            throw new \BgaVisibleSystemException("You can't ask a question in the last round");
+        }
 
         $this->globals->set(ORIGIN, $origin);
 

@@ -151,6 +151,7 @@ class Game extends \Table
             if ($endGame) {
                 $this->revealBoard();
                 $this->gamestate->nextState("gameEnd");
+                return;
             }
         }
 
@@ -494,23 +495,29 @@ class Game extends \Table
             $this->DbQuery("UPDATE player SET player_score=1 WHERE player_id=$player_id");
 
             if (!$this->globals->get(LAST_ROUND)) {
-                $showColumns = $this->getUniqueValueFromDB("SHOW COLUMNS FROM `player` LIKE 'player_turns'");
-
-                if (!$showColumns) {
-                    $this->revealBoard();
-                    $this->gamestate->nextState("gameEnd");
-                    return;
-                }
-
-                $turnsPlayed = $this->getTurnsPlayed($player_id) + 1;
-                $this->globals->set(LAST_ROUND, $turnsPlayed);
-
-                $this->notify->all(
-                    "lastRound",
-                    clienttranslate('This is the last round'),
-                    []
-                );
+                $this->revealBoard();
+                $this->gamestate->nextState("gameEnd");
+                return;
             }
+
+            // if (!$this->globals->get(LAST_ROUND)) {
+            //     $showColumns = $this->getUniqueValueFromDB("SHOW COLUMNS FROM `player` LIKE 'player_turns'");
+
+            //     if (!$showColumns) {
+            //         $this->revealBoard();
+            //         $this->gamestate->nextState("gameEnd");
+            //         return;
+            //     }
+
+            //     $turnsPlayed = $this->getTurnsPlayed($player_id) + 1;
+            //     $this->globals->set(LAST_ROUND, $turnsPlayed);
+
+            //     $this->notify->all(
+            //         "lastRound",
+            //         clienttranslate('This is the last round'),
+            //         []
+            //     );
+            // }
 
             $this->gamestate->nextState("nextPlayer");
             return;

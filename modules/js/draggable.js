@@ -9,16 +9,17 @@ let game = null;
 let isGemstoneMove = false;
 let autoScrollRaf = null;
 let lastMouseY = 0;
+let prevMouseY = 0;
 
 function startAutoScroll() {
   function step() {
-    const edgeThreshold = 100; // px from top/bottom to start scrolling
+    const edgeThreshold = 100; // px from top to start scrolling
     const scrollSpeed = 10; // px per frame
 
-    if (lastMouseY < edgeThreshold) {
+    const movingUp = lastMouseY < prevMouseY;
+
+    if (movingUp && lastMouseY < edgeThreshold) {
       window.scrollBy(0, -scrollSpeed);
-    } else if (lastMouseY > window.innerHeight - edgeThreshold) {
-      window.scrollBy(0, scrollSpeed);
     }
 
     autoScrollRaf = requestAnimationFrame(step);
@@ -52,6 +53,7 @@ function userPressed(event) {
   startX = event.pageX;
   startY = event.pageY;
   lastMouseY = event.clientY;
+  prevMouseY = event.clientY; // initialize direction tracking
 
   const gameAreaElement = document.getElementById("orp_gameArea");
 
@@ -71,6 +73,8 @@ function userPressed(event) {
 
 function userMoved(event) {
   event.preventDefault();
+
+  prevMouseY = lastMouseY;
   lastMouseY = event.clientY;
 
   deltaX = event.pageX - startX;
@@ -79,7 +83,6 @@ function userMoved(event) {
   const gameAreaElement = document.getElementById("orp_gameArea");
   const style = window.getComputedStyle(gameAreaElement);
   if (style.transform && style.transform !== "none") {
-    // The transform is usually in the form: matrix(a, b, c, d, tx, ty)
     const values = style.transform.match(/matrix\(([^)]+)\)/)[1].split(", ");
     scale = parseFloat(values[0]);
   }

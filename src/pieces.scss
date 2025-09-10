@@ -71,6 +71,7 @@
 
   &-drag {
     cursor: grabbing;
+    z-index: 2;
   }
 
   &-hidden {

@@ -505,6 +505,7 @@
 }
 .orp_piece-drag {
   cursor: grabbing;
+  z-index: 2;
 }
 .orp_piece-hidden {
   display: none;

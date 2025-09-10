@@ -42,7 +42,12 @@ $machinestates = [
             "actSaveSolution",
             "actSubmitSolution",
         ],
-        "transitions" => ["nextPlayer" => 3, "gameEnd" => 99, "zombiePass" => 3,],
+        "transitions" => [
+            "submitSolution" => 4,
+            "nextPlayer" => 3,
+            "zombiePass" => 3,
+            "gameEnd" => 99,
+        ],
     ],
 
     3 => [
@@ -51,7 +56,26 @@ $machinestates = [
         "type" => "game",
         "action" => "st_betweenPlayers",
         "updateGameProgression" => true,
-        "transitions" => ["gameEnd" => 99, "nextPlayer" => 2]
+        "transitions" => [
+            "nextPlayer" => 2,
+            "gameEnd" => 99,
+        ]
+    ],
+
+    4 => [
+        "name" => "submitSolution",
+        "description" => clienttranslate('${actplayer} may submit an answer'),
+        "descriptionmyturn" => clienttranslate('${you} may submit an answer'),
+        "type" => "activeplayer",
+        "possibleactions" => [
+            "actPass",
+            "actSubmitSolution",
+        ],
+        "transitions" => [
+            "nextPlayer" => 3,
+            "zombiePass" => 3,
+            "gameEnd" => 99,
+        ],
     ],
 
     // Final state.

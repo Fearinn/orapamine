@@ -432,6 +432,31 @@ define([
           const selectableLocations = args.client_args.selectableLocations;
           this.setSelectableLocations(selectableLocations);
         }
+
+        if (stateName === "submitSolution") {
+          this.statusBar.addActionButton(
+            _("submit answer"),
+            () => {
+              this.confirmationDialog(
+                _("Do you really want to submit an answer?"),
+                () => {
+                  this.actSubmitSolution();
+                }
+              );
+            },
+            {
+              classes: ["orp_submitAnswerBtn"],
+            }
+          );
+
+          this.statusBar.addActionButton(
+            _("skip and pass"),
+            () => {
+              this.performAction("actPass");
+            },
+            { color: "alert" }
+          );
+        }
       }
     },
 
@@ -1343,7 +1368,7 @@ define([
     ///////////////////////////////////////////////////
     //// Player's actions
 
-    performAction: function (action, args, options) {
+    performAction: function (action, args = {}, options) {
       args.CLIENT_VERSION = this.gamedatas.GAME_VERSION;
       this.bgaPerformAction(action, args, options);
     },

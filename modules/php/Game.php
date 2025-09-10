@@ -128,6 +128,15 @@ class Game extends \Table
         $this->giveExtraTime($player_id);
         $this->incTurnsPlayed($player_id);
 
+        $this->notify->all(
+            "message",
+            clienttranslate('${player_name} ends his turn'),
+            [
+                "player_id" => $player_id,
+                "player_name" => $this->getPlayerNameById($player_id),
+            ]
+        );
+
         $lastRound = $this->globals->get(LAST_ROUND);
         if ($lastRound) {
             $players = $this->loadPlayersBasicInfos();
@@ -224,8 +233,6 @@ class Game extends \Table
             ]
         );
 
-        $this->incStat(1, "locationsAsked", $player_id);
-
         $color_id = $coloredBoard[$guess_x][$guess_y];
 
         if ($color_id > 0) {
@@ -267,7 +274,8 @@ class Game extends \Table
             ]
         );
 
-        $this->gamestate->nextState("nextPlayer");
+        $this->incStat(1, "locationsAsked", $player_id);
+        $this->gamestate->nextState("submitSolution");
     }
 
     public function actSendWave(?int $CLIENT_VERSION, #[StringParam(
@@ -333,12 +341,12 @@ class Game extends \Table
             ]
         );
 
-        $this->incStat(1, "wavesSent", $player_id);
 
         $visitedColors = [];
         $this->sendWave($origin_x, $origin_y, $direction_id, $visitedColors, $origin);
 
-        $this->gamestate->nextState("nextPlayer");
+        $this->incStat(1, "wavesSent", $player_id);
+        $this->gamestate->nextState("submitSolution");
     }
 
     #[CheckAction(false)]
@@ -538,6 +546,11 @@ class Game extends \Table
         $this->gamestate->nextState("nextPlayer");
     }
 
+    public function actPass(): void
+    {
+        $this->gamestate->nextState("nextPlayer");
+    }
+
     /** Utility methods */
     public function GEMSTONES(): array
     {
@@ -592,8 +605,14 @@ class Game extends \Table
         $this->globals->set(BOARD_REVEALED, false);
     }
 
-    public function isValidPlacement(array $board, array $gemstoneBoard, array $gemstone, int $base_x, int $base_y, int $rotation): bool
-    {
+    public function isValidPlacement(
+        array $board,
+        array $gemstoneBoard,
+        array $gemstone,
+        int $base_x,
+        int $base_y,
+        int $rotation
+    ): bool {
         if ($board[$base_x][$base_y] > 0) {
             return false;
         }

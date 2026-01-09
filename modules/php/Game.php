@@ -508,25 +508,6 @@ class Game extends \Table
                 return;
             }
 
-            // if (!$this->globals->get(LAST_ROUND)) {
-            //     $showColumns = $this->getUniqueValueFromDB("SHOW COLUMNS FROM `player` LIKE 'player_turns'");
-
-            //     if (!$showColumns) {
-            //         $this->revealBoard();
-            //         $this->gamestate->nextState("gameEnd");
-            //         return;
-            //     }
-
-            //     $turnsPlayed = $this->getTurnsPlayed($player_id) + 1;
-            //     $this->globals->set(LAST_ROUND, $turnsPlayed);
-
-            //     $this->notify->all(
-            //         "lastRound",
-            //         clienttranslate('This is the last round'),
-            //         []
-            //     );
-            // }
-
             $this->gamestate->nextState("nextPlayer");
             return;
         }

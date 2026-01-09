@@ -52,8 +52,11 @@
   align-items: center;
   justify-content: center;
   gap: 32px;
-  padding: 0 8px;
   width: 100%;
+
+  @media screen and (max-width: 800px) {
+    padding: 60px 8px 0 8px;
+  }
 
   * {
     box-sizing: border-box;

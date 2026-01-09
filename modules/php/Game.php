@@ -1280,24 +1280,9 @@ class Game extends \Table
         return $gamedatas;
     }
 
-    /**
-     * Returns the game name.
-     *
-     * IMPORTANT: Please do not modify.
-     */
-    protected function getGameName()
-    {
-        return "orapamine";
-    }
 
-    /**
-     * This method is called only once, when a new game is launched. In this method, you must setup the game
-     *  according to the game rules, so that the game is ready to be played.
-     */
     protected function setupNewGame($players, $options = [])
     {
-        // Set the colors of the players with HTML color code. The default below is red/green/blue/orange/brown. The
-        // number of colors defined here must correspond to the maximum number of players allowed for the gams.
         $gameinfos = $this->getGameinfos();
         $default_colors = $gameinfos['player_colors'];
 
@@ -1340,8 +1325,8 @@ class Game extends \Table
             $this->initStat("player", "chancesLost", 0, $player_id);
         }
 
-        // Activate first player once everything has been initialized and ready.
         $this->activeNextPlayer();
+        return 2;
     }
 
     /**

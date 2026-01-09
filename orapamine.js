@@ -73,7 +73,6 @@ define([
         }
 
         const color = gamedatas.COLORS[color_id];
-
         const mixElement = document.createElement("div");
 
         color.components.forEach((component_id, index) => {
@@ -107,6 +106,8 @@ define([
         .getElementById("orp_gameArea")
         .insertAdjacentElement("beforeend", aidElement);
 
+      this.setupQuestionLog();
+
       this.orp.managers.help = new HelpManager(this, {
         buttons: [
           new BgaHelpExpandableButton({
@@ -114,8 +115,30 @@ define([
             foldedHtml: `<span class="orp_helpFolded">?</span>`,
             unfoldedHtml: aidElement.outerHTML,
           }),
+          new BgaHelpExpandableButton({
+            id: "orp_questionLogButton",
+            title: _("Show/hide question log"),
+            foldedHtml: `<span class="orp_helpFolded"><i id="orp_questionLogButton-icon" 
+            class="fa fa-list-alt" aria-hidden="true"></i></span>`,
+            unfoldedHtml: `<span class="orp_helpFolded"><i id="orp_questionLogButton-icon" 
+            class="fa fa-list-alt" aria-hidden="true"></i></span>`,
+            buttonExtraClasses: "orp_questionLogButton",
+          }),
         ],
       });
+
+      document.querySelector(".orp_questionLogButton").onclick = () => {
+        const questionLogContainer = document.getElementById(
+          "orp_questionLogContainer"
+        );
+
+        const hiddenClass = "orp_questionLogContainer-hidden";
+        questionLogContainer.classList.toggle(hiddenClass);
+
+        if (!questionLogContainer.classList.contains(hiddenClass)) {
+          questionLogContainer.scrollIntoView();
+        }
+      };
 
       aidElement.remove();
 
@@ -131,7 +154,6 @@ define([
 
       this.setupBoard();
       this.setupDraftPieces();
-      this.setupQuestionLog();
 
       for (const player_id in gamedatas.players) {
         const playerPanel = this.getPlayerPanelElement(player_id);
@@ -1169,22 +1191,6 @@ define([
 
       document.getElementById("orp_questionLogTitle").textContent =
         _("Question Log");
-
-      this.statusBar.addActionButton(
-        `<i id="orp_questionLogButton-icon" class="fa fa-list-alt" aria-hidden="true"></i>`,
-        () => {
-          document
-            .getElementById("orp_questionLogContainer")
-            .classList.toggle("orp_questionLogContainer-hidden");
-        },
-        {
-          id: "orp_questionLogButton",
-          title: _("Show/hide question log"),
-          color: "secondary",
-          classes: ["orp_extraButton"],
-          destination: document.getElementById("bga-help_buttons"),
-        }
-      );
     },
 
     insertQuestionLogLine: function (logLine) {

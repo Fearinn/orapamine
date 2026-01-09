@@ -107,6 +107,7 @@ define([
         .insertAdjacentElement("beforeend", aidElement);
 
       this.setupQuestionLog();
+      this.setupPreviousAnswers(gamedatas.isBoardRevealed);
 
       this.orp.managers.help = new HelpManager(this, {
         buttons: [
@@ -116,16 +117,25 @@ define([
             unfoldedHtml: aidElement.outerHTML,
           }),
           new BgaHelpExpandableButton({
-            id: "orp_questionLogButton",
             title: _("Show/hide question log"),
             foldedHtml: `<span class="orp_helpFolded"><i id="orp_questionLogButton-icon" 
-            class="fa fa-list-alt" aria-hidden="true"></i></span>`,
+            class="fa6 fa6-list-alt" aria-hidden="true"></i></span>`,
             unfoldedHtml: `<span class="orp_helpFolded"><i id="orp_questionLogButton-icon" 
-            class="fa fa-list-alt" aria-hidden="true"></i></span>`,
+            class="fa6 fa6-list-alt" aria-hidden="true"></i></span>`,
             buttonExtraClasses: "orp_questionLogButton",
+          }),
+          new BgaHelpExpandableButton({
+            title: _("show/hide previous answers"),
+            foldedHtml: `<span class="orp_helpFolded"><i id="orp_previousAnswersButton-icon" 
+            class="fa6 fa6-arrow-rotate-left" aria-hidden="true"></i></span>`,
+            unfoldedHtml: `<span class="orp_helpFolded"><i id="orp_previousAnswersButton-icon" 
+            class="fa6 fa6-arrow-rotate-left" aria-hidden="true"></i></span>`,
+            buttonExtraClasses: "orp_previousAnswersButton",
           }),
         ],
       });
+
+      aidElement.remove();
 
       document.querySelector(".orp_questionLogButton").onclick = () => {
         const questionLogContainer = document.getElementById(
@@ -140,7 +150,24 @@ define([
         }
       };
 
-      aidElement.remove();
+      document.querySelector(".orp_previousAnswersButton").onclick = (
+        event
+      ) => {
+        if (
+          !this.gamedatas.isBoardRevealed &&
+          this.gamedatas.previousAnswers[this.player_id].length == 0
+        ) {
+          this.showMessage(_("You haven't submitted an answer yet"), "error");
+          event.currentTarget.dataset.folded = "true";
+          return;
+        }
+
+        document
+          .querySelectorAll(".orp_previousAnswersContainer")
+          .forEach((element) => {
+            element.classList.toggle("orp_previousAnswersContainer-hidden");
+          });
+      };
 
       this.orp.managers.zoom = new ZoomManager({
         element: document.getElementById("orp_gameArea"),
@@ -185,7 +212,6 @@ define([
         });
       }
 
-      this.setupPreviousAnswers(gamedatas.isBoardRevealed);
       this.styleLocationFeedback(gamedatas.revealedLocations);
       this.styleWaveFeedback(gamedatas.revealedOrigins);
 
@@ -1232,40 +1258,6 @@ define([
     },
 
     setupPreviousAnswers: function (isBoardRevealed = false) {
-      if (
-        !this.isSpectator &&
-        !document.getElementById("orp_previousAnswersButton")
-      ) {
-        this.statusBar.addActionButton(
-          `<i id="orp_previousAnswersButton-icon" class="fa fa-history" aria-hidden="true"></i>`,
-          () => {
-            if (
-              !isBoardRevealed &&
-              this.gamedatas.previousAnswers[this.player_id].length == 0
-            ) {
-              this.showMessage(
-                _("You haven't submitted an answer yet"),
-                "error"
-              );
-              return;
-            }
-
-            document
-              .querySelectorAll(".orp_previousAnswersContainer")
-              .forEach((element) => {
-                element.classList.toggle("orp_previousAnswersContainer-hidden");
-              });
-          },
-          {
-            id: "orp_previousAnswersButton",
-            title: _("Show/hide previous answers"),
-            color: "secondary",
-            classes: ["orp_extraButton"],
-            destination: document.getElementById("bga-help_buttons"),
-          }
-        );
-      }
-
       for (const player_id in this.gamedatas.previousAnswers) {
         const previousAnswers = this.gamedatas.previousAnswers[player_id];
 

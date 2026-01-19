@@ -1,7 +1,8 @@
 :root.orp_pref-thematicBackground-blue,
 :root.orp_pref-thematicBackground-red {
   background-image: url("img/background.png");
-  background-size: cover;
+  background-size: 100%;
+  background-attachment: fixed;
 
   .orp_questionLogContainer,
   .orp_title {

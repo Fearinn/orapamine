@@ -38,7 +38,6 @@ const REVEALED_LOCATIONS = "revealedLocations";
 const REVEALED_ORIGINS = "revealedOrigins";
 const SOLUTION_SHEETS = "solutionSheets";
 const QUESTION_LOG = "questionLog";
-const LAST_ROUND = "lastRound";
 
 class Game extends \Table
 {
@@ -109,7 +108,6 @@ class Game extends \Table
         return [
             "selectableLocations" => array_values($selectableLocations),
             "selectableOrigins" => array_values($selectableOrigins),
-            "isLastRound" => $this->globals->get(LAST_ROUND),
         ];
     }
 
@@ -126,7 +124,6 @@ class Game extends \Table
     {
         $player_id = (int) $this->getActivePlayerId();
         $this->giveExtraTime($player_id);
-        $this->incTurnsPlayed($player_id);
 
         $this->notify->all(
             "message",
@@ -136,33 +133,6 @@ class Game extends \Table
                 "player_name" => $this->getPlayerNameById($player_id),
             ]
         );
-
-        $lastRound = $this->globals->get(LAST_ROUND);
-        if ($lastRound) {
-            $players = $this->loadPlayersBasicInfos();
-
-            $this->notify->all(
-                "disablePanel",
-                "",
-                ["player_id" => $player_id]
-            );
-
-            $endGame = true;
-            foreach ($players as $player_id => $player) {
-                $turnsPlayed = $this->getTurnsPlayed($player_id);
-
-                if ($turnsPlayed < $lastRound) {
-                    $endGame = false;
-                    break;
-                }
-            }
-
-            if ($endGame) {
-                $this->revealBoard();
-                $this->gamestate->nextState("gameEnd");
-                return;
-            }
-        }
 
         $player_id = (int) $this->getActivePlayerId();
         $this->activeNextPlayer();
@@ -212,10 +182,6 @@ class Game extends \Table
     ): void {
         $this->checkVersion($CLIENT_VERSION);
         $player_id = (int) $this->getActivePlayerId();
-
-        if ($this->globals->get(LAST_ROUND)) {
-            throw new \BgaVisibleSystemException("You can't ask a question in the last round");
-        }
 
         $coloredBoard = $this->globals->get(COLORED_BOARD);
         $this->updateSelectableLocations("{$guess_x}-{$guess_y}");
@@ -321,10 +287,6 @@ class Game extends \Table
     {
         $this->checkVersion($CLIENT_VERSION);
         $player_id = (int) $this->getActivePlayerId();
-
-        if ($this->globals->get(LAST_ROUND)) {
-            throw new \BgaVisibleSystemException("You can't ask a question in the last round");
-        }
 
         $this->globals->set(ORIGIN, $origin);
 
@@ -502,14 +464,8 @@ class Game extends \Table
             $this->setStat(100, "win%", $player_id);
             $this->DbQuery("UPDATE player SET player_score=1 WHERE player_id=$player_id");
 
-            if (!$this->globals->get(LAST_ROUND)) {
-                $this->revealBoard();
-                $this->gamestate->nextState("gameEnd");
-                return;
-            }
-
-            $this->gamestate->nextState("nextPlayer");
-            return;
+            $this->revealBoard();
+            $this->gamestate->nextState("gameEnd");
         }
 
         $this->notify->all(
@@ -1177,23 +1133,6 @@ class Game extends \Table
         $this->globals->set(BOARD_REVEALED, true);
     }
 
-    public function getTurnsPlayed(int $player_id): int
-    {
-        $turnsPlayed = (int) $this->getUniqueValueFromDB("SELECT player_turns FROM player 
-        WHERE player_id={$player_id}");
-        return $turnsPlayed;
-    }
-
-    public function incTurnsPlayed(int $player_id): void
-    {
-        $showColumns = $this->getUniqueValueFromDB("SHOW COLUMNS FROM `player` LIKE 'player_turns'");
-        if (!$showColumns) {
-            return;
-        }
-
-        $this->DbQuery("UPDATE player SET player_turns=player_turns+1 WHERE player_id={$player_id}");
-    }
-
     /**
      * Migrate database.
      *
@@ -1255,7 +1194,6 @@ class Game extends \Table
         $gamedatas["board"] = $isBoardRevealed ? $this->globals->get(BOARD) : [];
         $gamedatas["coloredBoard"] = $isBoardRevealed ? $this->globals->get(COLORED_BOARD) : [];
         $gamedatas["lastSheets"] = $isBoardRevealed ? $this->globals->get(SOLUTION_SHEETS) : [];
-        $gamedatas["isLastRound"] = !!$this->globals->get(LAST_ROUND);
 
         $previousAnswers = $this->globals->get(PREVIOUS_ANSWERS);
 
@@ -1348,8 +1286,6 @@ class Game extends \Table
     protected function zombieTurn(array $state, int $active_player): void
     {
         $state_name = $state["name"];
-
-        $this->incTurnsPlayed($active_player);
 
         if ($state["type"] === "activeplayer") {
             $this->gamestate->nextState("zombiePass");

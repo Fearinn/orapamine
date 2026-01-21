@@ -327,28 +327,6 @@ define([
         "only_to_log",
       );
 
-      const isLastRound = this.gamedatas.isLastRound;
-
-      const active_player_id = this.getActivePlayerId();
-      const active_order = this.gamedatas.players[active_player_id]?.order;
-
-      for (const player_id in this.gamedatas.players) {
-        const { order, color } = this.gamedatas.players[player_id];
-
-        this.getPlayerPanelElement(player_id).insertAdjacentHTML(
-          "afterbegin",
-          `<span style="color: #${color}; font-weight: bold">${order}.</span>`,
-        );
-
-        if (order < active_order && isLastRound) {
-          this.disablePlayerPanel(player_id);
-        }
-      }
-
-      if (isLastRound) {
-        this.insertLastRoundBanner();
-      }
-
       this.setupNotifications();
     },
 
@@ -414,36 +392,27 @@ define([
 
       if (this.isCurrentPlayerActive()) {
         if (stateName === "playerTurn") {
-          const { isLastRound, selectableLocations, selectableOrigins } =
-            args.args;
+          const { selectableLocations, selectableOrigins } = args.args;
 
-          if (!isLastRound) {
-            if (selectableOrigins.length > 0) {
-              this.statusBar.addActionButton(_("send ultrasound wave"), () => {
-                this.setClientState("client_sendWave", {
-                  descriptionmyturn: _(
-                    "${you} must pick the origin of the wave",
-                  ),
-                  client_args: { selectableOrigins: selectableOrigins },
-                });
+          if (selectableOrigins.length > 0) {
+            this.statusBar.addActionButton(_("send ultrasound wave"), () => {
+              this.setClientState("client_sendWave", {
+                descriptionmyturn: _("${you} must pick the origin of the wave"),
+                client_args: { selectableOrigins: selectableOrigins },
               });
-            }
-
-            if (selectableLocations.length > 0) {
-              this.statusBar.addActionButton(
-                _("ask about specific position"),
-                () => {
-                  this.setClientState("client_askLocation", {
-                    descriptionmyturn: _("${you} must pick the position"),
-                    client_args: { selectableLocations: selectableLocations },
-                  });
-                },
-              );
-            }
+            });
           }
 
-          if (isLastRound) {
-            this.statusBar.setTitle(_("${you} must submit an answer"));
+          if (selectableLocations.length > 0) {
+            this.statusBar.addActionButton(
+              _("ask about specific position"),
+              () => {
+                this.setClientState("client_askLocation", {
+                  descriptionmyturn: _("${you} must pick the position"),
+                  client_args: { selectableLocations: selectableLocations },
+                });
+              },
+            );
           }
 
           this.statusBar.addActionButton(
@@ -1460,16 +1429,6 @@ define([
       });
     },
 
-    insertLastRoundBanner: function () {
-      const pageTitle = document.getElementById("page-title");
-      pageTitle.insertAdjacentHTML(
-        "beforeend",
-        `<span class="orp_lastRoundBanner">${_(
-          "This is the last round!",
-        )}<span>`,
-      );
-    },
-
     toggleBlank: function (cellElement) {
       if (cellElement.querySelector("[data-color='99']")) {
         cellElement.innerHTML = "";
@@ -1525,10 +1484,6 @@ define([
     notif_incorrectSolution: function (args) {
       const player_id = args.player_id;
       this.orp.managers.counters[player_id].chances.incValue(-1);
-    },
-
-    notif_lastRound: function (args) {
-      this.insertLastRoundBanner();
     },
 
     notif_disablePanel: function (args) {

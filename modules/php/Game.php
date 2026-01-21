@@ -466,6 +466,7 @@ class Game extends \Table
 
             $this->revealBoard();
             $this->gamestate->nextState("gameEnd");
+            return;
         }
 
         $this->notify->all(

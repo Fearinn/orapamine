@@ -165,14 +165,14 @@ class Game extends \Table
 
     public function checkVersion(?int $CLIENT_VERSION): void
     {
-        if ($CLIENT_VERSION === null) {
-            return;
-        }
+        // if ($CLIENT_VERSION === null) {
+        //     return;
+        // }
 
-        $SERVER_VERSION = (int) $this->gamestate->table_globals[300];
-        if ($CLIENT_VERSION !== $SERVER_VERSION) {
-            throw new \BgaUserException(clienttranslate("A new version of this game is now available. Please reload the page (F5)."));
-        }
+        // $SERVER_VERSION = (int) $this->gamestate->table_globals[300];
+        // if ($CLIENT_VERSION !== $SERVER_VERSION) {
+        //     throw new \BgaUserException(clienttranslate("A new version of this game is now available. Please reload the page (F5)."));
+        // }
     }
 
     public function actAskLocation(

@@ -1430,7 +1430,7 @@ define([
     },
 
     toggleBlank: function (cellElement) {
-      if (cellElement.querySelector("[data-color='99']")) {
+      if (cellElement.querySelector("[data-color='6']")) {
         cellElement.innerHTML = "";
         return;
       }

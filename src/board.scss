@@ -163,6 +163,7 @@
   &-hidden {
     .orp_cell {
       border-width: 1px !important;
+      pointer-events: none;
     }
 
     .orp_piece {
@@ -185,7 +186,6 @@
   width: 100%;
 
   &:empty,
-  &:has(.orp_piece-hidden),
   &:has(.orp_blankSpace) {
     border-width: 1px !important;
   }

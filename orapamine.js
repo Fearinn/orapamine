@@ -26,13 +26,9 @@ define([
   `${g_gamethemeurl}modules/js/bga-help.js`,
 ], function (dojo, declare) {
   return declare("bgagame.orapamine", ebg.core.gamegui, {
-    constructor: function () {
-      console.log("orapamine constructor");
-    },
+    constructor: function () {},
 
     setup: function (gamedatas) {
-      console.log("Starting game setup");
-
       this.orp = {
         info: {
           colors: gamedatas.COLORS,
@@ -96,7 +92,7 @@ define([
           "beforeend",
           `<span> = </span><span class="orp_logHighlight" style="color: ${textColor}; background-color: ${
             color.code
-          }">${_(color.label)}</span>`
+          }">${_(color.label)}</span>`,
         );
 
         aidElement.insertAdjacentElement("beforeend", mixElement);
@@ -139,7 +135,7 @@ define([
 
       document.querySelector(".orp_questionLogButton").onclick = () => {
         const questionLogContainer = document.getElementById(
-          "orp_questionLogContainer"
+          "orp_questionLogContainer",
         );
 
         const hiddenClass = "orp_questionLogContainer-hidden";
@@ -151,7 +147,7 @@ define([
       };
 
       document.querySelector(".orp_previousAnswersButton").onclick = (
-        event
+        event,
       ) => {
         if (
           !this.gamedatas.isBoardRevealed &&
@@ -191,13 +187,13 @@ define([
           `<div class="orp_playerChancesContainer">
             <span id="orp_playerChances-${player_id}" class="orp_playerChances">${playerChances}</span>
             <i id="orp_playerChances-icon-${player_id}" class="orp_playerChances-icon fa fa-heart"></i>
-          </div>`
+          </div>`,
         );
 
         this.addTooltip(
           `orp_playerChances-icon-${player_id}`,
           _("Remaining chances"),
-          ""
+          "",
         );
 
         this.orp.managers.counters[player_id] = { chances: new ebg.counter() };
@@ -236,7 +232,7 @@ define([
                     }
                   });
                 this.actClearSolution();
-              }
+              },
             );
           },
           {
@@ -245,7 +241,7 @@ define([
             color: "alert",
             classes: ["orp_boardButton", "orp_boardButton-clear"],
             destination: document.getElementById("orp_boardButtons"),
-          }
+          },
         );
 
         this.statusBar.addActionButton(
@@ -258,7 +254,7 @@ define([
             title: _("Save solution sheet"),
             classes: ["orp_boardButton", "orp_boardButton-save"],
             destination: document.getElementById("orp_boardButtons"),
-          }
+          },
         );
       }
 
@@ -270,7 +266,7 @@ define([
             .classList.toggle("orp_board-hiddenControls");
 
           const buttonIcon = document.getElementById(
-            "orp_boardButton-simplify-icon"
+            "orp_boardButton-simplify-icon",
           );
           buttonIcon.classList.toggle("fa-plus-square-o");
           buttonIcon.classList.toggle("fa-minus-square-o");
@@ -281,7 +277,7 @@ define([
           color: "secondary",
           classes: ["orp_boardButton", "orp_boardButton-simplify"],
           destination: document.getElementById("orp_boardButtons"),
-        }
+        },
       );
 
       this.statusBar.addActionButton(
@@ -296,7 +292,7 @@ define([
             .classList.toggle("orp_draftPieces-hidden");
 
           const buttonIcon = document.getElementById(
-            "orp_boardButton-hide-icon"
+            "orp_boardButton-hide-icon",
           );
           buttonIcon.classList.toggle("fa-eye");
           buttonIcon.classList.toggle("fa-eye-slash");
@@ -307,7 +303,7 @@ define([
           color: "secondary",
           classes: ["orp_boardButton", "orp_boardButton-hide"],
           destination: document.getElementById("orp_boardButtons"),
-        }
+        },
       );
 
       if (gamedatas.isBoardRevealed) {
@@ -321,14 +317,14 @@ define([
 
       this.showMessage(
         _(
-          `Tip: the floating buttons at the left bottom contain useful resources`
+          `Tip: the floating buttons at the left bottom contain useful resources`,
         ),
-        "only_to_log"
+        "only_to_log",
       );
 
       this.showMessage(
         _("Tip: use the buttons in your solution sheet to save and clear it"),
-        "only_to_log"
+        "only_to_log",
       );
 
       const isLastRound = this.gamedatas.isLastRound;
@@ -341,7 +337,7 @@ define([
 
         this.getPlayerPanelElement(player_id).insertAdjacentHTML(
           "afterbegin",
-          `<span style="color: #${color}; font-weight: bold">${order}.</span>`
+          `<span style="color: #${color}; font-weight: bold">${order}.</span>`,
         );
 
         if (order < active_order && isLastRound) {
@@ -353,17 +349,13 @@ define([
         this.insertLastRoundBanner();
       }
 
-      // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
-      console.log("Ending game setup");
     },
 
     ///////////////////////////////////////////////////
     //// Game & client states
 
     onEnteringState: function (stateName, args) {
-      console.log("Entering state: " + stateName, args);
-
       if (!this.isSpectator || stateName === "client_placePiece") {
         if (stateName.includes("client_")) {
           this.statusBar.addActionButton(
@@ -371,7 +363,7 @@ define([
             () => {
               this.restoreServerGameState();
             },
-            { color: "alert" }
+            { color: "alert" },
           );
         }
 
@@ -388,15 +380,14 @@ define([
             cellElement.classList.add("orp_cell-selectable");
             cellElement.onclick = () => {
               const pieceElement = this.orp.globals.pieceElement;
-
               const locationFeedbackElement = cellElement.querySelector(
-                ".orp_locationFeedback"
+                ".orp_locationFeedback",
               );
 
               if (
                 !this.comparePieceToRevealedLocation(
                   locationFeedbackElement,
-                  pieceElement
+                  pieceElement,
                 )
               ) {
                 return;
@@ -431,7 +422,7 @@ define([
               this.statusBar.addActionButton(_("send ultrasound wave"), () => {
                 this.setClientState("client_sendWave", {
                   descriptionmyturn: _(
-                    "${you} must pick the origin of the wave"
+                    "${you} must pick the origin of the wave",
                   ),
                   client_args: { selectableOrigins: selectableOrigins },
                 });
@@ -446,7 +437,7 @@ define([
                     descriptionmyturn: _("${you} must pick the position"),
                     client_args: { selectableLocations: selectableLocations },
                   });
-                }
+                },
               );
             }
           }
@@ -462,12 +453,12 @@ define([
                 _("Do you really want to submit an answer?"),
                 () => {
                   this.actSubmitSolution();
-                }
+                },
               );
             },
             {
               classes: ["orp_submitAnswerBtn"],
-            }
+            },
           );
         }
 
@@ -489,12 +480,12 @@ define([
                 _("Do you really want to submit an answer?"),
                 () => {
                   this.actSubmitSolution();
-                }
+                },
               );
             },
             {
               classes: ["orp_submitAnswerBtn"],
-            }
+            },
           );
 
           this.statusBar.addActionButton(
@@ -502,15 +493,14 @@ define([
             () => {
               this.performAction("actPass");
             },
-            { color: "alert" }
+            { color: "alert" },
           );
         }
       }
     },
 
     onLeavingState: function (stateName) {
-      console.log("Leaving state: " + stateName);
-
+      console.log(stateName);
       if (stateName === "client_askLocation") {
         this.setSelectableLocations(null, true);
       }
@@ -527,7 +517,9 @@ define([
 
         document.querySelectorAll("[data-cell]").forEach((cellElement) => {
           cellElement.classList.remove("orp_cell-selectable");
-          cellElement.onclick = null;
+          cellElement.onclick = () => {
+            this.toggleBlank(cellElement);
+          };
         });
 
         this.orp.globals.pieceElement = null;
@@ -535,8 +527,6 @@ define([
     },
 
     onUpdateActionButtons: function (stateName, args) {
-      console.log("onUpdateActionButtons: " + stateName, args);
-
       if (this.isCurrentPlayerActive()) {
         switch (stateName) {
         }
@@ -573,6 +563,10 @@ define([
         const x = cellElement.dataset.cell.split("-")[0];
         const y = cellElement.dataset.cell.split("-")[1];
         cellElement.style.gridArea = `${y}/${x}`;
+
+        cellElement.onclick = () => {
+          this.toggleBlank(cellElement);
+        };
       });
     },
 
@@ -638,7 +632,9 @@ define([
           cellElement.classList.remove("orp_cell-selectable");
           cellElement.classList.remove("orp_cell-unselectable");
           cellElement.classList.remove(selectedClass);
-          cellElement.onclick = undefined;
+          cellElement.onclick = () => {
+            this.toggleBlank(cellElement);
+          };
           return;
         }
 
@@ -676,7 +672,7 @@ define([
               },
               {
                 id: "orp_confirmBtn",
-              }
+              },
             );
           };
           return;
@@ -730,7 +726,7 @@ define([
               },
               {
                 id: "orp_confirmBtn",
-              }
+              },
             );
           };
           return;
@@ -764,7 +760,7 @@ define([
         cellElement.insertAdjacentHTML("beforeend", locationFeedbackHTML);
 
         const locationFeedbackElement = document.getElementById(
-          `orp_locationFeedback-${x}-${y}`
+          `orp_locationFeedback-${x}-${y}`,
         );
 
         let color_label = color.label;
@@ -776,12 +772,11 @@ define([
         }
 
         this.addTooltip(locationFeedbackElement.id, _(color_label), "");
-
         const colorblindSupport = this.orp.info.colorToColorblind[color.id];
 
         locationFeedbackElement.insertAdjacentHTML(
           "beforeend",
-          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
+          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`,
         );
       });
     },
@@ -797,7 +792,7 @@ define([
         }
 
         const originElement = document.querySelector(
-          `[data-origin="${origin}"]`
+          `[data-origin="${origin}"]`,
         );
 
         originElement.style.backgroundColor = color.code;
@@ -816,7 +811,7 @@ define([
 
     insertPieceElement: function (
       { piece, color_id, x, y },
-      board = document.getElementById("orp_board")
+      board = document.getElementById("orp_board"),
     ) {
       if (piece <= 0) {
         return;
@@ -847,7 +842,6 @@ define([
       pieceElement.style.setProperty("--pieceColorDarker", color.darkerCode);
 
       const cellElement = board.querySelector(`[data-cell="${x}-${y}"]`);
-
       cellElement.insertAdjacentElement("afterbegin", pieceElement);
 
       this.attachControls(pieceElement);
@@ -857,7 +851,6 @@ define([
       const draftPiecesElement = document.getElementById("orp_draftPieces");
 
       const blankSpaceHTML = `<div id="orp_piece-${this.getUniqueId()}" class="orp_piece orp_blankSpace" data-piece="6" data-color="99">X</div>`;
-
       draftPiecesElement.insertAdjacentHTML("beforeend", blankSpaceHTML);
 
       for (const gemstone_id in this.orp.info.gemstones) {
@@ -865,11 +858,11 @@ define([
 
         draftPiecesElement.insertAdjacentHTML(
           "beforeend",
-          `<div id="orp_gemstone-${gemstone_id}" data-gemstone="${gemstone_id}" data-rotation="0"></div>`
+          `<div id="orp_gemstone-${gemstone_id}" data-gemstone="${gemstone_id}" data-rotation="0"></div>`,
         );
 
         const gemstoneElement = document.getElementById(
-          `orp_gemstone-${gemstone_id}`
+          `orp_gemstone-${gemstone_id}`,
         );
         gemstoneElement.classList.add("orp_gemstone");
 
@@ -878,7 +871,7 @@ define([
         const colorblindSupport = this.orp.info.colorToColorblind[color_id];
         gemstoneElement.insertAdjacentHTML(
           "beforeend",
-          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
+          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`,
         );
 
         if (this.getGameUserPreference(102) == 1) {
@@ -895,7 +888,7 @@ define([
                 "bgabutton",
               ],
               destination: gemstoneElement,
-            }
+            },
           );
         }
 
@@ -915,7 +908,7 @@ define([
                 "bgabutton",
               ],
               destination: gemstoneElement,
-            }
+            },
           );
         }
 
@@ -935,7 +928,7 @@ define([
                 "bgabutton",
               ],
               destination: gemstoneElement,
-            }
+            },
           );
         }
 
@@ -999,7 +992,7 @@ define([
             const siblingElement = document.getElementById(
               `orp_gemstonePiece-${gemstone_id}-${Number(x) + shift_x}-${
                 Number(y) + shift_y
-              }`
+              }`,
             );
 
             if (siblingElement) {
@@ -1043,7 +1036,6 @@ define([
 
     flipGemstone: function (gemstoneElement) {
       let rotation = Number(gemstoneElement.dataset.rotation);
-      console.log(rotation, "TEST");
 
       rotation += 180;
 
@@ -1073,7 +1065,7 @@ define([
 
         pieceElement.insertAdjacentHTML(
           "beforeend",
-          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`
+          `<span class="orp_colorblindSupport">${colorblindSupport}</span>`,
         );
       }
     },
@@ -1097,7 +1089,8 @@ define([
 
       this.statusBar.addActionButton(
         `<i class="fa fa-trash fa-inverse" aria-hidden="true"></i>`,
-        () => {
+        (event) => {
+          event.stopPropagation();
           pieceElement.remove();
           this.restoreServerGameState();
         },
@@ -1107,7 +1100,7 @@ define([
           classes: ["orp_pieceButton-delete", "orp_pieceButton"],
           color: "alert",
           destination: pieceElement,
-        }
+        },
       );
 
       if (piece < 5 && piece) {
@@ -1142,7 +1135,7 @@ define([
             color: "secondary",
             classes: ["orp_pieceButton-rotate", "orp_pieceButton"],
             destination: pieceElement,
-          }
+          },
         );
       }
     },
@@ -1168,7 +1161,7 @@ define([
             const siblingElement = document.querySelector(
               `[data-cell="${Number(x) + Number(shift_x)}-${
                 Number(y) + Number(shift_y)
-              }"]`
+              }"]`,
             );
 
             const siblingColor =
@@ -1184,7 +1177,7 @@ define([
 
     comparePieceToRevealedLocation: function (
       locationFeedbackElement,
-      pieceElement
+      pieceElement,
     ) {
       if (!locationFeedbackElement) {
         return true;
@@ -1193,7 +1186,7 @@ define([
       if (locationFeedbackElement.dataset.color == 0) {
         this.showMessage(
           _("This position has been confirmed as blank"),
-          "error"
+          "error",
         );
         return;
       }
@@ -1201,7 +1194,7 @@ define([
       if (locationFeedbackElement.dataset.color != pieceElement.dataset.color) {
         this.showMessage(
           _("This position has been confirmed as another color"),
-          "error"
+          "error",
         );
         return false;
       }
@@ -1273,7 +1266,7 @@ define([
           `<div id="orp_previousAnswersContainer-${player_id}" class="orp_previousAnswersContainer-hidden orp_previousAnswersContainer whiteblock">
             <h3 class="orp_previousAnswersTitle orp_title">${_(title)}</h3>
             <div id="orp_previousAnswers-${player_id}" class="orp_previousAnswers"></div>
-          </div>`
+          </div>`,
         );
 
         previousAnswers.forEach((answer) => {
@@ -1349,7 +1342,7 @@ define([
       if (isSheet) {
         alternateBoard.insertAdjacentHTML(
           "afterbegin",
-          `<h4 class="orp_lastSheetTitle">${_("last saved sheet")}</h4>`
+          `<h4 class="orp_lastSheetTitle">${_("last saved sheet")}</h4>`,
         );
       }
     },
@@ -1414,9 +1407,9 @@ define([
       if (solutionSheet.length > 75) {
         this.showMessage(
           _(
-            "Limit of occupied cells in the sheet reached. Please clear a few cells"
+            "Limit of occupied cells in the sheet reached. Please clear a few cells",
           ),
-          "error"
+          "error",
         );
         return;
       }
@@ -1428,7 +1421,7 @@ define([
         },
         {
           checkAction: false,
-        }
+        },
       );
     },
 
@@ -1455,9 +1448,9 @@ define([
       if (solutionSheet.length > 75) {
         this.showMessage(
           _(
-            "Limit of occupied cells in the sheet reached. Please clear a few cells"
+            "Limit of occupied cells in the sheet reached. Please clear a few cells",
           ),
-          "error"
+          "error",
         );
         return;
       }
@@ -1472,16 +1465,30 @@ define([
       pageTitle.insertAdjacentHTML(
         "beforeend",
         `<span class="orp_lastRoundBanner">${_(
-          "This is the last round!"
-        )}<span>`
+          "This is the last round!",
+        )}<span>`,
       );
+    },
+
+    toggleBlank: function (cellElement) {
+      if (cellElement.querySelector("[data-color='99']")) {
+        cellElement.innerHTML = "";
+        return;
+      }
+
+      if (cellElement.childElementCount === 0) {
+        const uid = `orp_piece-${this.getUniqueId()}`;
+        const blankSpaceHTML = `<div id="${uid}" class="orp_piece orp_blankSpace" data-piece="6" data-color="99">X</div>`;
+        cellElement.innerHTML = blankSpaceHTML;
+
+        this.attachControls(document.getElementById(uid));
+      }
     },
 
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications
 
     setupNotifications: function () {
-      console.log("notifications subscriptions setup");
       this.bgaSetupPromiseNotifications();
     },
 

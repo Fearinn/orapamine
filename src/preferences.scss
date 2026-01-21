@@ -35,6 +35,13 @@
   z-index: 1;
 }
 
+// [data-color="0"],
+// [data-color="99"] {
+//   .orp_colorblindSupport {
+//     display: none;
+//   }
+// }
+
 .orp_pref-draggable {
   .orp_piece:not(.orp_piece-drag) {
     cursor: grab;

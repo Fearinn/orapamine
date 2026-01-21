@@ -7,7 +7,7 @@
   gap: 64px;
   order: 2;
   margin: 0 auto;
-  padding: 8px;
+  padding: 16px 8px 8px 8px;
   max-width: var(--boardWidth);
 
   &-hidden {
@@ -61,9 +61,9 @@
   aspect-ratio: 1;
   background-color: var(--pieceColor);
   border: 0 solid var(--pieceColorDarker);
+  width: var(--cellWidth);
   cursor: pointer;
   touch-action: none;
-  width: var(--cellWidth);
 
   &-empty {
     cursor: initial;
@@ -98,8 +98,6 @@
         #ffffff00 50%,
         var(--pieceColor) 50%
       );
-      // border-bottom: 2px solid var(--pieceColorDarker);
-      // border-right: 2px solid var(--pieceColorDarker);
     }
 
     &[data-piece="2"] {
@@ -108,8 +106,6 @@
         #ffffff00 50%,
         var(--pieceColor) 50%
       );
-      // border-bottom: 2px solid var(--pieceColorDarker);
-      // border-left: 2px solid var(--pieceColorDarker);
     }
 
     &[data-piece="3"] {
@@ -118,8 +114,6 @@
         #ffffff00 50%,
         var(--pieceColor) 50%
       );
-      // border-top: 2px solid var(--pieceColorDarker);
-      // border-right: 2px solid var(--pieceColorDarker);
     }
 
     &[data-piece="4"] {
@@ -128,8 +122,6 @@
         #ffffff00 50%,
         var(--pieceColor) 50%
       );
-      // border-top: 2px solid var(--pieceColorDarker);
-      // border-left: 2px solid var(--pieceColorDarker);
     }
   }
 }

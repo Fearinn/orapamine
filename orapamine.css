@@ -364,10 +364,12 @@
   text-shadow: black 1px 0 10px;
 }
 .orp_origin-transparent {
-  background-image: radial-gradient(black, #f5f5dc, gray);
+  background-image: radial-gradient(gray, #f5f5dc);
+  border-radius: 50%;
 }
 .orp_origin-absorbed {
-  background-image: radial-gradient(white, #0c1533, gray);
+  background-image: radial-gradient(gray, #0c1533);
+  border-radius: 50%;
 }
 
 @keyframes leap {

@@ -121,11 +121,13 @@
   }
 
   &-transparent {
-    background-image: radial-gradient(black, #f5f5dc, gray);
+    background-image: radial-gradient(gray, #f5f5dc);
+    border-radius: 50%;
   }
 
   &-absorbed {
-    background-image: radial-gradient(white, #0c1533, gray);
+    background-image: radial-gradient(gray, #0c1533);
+    border-radius: 50%;
   }
 }
 

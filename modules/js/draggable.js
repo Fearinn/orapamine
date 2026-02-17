@@ -10,6 +10,7 @@ let isGemstoneMove = false;
 let autoScrollRaf = null;
 let lastMouseY = 0;
 let prevMouseY = 0;
+let activePointerId = null;
 
 function startAutoScroll() {
   function step() {
@@ -38,8 +39,12 @@ function stopAutoScroll() {
 }
 
 function userPressed(event) {
-  element = event.target;
+  // If a drag is already in progress, ignore new pointerdown events
+  if (activePointerId !== null) {
+    return;
+  }
 
+  element = event.target;
   isGemstoneMove = element.classList.contains("orp_gemstoneButton-move");
 
   if (!element.dataset.piece && !isGemstoneMove) {
@@ -54,6 +59,7 @@ function userPressed(event) {
   startY = event.pageY;
   lastMouseY = event.clientY;
   prevMouseY = event.clientY; // initialize direction tracking
+  activePointerId = event.pointerId;
 
   const gameAreaElement = document.getElementById("orp_gameArea");
 
@@ -72,6 +78,10 @@ function userPressed(event) {
 }
 
 function userMoved(event) {
+  // Only respond to the pointer that started the drag
+  if (event.pointerId !== activePointerId) {
+    return;
+  }
   event.preventDefault();
 
   prevMouseY = lastMouseY;
@@ -101,6 +111,10 @@ function userMovedRaf() {
 }
 
 function userReleased(event) {
+  // Only respond to the pointer that started the drag
+  if (event.pointerId !== activePointerId) {
+    return;
+  }
   const gameAreaElement = document.getElementById("orp_gameArea");
 
   gameAreaElement.removeEventListener("pointermove", userMoved);
@@ -139,6 +153,7 @@ function userReleased(event) {
   stopAutoScroll();
   deltaX = null;
   deltaY = null;
+  activePointerId = null;
 }
 
 function dropItemOntoXY(pieceElement, x, y) {

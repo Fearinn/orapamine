@@ -559,8 +559,7 @@
 :root.orp_pref-themedBackground-blue,
 :root.orp_pref-themedBackground-red {
   background-image: url("img/background.png");
-  background-size: 100%;
-  background-attachment: fixed;
+  background-size: 100% 100%;
 }
 :root.orp_pref-themedBackground-blue .orp_questionLogContainer,
 :root.orp_pref-themedBackground-blue .orp_title,

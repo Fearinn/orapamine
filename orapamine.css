@@ -556,21 +556,21 @@
   visibility: hidden;
 }
 
-:root.orp_pref-thematicBackground-blue,
-:root.orp_pref-thematicBackground-red {
+:root.orp_pref-themedBackground-blue,
+:root.orp_pref-themedBackground-red {
   background-image: url("img/background.png");
   background-size: 100%;
   background-attachment: fixed;
 }
-:root.orp_pref-thematicBackground-blue .orp_questionLogContainer,
-:root.orp_pref-thematicBackground-blue .orp_title,
-:root.orp_pref-thematicBackground-red .orp_questionLogContainer,
-:root.orp_pref-thematicBackground-red .orp_title {
+:root.orp_pref-themedBackground-blue .orp_questionLogContainer,
+:root.orp_pref-themedBackground-blue .orp_title,
+:root.orp_pref-themedBackground-red .orp_questionLogContainer,
+:root.orp_pref-themedBackground-red .orp_title {
   color: white;
   -webkit-text-stroke: 1.5px var(--themeColor);
 }
 
-:root.orp_pref-thematicBackground-red {
+:root.orp_pref-themedBackground-red {
   --themeColor: darkred;
   background-image: url("img/background-red.png");
 }

@@ -1,5 +1,5 @@
-:root.orp_pref-thematicBackground-blue,
-:root.orp_pref-thematicBackground-red {
+:root.orp_pref-themedBackground-blue,
+:root.orp_pref-themedBackground-red {
   background-image: url("img/background.png");
   background-size: 100%;
   background-attachment: fixed;
@@ -11,7 +11,7 @@
   }
 }
 
-:root.orp_pref-thematicBackground-red {
+:root.orp_pref-themedBackground-red {
   --themeColor: darkred;
 
   background-image: url("img/background-red.png");

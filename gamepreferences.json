@@ -1,6 +1,6 @@
 {
   "100": {
-    "name": "Thematic background",
+    "name": "Themed background",
     "needReload": false,
     "values": {
       "0": {
@@ -8,11 +8,11 @@
       },
       "1": {
         "name": "Blue",
-        "cssPref": "orp_pref-thematicBackground-blue"
+        "cssPref": "orp_pref-themedBackground-blue"
       },
       "2": {
         "name": "Red",
-        "cssPref": "orp_pref-thematicBackground-red"
+        "cssPref": "orp_pref-themedBackground-red"
       }
     },
     "default": 1

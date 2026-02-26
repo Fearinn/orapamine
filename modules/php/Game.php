@@ -568,7 +568,6 @@ class Game extends \Table
                     return false;
                 }
 
-                // Define allowed adjacency based on direction
                 $allowedNeighbors = [];
                 if ($piece === 1) { // ↖ top-left
                     $allowedNeighbors = [[$piece_x - 1, $piece_y], [$piece_x, $piece_y - 1]];
@@ -580,7 +579,6 @@ class Game extends \Table
                     $allowedNeighbors = [[$piece_x + 1, $piece_y], [$piece_x, $piece_y + 1]];
                 }
 
-                // Check for disallowed lateral adjacency
                 $adjacent_positions = [
                     [$piece_x - 1, $piece_y], // Left
                     [$piece_x + 1, $piece_y], // Right
@@ -591,7 +589,7 @@ class Game extends \Table
                 foreach ($adjacent_positions as [$adj_x, $adj_y]) {
                     if (isset($board[$adj_x][$adj_y]) && $board[$adj_x][$adj_y] > 0) {
                         if ($gemstoneBoard[$adj_x][$adj_y] === $gemstone_id) {
-                            continue; // Same color is allowed
+                            continue;
                         }
 
                         $is_allowed = false;
@@ -602,7 +600,7 @@ class Game extends \Table
                             }
                         }
                         if (!$is_allowed) {
-                            return false; // Invalid lateral adjacency
+                            return false;
                         }
                     }
                 }
@@ -646,8 +644,14 @@ class Game extends \Table
         return true;
     }
 
-    public function arrangePieces(array &$board, array &$gemstoneBoard, array $gemstone, int $base_x, int $base_y, int $rotation): void
-    {
+    public function arrangePieces(
+        array &$board,
+        array &$gemstoneBoard,
+        array $gemstone,
+        int $base_x,
+        int $base_y,
+        int $rotation
+    ): void {
         $format = (array) $gemstone["format"][$rotation];
 
         $piece_y = $base_y;
@@ -667,8 +671,14 @@ class Game extends \Table
         }
     }
 
-    public function removePieces(array &$board, array &$gemstoneBoard, array $gemstone, int $base_x, int $base_y, int $rotation): void
-    {
+    public function removePieces(
+        array &$board,
+        array &$gemstoneBoard,
+        array $gemstone,
+        int $base_x,
+        int $base_y,
+        int $rotation
+    ): void {
         $format = (array) $gemstone["format"][$rotation];
 
         $piece_y = $base_y;
@@ -685,25 +695,26 @@ class Game extends \Table
         }
     }
 
-    public function placeGemstones(array &$board, array  &$gemstoneBoard, array &$gemstones, int $index = 0): bool
-    {
+    public function placeGemstones(
+        array &$board,
+        array &$gemstoneBoard,
+        array &$gemstones,
+        int $index = 0
+    ): bool {
         if ($index > count($gemstones) - 1) {
-            return true;
+            return $this->allGemstonesReachable($board, $gemstoneBoard);
         }
 
-        $possible_x = [];
-        $possible_y = [];
+        $possible_positions = [];
         foreach ($board as $x => $row) {
             foreach ($row as $y => $piece) {
                 if ($piece === 0) {
-                    $possible_x[] = $x;
-                    $possible_y[] = $y;
+                    $possible_positions[] = [$x, $y];
                 }
             }
         }
 
-        shuffle($possible_x);
-        shuffle($possible_y);
+        shuffle($possible_positions);
 
         $rotations = [0, 90, 180, 270];
         shuffle($rotations);
@@ -711,17 +722,91 @@ class Game extends \Table
         $gemstone = (array) $gemstones[$index];
 
         foreach ($rotations as $rotation) {
-            foreach ($possible_x as $x) {
-                foreach ($possible_y as $y) {
-                    if ($this->isValidPlacement($board, $gemstoneBoard, $gemstone, $x, $y, $rotation)) {
-                        $this->arrangePieces($board, $gemstoneBoard, $gemstone, $x, $y, $rotation);
+            foreach ($possible_positions as $position) {
+                $x = $position[0];
+                $y = $position[1];
 
-                        if ($this->placeGemstones($board, $gemstoneBoard, $gemstones, $index + 1)) {
-                            return true;
-                        }
+                if ($this->isValidPlacement($board, $gemstoneBoard, $gemstone, $x, $y, $rotation)) {
+                    $this->arrangePieces($board, $gemstoneBoard, $gemstone, $x, $y, $rotation);
 
-                        $this->removePieces($board, $gemstoneBoard, $gemstone, $x, $y, $rotation);
+                    if (
+                        $this->allGemstonesReachable($board, $gemstoneBoard)
+                        && $this->placeGemstones($board, $gemstoneBoard, $gemstones, $index + 1)
+                    ) {
+                        return true;
                     }
+
+                    $this->removePieces($board, $gemstoneBoard, $gemstone, $x, $y, $rotation);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function allGemstonesReachable(array $board, array $gemstoneBoard): bool
+    {
+        $gemstonePositions = [];
+        foreach ($gemstoneBoard as $x => $row) {
+            foreach ($row as $y => $id) {
+                if ($id > 0) {
+                    $gemstonePositions[$id][] = [$x, $y];
+                }
+            }
+        }
+
+        foreach ($gemstonePositions as $positions) {
+            foreach ($positions as $start) {
+                $start_x = $start[0];
+                $start_y = $start[1];
+
+                if (!$this->gemstoneReachesEdge($board, $start_x, $start_y)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function gemstoneReachesEdge(array $board, int $start_x, int $start_y): bool
+    {
+        $rows = 10;
+        $cols = 8;
+
+        $visited = [];
+        $queue = [];
+        $queue[] = [$start_x, $start_y];
+        $visited[$start_x][$start_y] = true;
+
+        $directions = [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1]
+        ];
+
+        while (!empty($queue)) {
+            [$curr_x, $curr_y] = array_shift($queue);
+
+            if (
+                $curr_x <= 1 || $curr_x >= $rows ||
+                $curr_y <= 1 || $curr_y >= $cols
+            ) {
+                return true;
+            }
+
+            foreach ($directions as $dir) {
+                $next_x = $curr_x + $dir[0];
+                $next_y = $curr_y + $dir[1];
+
+                if (
+                    isset($board[$next_x][$next_y]) &&
+                    $board[$next_x][$next_y] === 0 &&
+                    !isset($visited[$next_x][$next_y])
+                ) {
+                    $visited[$next_x][$next_y] = true;
+                    $queue[] = [$next_x, $next_y];
                 }
             }
         }
@@ -1184,7 +1269,6 @@ class Game extends \Table
         $gamedatas["players"] = $this->getCollectionFromDb(
             "SELECT `player_id` `id`, `player_score` `score`, `player_chances` `chances`, `player_no` `order` FROM `player`"
         );
-        $gamedatas["GAME_VERSION"] = (int) $this->gamestate->table_globals[300];
         $gamedatas["COLORS"] = $this->COLORS;
         $gamedatas["GEMSTONES"] = $this->GEMSTONES();
         $gamedatas["AXIS_LETTERS"] = $this->AXIS_LETTERS;

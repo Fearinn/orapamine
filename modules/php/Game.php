@@ -163,24 +163,10 @@ class Game extends \Table
 
     /** Player actions */
 
-    public function checkVersion(?int $CLIENT_VERSION): void
-    {
-        // if ($CLIENT_VERSION === null) {
-        //     return;
-        // }
-
-        // $SERVER_VERSION = (int) $this->gamestate->table_globals[300];
-        // if ($CLIENT_VERSION !== $SERVER_VERSION) {
-        //     throw new \BgaUserException(clienttranslate("A new version of this game is now available. Please reload the page (F5)."));
-        // }
-    }
-
     public function actAskLocation(
-        ?int $CLIENT_VERSION,
         #[IntParam(min: 1, max: 10)] int $guess_x,
         #[IntParam(min: 1, max: 8)] int $guess_y
     ): void {
-        $this->checkVersion($CLIENT_VERSION);
         $player_id = (int) $this->getActivePlayerId();
 
         $coloredBoard = $this->globals->get(COLORED_BOARD);
@@ -244,7 +230,7 @@ class Game extends \Table
         $this->gamestate->nextState("submitSolution");
     }
 
-    public function actSendWave(?int $CLIENT_VERSION, #[StringParam(
+    public function actSendWave(#[StringParam(
         enum: [
             "A",
             "B",
@@ -285,7 +271,6 @@ class Game extends \Table
         ]
     )] string $origin): void
     {
-        $this->checkVersion($CLIENT_VERSION);
         $player_id = (int) $this->getActivePlayerId();
 
         $this->globals->set(ORIGIN, $origin);
@@ -312,10 +297,8 @@ class Game extends \Table
     }
 
     #[CheckAction(false)]
-    public function actClearSolution(?int $CLIENT_VERSION): void
+    public function actClearSolution(): void
     {
-        $this->checkVersion($CLIENT_VERSION);
-
         if ($this->gamestate->state_id() === 99) {
             throw new \BgaUserException("This table is finished");
         }
@@ -338,9 +321,8 @@ class Game extends \Table
     }
 
     #[CheckAction(false)]
-    public function actSaveSolution(?int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $solutionSheet): void
+    public function actSaveSolution(#[JsonParam(alphanum: true)] array $solutionSheet): void
     {
-        $this->checkVersion($CLIENT_VERSION);
 
         if ($this->gamestate->state_id() === 99) {
             throw new \BgaUserException("This table is finished");
@@ -366,10 +348,8 @@ class Game extends \Table
         );
     }
 
-    public function actSubmitSolution(int $CLIENT_VERSION, #[JsonParam(alphanum: true)] array $solutionSheet): void
+    public function actSubmitSolution(#[JsonParam(alphanum: true)] array $solutionSheet): void
     {
-        $this->checkVersion($CLIENT_VERSION);
-
         if (!$this->isValidSolution($solutionSheet)) {
             throw new \BgaUserException(clienttranslate("Please build a valid solution sheet before submitting an answer"));
         };

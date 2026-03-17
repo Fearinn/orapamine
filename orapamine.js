@@ -468,7 +468,6 @@ define([
     },
 
     onLeavingState: function (stateName) {
-      console.log(stateName);
       if (stateName === "client_askLocation") {
         this.setSelectableLocations(null, true);
       }
@@ -1535,32 +1534,36 @@ define([
       });
     },
 
-    // Override
-    format_string_recursive(log, args) {
+    bgaFormatText(log, args) {
       try {
-        if (log && args && !args.processed) {
-          args.processed = true;
+        const { color_id, origin, exit } = args;
+        console.log(color_id, origin, exit, "TEST");
 
-          if (args.color_label && args.color_id !== undefined) {
-            const color = this.orp.info.colors[args.color_id];
-
-            const textColor = color.contrast === "light" ? "black" : "white";
-
-            args.color_label = `<span class="orp_logHighlight" style="color: ${textColor}; background-color: ${
-              color.code
-            }; padding: 0 4px;">${_(color.label)}</span>`;
-          }
-
-          highlighted = ["log_x", "log_y", "log_origin", "log_exit"];
-          highlighted.forEach((key) => {
-            args[key] = `<span class="orp_logHighlight">${args[key]}</span>`;
-          });
+        if (color_id != 16 && origin && exit && origin === exit) {
+          document
+            .querySelector(`[data-origin="${origin}"]`)
+            .classList.add("orp_origin-mirror");
         }
+
+        if (args.color_label && args.color_id !== undefined) {
+          const color = this.orp.info.colors[args.color_id];
+
+          const textColor = color.contrast === "light" ? "black" : "white";
+
+          args.color_label = `<span class="orp_logHighlight" style="color: ${textColor}; background-color: ${
+            color.code
+          }; padding: 0 4px;">${_(color.label)}</span>`;
+        }
+
+        highlighted = ["log_x", "log_y", "log_origin", "log_exit"];
+        highlighted.forEach((key) => {
+          args[key] = `<span class="orp_logHighlight">${args[key]}</span>`;
+        });
       } catch (e) {
         console.error(log, args, "Exception thrown", e.stack);
       }
 
-      return this.inherited(arguments);
+      return { log, args };
     },
   });
 });

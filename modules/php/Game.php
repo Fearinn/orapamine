@@ -996,8 +996,10 @@ class Game extends \Table
                     "color_id" => $blackbodyColor_id,
                     "origin" => $origin,
                     "exit" => $origin,
+                    "preserve" => ["color_id", "origin", "exit"],
                 ],
             );
+
             return;
         }
 
@@ -1065,6 +1067,7 @@ class Game extends \Table
                 "log_exit" => $exit_id,
                 "color_label" => (string) $color["label"],
                 "i18n" => ["color_label"],
+                "preserve" => ["color_id", "origin", "exit"],
             ]
         );
     }

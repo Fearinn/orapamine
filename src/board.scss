@@ -91,6 +91,7 @@
 }
 
 .orp_origin {
+  position: relative;
   color: white;
   font-weight: bold;
   font-size: 24px;
@@ -128,6 +129,20 @@
   &-absorbed {
     background-image: radial-gradient(gray, #0c1533);
     border-radius: 50%;
+  }
+
+  &-mirror {
+    &::after {
+      font-size: 32px;
+      content: "\27F7";
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      color: black;
+      -webkit-text-stroke: 0;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
   }
 }
 

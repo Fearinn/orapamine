@@ -1537,7 +1537,6 @@ define([
     bgaFormatText(log, args) {
       try {
         const { color_id, origin, exit } = args;
-        console.log(color_id, origin, exit, "TEST");
 
         if (color_id != 16 && origin && exit && origin === exit) {
           document

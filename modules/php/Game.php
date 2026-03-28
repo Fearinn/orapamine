@@ -513,7 +513,8 @@ class Game extends \Table
         $coloredBoard = [];
         foreach ($gemstoneBoard as $x => $row) {
             foreach ($row as $y => $gemstone_id) {
-                $color_id = $gemstone_id > 0 ? (int) $this->GEMSTONES()[$gemstone_id]["color"] : 0;
+                $gemstones = $this->GEMSTONES();
+                $color_id = $gemstone_id > 0 ? (int) $gemstones[$gemstone_id]["color"] : 0;
                 $coloredBoard[$x][$y] = $color_id;
             }
         }
@@ -666,8 +667,11 @@ class Game extends \Table
             $piece_x = $base_x;
 
             foreach ($row as $piece) {
-                $board[$piece_x][$piece_y] = 0;
-                $gemstoneBoard[$piece_x][$piece_y] = 0;
+                if ($piece > 0) {
+                    $board[$piece_x][$piece_y] = 0;
+                    $gemstoneBoard[$piece_x][$piece_y] = 0;
+                }
+
                 $piece_x++;
             }
 
@@ -770,8 +774,8 @@ class Game extends \Table
             [$curr_x, $curr_y] = array_shift($queue);
 
             if (
-                $curr_x <= 1 || $curr_x >= $rows ||
-                $curr_y <= 1 || $curr_y >= $cols
+                $curr_x === 1 || $curr_x === $rows ||
+                $curr_y === 1 || $curr_y === $cols
             ) {
                 return true;
             }
@@ -1369,8 +1373,12 @@ class Game extends \Table
         throw new \feException("Zombie mode not supported at this game state: \"{$state_name}\".");
     }
 
-    public function debug_setLocation(int $x, int $y, int $piece, int $color_id): void
-    {
+    public function debug_setLocation(
+        int $x,
+        int $y,
+        int $piece,
+        int $color_id
+    ): void {
         $board = $this->globals->get(BOARD);
         $board[$x][$y] = $piece;
         $this->globals->set(BOARD, $board);
@@ -1390,5 +1398,51 @@ class Game extends \Table
     public function debug_revealBoard(): void
     {
         $this->revealBoard();
+    }
+
+    public function debug_testPlacement(): void
+    {
+        $board = array_fill(1, 10, array_fill(1, 8, 0));
+        $gemstoneBoard = array_fill(1, 10, array_fill(1, 8, 0));
+
+        $gemstones = $this->GEMSTONES();
+        shuffle($gemstones);
+
+        if (!$this->placeGemstones($board, $gemstoneBoard, $gemstones)) {
+            throw new \BgaVisibleSystemException("Board placement FAILED");
+        }
+
+        $state = $this->debug_getBoardState($board, $gemstoneBoard);
+        throw new \BgaVisibleSystemException("Board placement PASSED - " . $state);
+    }
+
+    private function debug_getBoardState(array $board, array $gemstoneBoard): string
+    {
+        $gemstonePositions = [];
+        foreach ($gemstoneBoard as $x => $row) {
+            foreach ($row as $y => $id) {
+                if ($id > 0) {
+                    if (!isset($gemstonePositions[$id])) {
+                        $gemstonePositions[$id] = [];
+                    }
+                    $gemstonePositions[$id][] = [$x, $y];
+                }
+            }
+        }
+
+        $result = [];
+        foreach ($gemstonePositions as $id => $positions) {
+            $reachable = true;
+            foreach ($positions as $pos) {
+                if (!$this->gemstoneReachesEdge($board, $pos[0], $pos[1])) {
+                    $reachable = false;
+                    break;
+                }
+            }
+
+            $result[] = "Gemstone $id: " . json_encode($positions) . " - Reachable: " . ($reachable ? "YES" : "NO");
+        }
+
+        return implode(" | ", $result);
     }
 }

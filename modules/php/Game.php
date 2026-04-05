@@ -538,7 +538,6 @@ class Game extends \Table
 
         $format = (array) $gemstone["format"][$rotation];
         $gemstone_id = (int) $gemstone["id"];
-        $gemstoneHidden = true;
 
         $piece_y = $base_y;
         foreach ($format as $row) {
@@ -561,10 +560,10 @@ class Game extends \Table
                 }
 
                 $adjacent_positions = [
-                    [$piece_x - 1, $piece_y], // Left
-                    [$piece_x + 1, $piece_y], // Right
-                    [$piece_x, $piece_y - 1], // Up
-                    [$piece_x, $piece_y + 1]  // Down
+                    [$piece_x - 1, $piece_y],
+                    [$piece_x + 1, $piece_y],
+                    [$piece_x, $piece_y - 1],
+                    [$piece_x, $piece_y + 1]
                 ];
 
                 foreach ($adjacent_positions as [$adj_x, $adj_y]) {
@@ -580,6 +579,7 @@ class Game extends \Table
                                 break;
                             }
                         }
+
                         if (!$is_allowed) {
                             return false;
                         }
@@ -588,38 +588,9 @@ class Game extends \Table
 
                 $board[$piece_x][$piece_y] = $piece;
                 $gemstoneBoard[$piece_x][$piece_y] = $gemstone_id;
-
-                for ($x = $piece_x; $x <= 10; $x++) {
-                    if ($board[$x][$piece_y] === 0) {
-                        $gemstoneHidden = false;
-                    }
-                }
-
-                for ($x = $piece_x; $x >= 1; $x--) {
-                    if ($board[$x][$piece_y] === 0) {
-                        $gemstoneHidden = false;
-                    }
-                }
-
-                for ($y = $piece_y; $y <= 8; $y++) {
-                    if ($board[$piece_x][$y] === 0) {
-                        $gemstoneHidden = false;
-                    }
-                }
-
-                for ($y = $piece_y; $y >= 1; $y--) {
-                    if ($board[$piece_x][$y] === 0) {
-                        $gemstoneHidden = false;
-                    }
-                }
-
                 $piece_x++;
             }
             $piece_y++;
-        }
-
-        if ($gemstoneHidden) {
-            return false;
         }
 
         return true;
@@ -730,72 +701,56 @@ class Game extends \Table
 
     public function allGemstonesReachable(array $board, array $gemstoneBoard): bool
     {
-        $gemstonePositions = [];
+        $gemstoneIds = [];
+        $reachableGemstones = [];
+
         foreach ($gemstoneBoard as $x => $row) {
             foreach ($row as $y => $id) {
                 if ($id > 0) {
-                    $gemstonePositions[$id][] = [$x, $y];
+                    $gemstoneIds[$id] = true;
                 }
             }
         }
 
-        foreach ($gemstonePositions as $positions) {
-            foreach ($positions as $start) {
-                $start_x = $start[0];
-                $start_y = $start[1];
-
-                if (!$this->gemstoneReachesEdge($board, $start_x, $start_y)) {
-                    return false;
+        for ($y = 1; $y <= 8; $y++) {
+            for ($x = 1; $x <= 10; $x++) {
+                if ($board[$x][$y] > 0) {
+                    $reachableGemstones[$gemstoneBoard[$x][$y]] = true;
+                    break;
                 }
+            }
+
+            for ($x = 10; $x >= 1; $x--) {
+                if ($board[$x][$y] > 0) {
+                    $reachableGemstones[$gemstoneBoard[$x][$y]] = true;
+                    break;
+                }
+            }
+        }
+
+        for ($x = 1; $x <= 10; $x++) {
+            for ($y = 1; $y <= 8; $y++) {
+                if ($board[$x][$y] > 0) {
+                    $reachableGemstones[$gemstoneBoard[$x][$y]] = true;
+                    break;
+                }
+            }
+
+            for ($y = 8; $y >= 1; $y--) {
+                if ($board[$x][$y] > 0) {
+                    $reachableGemstones[$gemstoneBoard[$x][$y]] = true;
+                    break;
+                }
+            }
+        }
+
+        foreach (array_keys($gemstoneIds) as $id) {
+            if (!isset($reachableGemstones[$id])) {
+                return false;
             }
         }
 
         return true;
-    }
-
-    private function gemstoneReachesEdge(array $board, int $start_x, int $start_y): bool
-    {
-        $rows = 10;
-        $cols = 8;
-
-        $visited = [];
-        $queue = [];
-        $queue[] = [$start_x, $start_y];
-        $visited[$start_x][$start_y] = true;
-
-        $directions = [
-            [-1, 0],
-            [1, 0],
-            [0, -1],
-            [0, 1]
-        ];
-
-        while (!empty($queue)) {
-            [$curr_x, $curr_y] = array_shift($queue);
-
-            if (
-                $curr_x === 1 || $curr_x === $rows ||
-                $curr_y === 1 || $curr_y === $cols
-            ) {
-                return true;
-            }
-
-            foreach ($directions as $dir) {
-                $next_x = $curr_x + $dir[0];
-                $next_y = $curr_y + $dir[1];
-
-                if (
-                    isset($board[$next_x][$next_y]) &&
-                    $board[$next_x][$next_y] === 0 &&
-                    !isset($visited[$next_x][$next_y])
-                ) {
-                    $visited[$next_x][$next_y] = true;
-                    $queue[] = [$next_x, $next_y];
-                }
-            }
-        }
-
-        return false;
     }
 
     public function updateSelectableLocations(string $removedLocation, ?bool $setup = false): void
@@ -1398,51 +1353,5 @@ class Game extends \Table
     public function debug_revealBoard(): void
     {
         $this->revealBoard();
-    }
-
-    public function debug_testPlacement(): void
-    {
-        $board = array_fill(1, 10, array_fill(1, 8, 0));
-        $gemstoneBoard = array_fill(1, 10, array_fill(1, 8, 0));
-
-        $gemstones = $this->GEMSTONES();
-        shuffle($gemstones);
-
-        if (!$this->placeGemstones($board, $gemstoneBoard, $gemstones)) {
-            throw new \BgaVisibleSystemException("Board placement FAILED");
-        }
-
-        $state = $this->debug_getBoardState($board, $gemstoneBoard);
-        throw new \BgaVisibleSystemException("Board placement PASSED - " . $state);
-    }
-
-    private function debug_getBoardState(array $board, array $gemstoneBoard): string
-    {
-        $gemstonePositions = [];
-        foreach ($gemstoneBoard as $x => $row) {
-            foreach ($row as $y => $id) {
-                if ($id > 0) {
-                    if (!isset($gemstonePositions[$id])) {
-                        $gemstonePositions[$id] = [];
-                    }
-                    $gemstonePositions[$id][] = [$x, $y];
-                }
-            }
-        }
-
-        $result = [];
-        foreach ($gemstonePositions as $id => $positions) {
-            $reachable = true;
-            foreach ($positions as $pos) {
-                if (!$this->gemstoneReachesEdge($board, $pos[0], $pos[1])) {
-                    $reachable = false;
-                    break;
-                }
-            }
-
-            $result[] = "Gemstone $id: " . json_encode($positions) . " - Reachable: " . ($reachable ? "YES" : "NO");
-        }
-
-        return implode(" | ", $result);
     }
 }

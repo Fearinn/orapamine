@@ -651,7 +651,7 @@
 }
 @media screen and (max-width: 800px) {
   .orp_gameArea {
-    padding: 60px 8px 0 8px;
+    padding: 80px 8px 0 8px;
   }
 }
 .orp_gameArea * {

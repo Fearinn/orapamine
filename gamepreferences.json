@@ -55,5 +55,18 @@
       }
     },
     "default": 1
+  },
+  "104": {
+    "name": "Autosave solution sheet",
+    "needReload": false,
+    "values": {
+      "0": {
+        "name": "No"
+      },
+      "1": {
+        "name": "Yes"
+      }
+    },
+    "default": 1
   }
 }

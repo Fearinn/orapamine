@@ -1369,6 +1369,10 @@ define([
     },
 
     actAutosaveSolution: function () {
+      if (this.getGameUserPreference(104) !== 1) {
+        return;
+      }
+
       this.saveSolutionSheet(this.getSolutionSheet(), true);
     },
 

@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Bga\Games\OrapaMine;
 
 use Bga\GameFramework\Actions\CheckAction;
+use Bga\GameFramework\Actions\Types\BoolParam;
 use Bga\GameFramework\Actions\Types\IntParam;
 use Bga\GameFramework\Actions\Types\JsonParam;
 use Bga\GameFramework\Actions\Types\StringParam;
@@ -300,7 +301,10 @@ class Game extends \Table
     }
 
     #[CheckAction(false)]
-    public function actSaveSolution(#[JsonParam(alphanum: true)] array $solutionSheet): void
+    public function actSaveSolution(
+        #[JsonParam(alphanum: true)] array $solutionSheet,
+        #[BoolParam] bool $autosave = false,
+    ): void
     {
 
         if ($this->gamestate->state_id() === 99) {
@@ -317,14 +321,16 @@ class Game extends \Table
         $solutionSheets[$player_id] = $solutionSheet;
         $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
 
-        $this->notify->player(
-            $player_id,
-            "saveSolution",
-            "",
-            [
-                "solutionSheet" => $solutionSheet,
-            ]
-        );
+        if (!$autosave) {
+            $this->notify->player(
+                $player_id,
+                "saveSolution",
+                "",
+                [
+                    "solutionSheet" => $solutionSheet,
+                ]
+            );
+        }
     }
 
     public function actSubmitSolution(#[JsonParam(alphanum: true)] array $solutionSheet): void

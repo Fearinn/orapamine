@@ -321,11 +321,6 @@ define([
         "only_to_log",
       );
 
-      this.showMessage(
-        _("Tip: use the buttons in your solution sheet to save and clear it"),
-        "only_to_log",
-      );
-
       this.setupNotifications();
     },
 
@@ -376,6 +371,8 @@ define([
               if (pieceElement.dataset.piece == 6) {
                 pieceElement.textContent = "X";
               }
+
+              this.debounce(this.actAutosaveSolution);
 
               document
                 .querySelectorAll("[data-piece]")
@@ -1059,6 +1056,7 @@ define([
         (event) => {
           event.stopPropagation();
           pieceElement.remove();
+          this.debounce(this.actAutosaveSolution);
           this.restoreServerGameState();
         },
         {
@@ -1095,6 +1093,7 @@ define([
             }
 
             pieceElement.dataset.piece = piece;
+            this.debounce(this.actAutosaveSolution);
           },
           {
             id: `orp_pieceButton-rotate-${uid}`,
@@ -1349,21 +1348,7 @@ define([
     },
 
     actSaveSolution: function () {
-      const solutionSheet = [];
-      document
-        .getElementById("orp_board")
-        .querySelectorAll("[data-cell]")
-        .forEach((cellElement) => {
-          const pieceElement = cellElement.querySelector("[data-piece]");
-          if (pieceElement) {
-            const x = Number(cellElement.dataset.cell.split("-")[0]);
-            const y = Number(cellElement.dataset.cell.split("-")[1]);
-            const piece = Number(pieceElement.dataset.piece);
-            const color_id = Number(pieceElement.dataset.color);
-
-            solutionSheet.push({ x, y, piece, color_id });
-          }
-        });
+      const solutionSheet = this.getSolutionSheet();
 
       if (solutionSheet.length === 0) {
         this.showMessage(_("You can't save an empty sheet"), "error");
@@ -1380,10 +1365,50 @@ define([
         return;
       }
 
+      this.saveSolutionSheet(solutionSheet);
+    },
+
+    actAutosaveSolution: function () {
+      this.saveSolutionSheet(this.getSolutionSheet(), true);
+    },
+
+    debounce: function (func, wait = 2000) {
+      if (this.debounceTimeout) {
+        clearTimeout(this.debounceTimeout);
+      }
+
+      this.debounceTimeout = setTimeout(() => {
+        this.debounceTimeout = null;
+        func.call(this);
+      }, wait);
+    },
+
+    getSolutionSheet: function () {
+      const solutionSheet = [];
+      document
+        .getElementById("orp_board")
+        .querySelectorAll("[data-cell]")
+        .forEach((cellElement) => {
+          const pieceElement = cellElement.querySelector("[data-piece]");
+          if (pieceElement) {
+            const x = Number(cellElement.dataset.cell.split("-")[0]);
+            const y = Number(cellElement.dataset.cell.split("-")[1]);
+            const piece = Number(pieceElement.dataset.piece);
+            const color_id = Number(pieceElement.dataset.color);
+
+            solutionSheet.push({ x, y, piece, color_id });
+          }
+        });
+
+      return solutionSheet;
+    },
+
+    saveSolutionSheet: function (solutionSheet, autosave = false) {
       this.performAction(
         "actSaveSolution",
         {
           solutionSheet: JSON.stringify(solutionSheet),
+          autosave,
         },
         {
           checkAction: false,
@@ -1429,16 +1454,17 @@ define([
     toggleBlank: function (cellElement) {
       if (cellElement.querySelector("[data-color='6']")) {
         cellElement.innerHTML = "";
-        return;
-      }
-
-      if (cellElement.childElementCount === 0) {
+      } else if (cellElement.childElementCount === 0) {
         const uid = `orp_piece-${this.getUniqueId()}`;
         const blankSpaceHTML = `<div id="${uid}" class="orp_piece orp_blankSpace" data-piece="6" data-color="99">X</div>`;
         cellElement.innerHTML = blankSpaceHTML;
 
         this.attachControls(document.getElementById(uid));
+      } else {
+        return;
       }
+
+      this.debounce(this.actAutosaveSolution);
     },
 
     ///////////////////////////////////////////////////

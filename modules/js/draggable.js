@@ -44,10 +44,18 @@ function userPressed(event) {
     return;
   }
 
-  element = event.target;
-  isGemstoneMove = element.classList.contains("orp_gemstoneButton-move");
+  const target = event.target;
+  const gemstoneMoveButton = target.closest(".orp_gemstoneButton-move");
+  const pieceControl = target.closest(".orp_pieceButton, .orp_gemstoneButton");
 
-  if (!element.dataset.piece && !isGemstoneMove) {
+  if (!gemstoneMoveButton && pieceControl) {
+    return;
+  }
+
+  isGemstoneMove = Boolean(gemstoneMoveButton);
+  element = gemstoneMoveButton || target.closest("[data-piece]");
+
+  if (!element || (!element.dataset.piece && !isGemstoneMove)) {
     return;
   }
 
@@ -128,6 +136,8 @@ function userReleased(event) {
 
   element.style.setProperty("transform", null);
 
+  let draftChanged = false;
+
   if (isGemstoneMove) {
     element.querySelectorAll("[data-piece]").forEach((pieceElement) => {
       const rect = pieceElement.getBoundingClientRect();
@@ -137,7 +147,8 @@ function userReleased(event) {
 
       const targetX = centerX + deltaX * scale;
       const targetY = centerY + deltaY * scale;
-      dropItemOntoXY(pieceElement, targetX, targetY);
+      draftChanged =
+        dropItemOntoXY(pieceElement, targetX, targetY) || draftChanged;
     });
   } else {
     const rect = element.getBoundingClientRect();
@@ -147,7 +158,11 @@ function userReleased(event) {
 
     const targetX = centerX + deltaX * scale;
     const targetY = centerY + deltaY * scale;
-    dropItemOntoXY(element, targetX, targetY);
+    draftChanged = dropItemOntoXY(element, targetX, targetY);
+  }
+
+  if (draftChanged) {
+    game.debounce(game.actAutosaveSolution);
   }
 
   stopAutoScroll();
@@ -166,20 +181,20 @@ function dropItemOntoXY(pieceElement, x, y) {
   document.querySelector(".orp_piece-drag")?.classList.remove("orp_piece-drag");
 
   if (!pointsTo) {
-    return;
+    return false;
   }
 
   const boardElement = document.getElementById("orp_boardContainer");
 
   if (!boardElement.contains(pointsTo) && boardElement.contains(pieceElement)) {
     pieceElement.remove();
-    return;
+    return true;
   }
 
   const cellElement = pointsTo.closest(`[data-cell]`);
 
   if (!cellElement || cellElement.querySelector("[data-piece]")) {
-    return;
+    return false;
   }
 
   const locationFeedbackElement = cellElement.querySelector(
@@ -188,13 +203,13 @@ function dropItemOntoXY(pieceElement, x, y) {
   if (
     !game.comparePieceToRevealedLocation(locationFeedbackElement, pieceElement)
   ) {
-    return;
+    return false;
   }
 
   if (boardElement.contains(pieceElement)) {
     cellElement.insertAdjacentElement("afterbegin", pieceElement);
     game.attachControls(pieceElement);
-    return;
+    return true;
   }
 
   const cloneElement = pieceElement.cloneNode(true);
@@ -203,6 +218,7 @@ function dropItemOntoXY(pieceElement, x, y) {
   cellElement.insertAdjacentElement("afterbegin", cloneElement);
 
   game.attachControls(cloneElement);
+  return true;
 }
 
 class Draggable {

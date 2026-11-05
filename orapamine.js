@@ -1355,16 +1355,6 @@ define([
         return;
       }
 
-      if (solutionSheet.length > 75) {
-        this.showMessage(
-          _(
-            "Limit of occupied cells in the sheet reached. Please clear a few cells",
-          ),
-          "error",
-        );
-        return;
-      }
-
       this.saveSolutionSheet(solutionSheet);
     },
 
@@ -1374,10 +1364,6 @@ define([
       }
 
       const solutionSheet = this.getSolutionSheet();
-      if (solutionSheet.length > 75) {
-        return;
-      }
-
       this.saveSolutionSheet(solutionSheet, true);
     },
 
@@ -1421,10 +1407,14 @@ define([
     },
 
     saveSolutionSheet: function (solutionSheet, autosave = false) {
+      const compactSolutionSheet = solutionSheet.map(
+        ({ x, y, piece, color_id }) => [x, y, piece, color_id],
+      );
+
       this.performAction(
         "actSaveSolution",
         {
-          solutionSheet: JSON.stringify(solutionSheet),
+          solutionSheet: JSON.stringify(compactSolutionSheet),
           autosave,
         },
         {

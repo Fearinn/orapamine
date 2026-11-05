@@ -39,7 +39,6 @@ const REVEALED_LOCATIONS = "revealedLocations";
 const REVEALED_ORIGINS = "revealedOrigins";
 const SOLUTION_SHEETS = "solutionSheets";
 const QUESTION_LOG = "questionLog";
-const MAX_SOLUTION_CELLS = 75;
 
 class Game extends \Table
 {
@@ -317,12 +316,37 @@ class Game extends \Table
 
         $player_id = (int) $this->getCurrentPlayerId();
 
-        if (count($solutionSheet) > MAX_SOLUTION_CELLS) {
-            throw new \BgaUserException(clienttranslate("Limit of occupied cells in the sheet reached. Please clear a few cells"));
+        $expandedSolutionSheet = [];
+        foreach ($solutionSheet as $cell) {
+            if (!is_array($cell)) {
+                throw new \BgaUserException(clienttranslate("Invalid solution sheet"));
+            }
+
+            if (array_key_exists("x", $cell)) {
+                $expandedSolutionSheet[] = $cell;
+                continue;
+            }
+
+            if (
+                count($cell) !== 4 ||
+                !array_key_exists(0, $cell) ||
+                !array_key_exists(1, $cell) ||
+                !array_key_exists(2, $cell) ||
+                !array_key_exists(3, $cell)
+            ) {
+                throw new \BgaUserException(clienttranslate("Invalid solution sheet"));
+            }
+
+            $expandedSolutionSheet[] = [
+                "x" => $cell[0],
+                "y" => $cell[1],
+                "piece" => $cell[2],
+                "color_id" => $cell[3],
+            ];
         }
 
         $solutionSheets = $this->globals->get(SOLUTION_SHEETS);
-        $solutionSheets[$player_id] = $solutionSheet;
+        $solutionSheets[$player_id] = $expandedSolutionSheet;
         $this->globals->set(SOLUTION_SHEETS, $solutionSheets);
 
         if (!$autosave) {
@@ -331,7 +355,7 @@ class Game extends \Table
                 "saveSolution",
                 "",
                 [
-                    "solutionSheet" => $solutionSheet,
+                    "solutionSheet" => $expandedSolutionSheet,
                 ]
             );
         }

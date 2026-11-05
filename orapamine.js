@@ -372,7 +372,7 @@ define([
                 pieceElement.textContent = "X";
               }
 
-              this.debounce(this.actAutosaveSolution);
+              this.scheduleAutosaveSolution();
 
               document
                 .querySelectorAll("[data-piece]")
@@ -1056,7 +1056,7 @@ define([
         (event) => {
           event.stopPropagation();
           pieceElement.remove();
-          this.debounce(this.actAutosaveSolution);
+          this.scheduleAutosaveSolution();
           this.restoreServerGameState();
         },
         {
@@ -1093,7 +1093,7 @@ define([
             }
 
             pieceElement.dataset.piece = piece;
-            this.debounce(this.actAutosaveSolution);
+            this.scheduleAutosaveSolution();
           },
           {
             id: `orp_pieceButton-rotate-${uid}`,
@@ -1369,11 +1369,24 @@ define([
     },
 
     actAutosaveSolution: function () {
-      if (this.getGameUserPreference(104) !== 1) {
+      if (this.isSpectator || this.getGameUserPreference(104) !== 1) {
         return;
       }
 
-      this.saveSolutionSheet(this.getSolutionSheet(), true);
+      const solutionSheet = this.getSolutionSheet();
+      if (solutionSheet.length > 75) {
+        return;
+      }
+
+      this.saveSolutionSheet(solutionSheet, true);
+    },
+
+    scheduleAutosaveSolution: function () {
+      if (this.isSpectator || this.getGameUserPreference(104) !== 1) {
+        return;
+      }
+
+      this.debounce(this.actAutosaveSolution);
     },
 
     debounce: function (func, wait = 2000) {
@@ -1468,7 +1481,7 @@ define([
         return;
       }
 
-      this.debounce(this.actAutosaveSolution);
+      this.scheduleAutosaveSolution();
     },
 
     ///////////////////////////////////////////////////

@@ -162,7 +162,7 @@ function userReleased(event) {
   }
 
   if (draftChanged) {
-    game.debounce(game.actAutosaveSolution);
+    game.scheduleAutosaveSolution();
   }
 
   stopAutoScroll();

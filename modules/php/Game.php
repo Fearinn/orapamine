@@ -39,6 +39,7 @@ const REVEALED_LOCATIONS = "revealedLocations";
 const REVEALED_ORIGINS = "revealedOrigins";
 const SOLUTION_SHEETS = "solutionSheets";
 const QUESTION_LOG = "questionLog";
+const MAX_SOLUTION_CELLS = 75;
 
 class Game extends \Table
 {
@@ -306,15 +307,18 @@ class Game extends \Table
         #[BoolParam] bool $autosave = false,
     ): void
     {
-
         if ($this->gamestate->state_id() === 99) {
             throw new \BgaUserException("This table is finished");
         }
 
-        $player_id = (int) $this->getCurrentPlayerId();
-
         if ($this->isSpectator()) {
             throw new \BgaVisibleSystemException("Only players may perform this action");
+        }
+
+        $player_id = (int) $this->getCurrentPlayerId();
+
+        if (count($solutionSheet) > MAX_SOLUTION_CELLS) {
+            throw new \BgaUserException(clienttranslate("Limit of occupied cells in the sheet reached. Please clear a few cells"));
         }
 
         $solutionSheets = $this->globals->get(SOLUTION_SHEETS);
@@ -1204,6 +1208,7 @@ class Game extends \Table
     {
         $gameinfos = $this->getGameinfos();
         $default_colors = $gameinfos['player_colors'];
+        $query_values = [];
 
         foreach ($players as $player_id => $player) {
             $query_values[] = vsprintf("('%s', '%s', '%s', '%s', '%s')", [

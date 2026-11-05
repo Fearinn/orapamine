@@ -1359,7 +1359,11 @@ define([
     },
 
     actAutosaveSolution: function () {
-      if (this.isSpectator || this.getGameUserPreference(104) !== 1) {
+      if (
+        this.isSpectator ||
+        this.gamedatas.isBoardRevealed ||
+        this.getGameUserPreference(104) !== 1
+      ) {
         return;
       }
 
@@ -1368,7 +1372,11 @@ define([
     },
 
     scheduleAutosaveSolution: function () {
-      if (this.isSpectator || this.getGameUserPreference(104) !== 1) {
+      if (
+        this.isSpectator ||
+        this.gamedatas.isBoardRevealed ||
+        this.getGameUserPreference(104) !== 1
+      ) {
         return;
       }
 
